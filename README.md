@@ -15,17 +15,27 @@ A real-time chat application that allows users to send and receive messages, cre
 ## Tech Stack
 
 - Frontend: React.js, Next.js
-- Backend: -
+- Backend: D
 - Database: Firebase
-- Deployment: -
+- Deployment: D
   
 ## Installation
 
 ### Clone the repository
 
+```bash
 git clone [https://github.com/NurFakhiraMohdSaufi/Chat-App]
 cd chat-app
+```
 
 ### Install dependencies
 
 npm install
+
+### Steps to upload
+
+```bash
+- git add .
+- git commit -m "any messages"
+- git push origin main
+```

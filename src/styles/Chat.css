@@ -1,0 +1,65 @@
+.chat-app {
+    @apply w-full;
+}
+
+.header {
+    @apply w-full flex fixed justify-between items-center bg-gray-800 text-white p-4 m-auto;
+}
+
+.header-title {
+    @apply text-xl font-bold text-center;
+}
+
+.sign-out-button {
+    @apply bg-transparent border-none;
+}
+
+.messages {
+    @apply flex flex-col overflow-y-auto p-4;
+}
+
+.message {
+    @apply mb-2 p-2 rounded-lg;
+}
+
+.sent {
+    @apply bg-amber-400 text-black self-end;
+    @apply ml-auto;
+}
+
+.received {
+    @apply bg-gray-200 text-black self-start;
+    @apply mr-auto;
+}
+
+.user {
+    @apply font-semibold;
+}
+
+.text {
+    @apply block;
+}
+
+.timestamp {
+    @apply text-xs text-gray-500;
+}
+
+.new-message-form {
+    @apply flex p-4;
+}
+
+.new-message-input {
+    @apply flex-1 border border-gray-300 bg-gray-200 rounded-lg pl-10 pr-10 p-2;
+}
+
+.emoticon-button {
+    @apply absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400;
+}
+
+.paperclip-button {
+    @apply absolute right-20 top-1/2  transform -translate-y-1/2 text-gray-400;
+}
+
+.send-button {
+    @apply border-none outline-none text-2xl bg-gray-200 w-12 h-12 rounded-full flex items-center justify-center cursor-pointer mx-4 mr-auto;
+}

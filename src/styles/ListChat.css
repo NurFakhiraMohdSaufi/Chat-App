@@ -1,0 +1,35 @@
+.list-chat {
+    @apply py-4 px-6;
+}
+
+.header-room {
+    @apply text-lg font-semibold text-amber-600 mb-4;
+}
+
+.card-list {
+    @apply divide-y divide-gray-300;
+}
+
+.button-chat {
+    @apply w-full text-left py-3 focus:outline-none transition duration-150 ease-in-out;
+}
+
+.button-chat:hover {
+    @apply bg-amber-100 rounded-md shadow-sm;
+}
+
+.chat-list {
+    @apply flex px-2 py-2 space-x-3;
+}
+
+.icon-profile {
+    @apply rounded-full h-8 w-8 flex-shrink-0;
+}
+
+.title-name {
+    @apply text-sm font-semibold text-gray-900 text-left ml-2;
+}
+
+.title-chat {
+    @apply text-xs text-gray-600 text-left ml-2;
+}

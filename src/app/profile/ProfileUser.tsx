@@ -7,7 +7,7 @@ export function ProfileUser() {
     return (
         <div
             className='flex
-        flex-col items-center bg-indigo-100 border border-gray-200 mt-1 w-full py-6 px-4 rounded-lg'
+        flex-col items-center bg-amber-100 border border-gray-200 mt-1 w-full py-6 px-4 rounded-lg'
         >
             <div className='h-20 w-20 rounded-full border overflow-hidden'>
                 <img
@@ -21,7 +21,7 @@ export function ProfileUser() {
             <div className='text-sm font-semibold mt-1 text-center'>{user}</div>
 
             {/* <div className='flex flex-row items-center mt-3'>
-                <div className='flex flex-col justify-center h-4 w-8 bg-indigo-500 rounded-full'>
+                <div className='flex flex-col justify-center h-4 w-8 bg-amber-500 rounded-full'>
                     <div className='h-3 w-3 bg-white rounded-full self-end mr-1'></div>
                 </div>
                 <div className='leading-none ml-1 text-xs'>Active</div>

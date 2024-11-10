@@ -52,14 +52,13 @@ export default function Room({room}: RoomProps) {
             snapshot.forEach((doc) => {
                 const data = doc.data();
 
-                // Ensure all required fields are present in the data
                 const message: Message = {
                     id: doc.id,
-                    text: data.text || '', // Provide a default value if text is missing
-                    user: data.user || 'Unknown', // Default user if missing
-                    createdAt: data.createdAt || null, // Handle missing createdAt
-                    room: data.room || room, // Ensure the room field is set
-                    replyTo: data.replyTo || null, // Handle missing replyTo
+                    text: data.text || '',
+                    user: data.user || 'Unknown',
+                    createdAt: data.createdAt || null,
+                    room: data.room || room,
+                    replyTo: data.replyTo || null,
                 };
 
                 messages.push(message);

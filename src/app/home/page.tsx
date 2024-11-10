@@ -9,8 +9,7 @@ import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { auth } from '@/config/firebase-config';
 
 import Room from '../chat/Chat';
-import ListChat from '../chat/page';
-import LandingPage from './LandingPage';
+import LandingPage from './LandingPage.tsx';
 
 export default function Home() {
     const [user, setUser] = useState<User | null>(null);

@@ -2,6 +2,10 @@
 
 A real-time chat application that allows users to send and receive messages, create chat rooms, and communicate in a seamless and user-friendly interface.
 
+## Planning
+
+![chatapp](https://github.com/user-attachments/assets/a9066a86-7e82-4433-b5a9-a9b5e19beee6)
+
 ## Features
 
 - Real-time Messaging: Send and receive messages instantly.

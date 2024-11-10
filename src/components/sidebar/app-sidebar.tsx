@@ -91,7 +91,7 @@ export function AppSidebar({setRoom, setIsInChat}) {
     };
 
     return (
-        <Sidebar className='h-screen flex flex-col'>
+        <Sidebar className='h-screen flex flex-col bg-neutral-700'>
             <SidebarHeader>
                 <SidebarContent className='h-full overflow-y-auto flex-grow'>
                     <SidebarGroup>

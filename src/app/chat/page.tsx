@@ -86,7 +86,7 @@ export default function ListChat({setRoom, setIsInChat}) {
                     rooms.map((room, index) => (
                         <button
                             key={index}
-                            className='flex flex-row items-center hover:bg-gray-100 rounded-xl p-2'
+                            className='flex flex-row items-center hover:bg-amber-100 rounded-xl p-2'
                             onClick={() => handleRoomClick(room.roomName)}
                             aria-label={`Chat with ${room.roomName}`}
                         >

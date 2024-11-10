@@ -8,16 +8,15 @@ import { AppSidebar } from '@/components/sidebar/app-sidebar';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { auth } from '@/config/firebase-config';
 
-import Room from './chat/Chat';
-import ListChat from './chat/page';
+import Room from '../chat/Chat';
+import ListChat from '../chat/page';
+import LandingPage from './LandingPage';
 
 export default function Home() {
     const [user, setUser] = useState<User | null>(null);
     const [room, setRoom] = useState<string | null>(null);
     const [isInChat, setIsInChat] = useState(false);
     const router = useRouter();
-
-    console.log('try room jadi tak', room);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -39,8 +38,7 @@ export default function Home() {
         <SidebarProvider>
             <AppSidebar setRoom={setRoom} setIsInChat={setIsInChat} />
             <SidebarTrigger />
-
-            {room && <Room room={room} />}
+            {!isInChat ? <LandingPage /> : room && <Room room={room} />}
         </SidebarProvider>
     );
 }

@@ -6,10 +6,12 @@ import {
 	signInWithEmailAndPassword,
 	signInWithPopup,
 } from 'firebase/auth';
+import { AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Cookies from 'universal-cookie';
 
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { auth, provider } from '@/config/firebase-config';
 
 const cookies = new Cookies();
@@ -27,7 +29,7 @@ export default function Login() {
             cookies.set('auth-token', result.user.refreshToken);
             // setIsAuth(true);
             alert('Successfully logged in!');
-            router.push('/'); // Redirect to home page after login
+            router.push('/home'); // Redirect to home page after login
         } catch (err) {
             console.error(err);
             setError('Failed to sign in with Google');
@@ -57,7 +59,7 @@ export default function Login() {
 
             cookies.set('auth-token', result.user.refreshToken);
             alert('Successfully logged in!');
-            router.push('/'); // Redirect to home page after login
+            router.push('/home'); // Redirect to home page after login
             // setIsAuth(true);
             setError('');
             setEmail('');
@@ -86,7 +88,13 @@ export default function Login() {
         <div className='auth-container'>
             <div className='card-auth'>
                 <h1 className='headerName'>Sign in</h1>
-                {error && <p className='alert-warning'>{error}</p>}
+                {error && (
+                    <Alert variant='destructive'>
+                        <AlertCircle className='h-4 w-4' />
+                        <AlertTitle>Error</AlertTitle>
+                        <AlertDescription>{error}</AlertDescription>
+                    </Alert>
+                )}
 
                 <form
                     className='mt-6'

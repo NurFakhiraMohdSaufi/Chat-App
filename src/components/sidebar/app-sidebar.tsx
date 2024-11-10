@@ -72,8 +72,6 @@ export function AppSidebar({setRoom, setIsInChat}) {
                 joinedAt: serverTimestamp(),
             });
 
-            console.log('User room reference: ', userRoomRef);
-
             setRoom(roomName);
             setIsInChat(true);
             setRoomName('');
@@ -99,7 +97,7 @@ export function AppSidebar({setRoom, setIsInChat}) {
     };
 
     return (
-        <Sidebar className='h-screen flex flex-col bg-neutral-700'>
+        <Sidebar className='bg-amber-100 h-screen flex flex-col'>
             <SidebarHeader>
                 <SidebarContent className='h-full overflow-y-auto flex-grow'>
                     <SidebarGroup>
@@ -130,7 +128,7 @@ export function AppSidebar({setRoom, setIsInChat}) {
                 </div>
                 <div className='mt-4 lg:mt-0 lg:flex '>
                     <button
-                        className='text-sm font-semibold text-gray-300 hover:text-red-500'
+                        className='text-sm font-semibold text-gray-300 hover:text-amber-500'
                         onClick={signUserOut}
                     >
                         Sign Out <span aria-hidden='true'>&rarr;</span>

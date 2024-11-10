@@ -1,10 +1,17 @@
 import 'font-awesome/css/font-awesome.min.css';
 import '@/styles/Room.css';
 
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import {
+	addDoc,
+	collection,
+	getDocs,
+	query,
+	Timestamp,
+	where,
+} from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 
-import { db } from '@/config/firebase-config';
+import { auth, db } from '@/config/firebase-config';
 
 export function SearchRoom({setRoom, setIsInChat}) {
     const [roomName, setRoomName] = useState('');
@@ -32,7 +39,24 @@ export function SearchRoom({setRoom, setIsInChat}) {
         searchRooms();
     }, [roomName]);
 
+    async function joinRoom(roomId: string) {
+        try {
+            const user = auth.currentUser?.displayName;
+
+            if (!user) return;
+
+            await addDoc(collection(db, 'userRooms'), {
+                userId: user,
+                roomId,
+                joinedAt: Timestamp.fromDate(new Date()),
+            });
+        } catch (e) {
+            console.log('Error joining room', e);
+        }
+    }
+
     const handleEnterChat = (room) => {
+        joinRoom(room);
         setRoom(room);
         setIsInChat(true);
         setRoomName('');

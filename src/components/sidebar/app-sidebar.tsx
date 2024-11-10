@@ -66,6 +66,14 @@ export function AppSidebar({setRoom, setIsInChat}) {
                 createdBy: auth.currentUser?.displayName,
             });
 
+            const userRoomRef = await addDoc(collection(db, 'userRooms'), {
+                userId: auth.currentUser?.displayName,
+                roomId: roomName,
+                joinedAt: serverTimestamp(),
+            });
+
+            console.log('User room reference: ', userRoomRef);
+
             setRoom(roomName);
             setIsInChat(true);
             setRoomName('');

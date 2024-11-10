@@ -29,12 +29,14 @@ A real-time chat application that allows users to send and receive messages, cre
 
 ```bash
 git clone [https://github.com/NurFakhiraMohdSaufi/Chat-App]
-cd chat-app
+cd Chat-App
 ```
 
 ### Install dependencies
 
+```bash
 npm install
+```
 
 ### Steps to upload
 

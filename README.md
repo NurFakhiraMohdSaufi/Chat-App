@@ -28,7 +28,7 @@ A real-time chat application that allows users to send and receive messages, cre
 ### Clone the repository
 
 ```bash
-git clone [https://github.com/NurFakhiraMohdSaufi/Chat-App]
+git clone https://github.com/NurFakhiraMohdSaufi/Chat-App
 cd Chat-App
 ```
 

@@ -4,12 +4,12 @@ import { onAuthStateChanged, User } from 'firebase/auth'; // Firebase auth impor
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+import LandingPage from '@/app/home/landingPage';
 import { AppSidebar } from '@/components/sidebar/app-sidebar';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { auth } from '@/config/firebase-config';
 
 import Room from '../chat/Chat';
-import LandingPage from './LandingPage.tsx';
 
 export default function Home() {
     const [user, setUser] = useState<User | null>(null);

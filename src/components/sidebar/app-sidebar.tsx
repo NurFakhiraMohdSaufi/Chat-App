@@ -33,8 +33,13 @@ import {
 
 const cookies = new Cookies();
 
-export function AppSidebar({setRoom, setIsInChat}) {
-    const [isAuth, setIsAuth] = useState(cookies.get('auth-token'));
+interface RoomProps {
+    setRoom: (roomName: string) => void;
+    setIsInChat: (isInChat: boolean) => void;
+}
+
+export function AppSidebar({setRoom, setIsInChat}: RoomProps) {
+    // const [isAuth, setIsAuth] = useState(cookies.get('auth-token'));
     const [openModal, setOpenModal] = useState(false);
     const [roomName, setRoomName] = useState('');
     const [loading, setLoading] = useState(false);
@@ -46,11 +51,11 @@ export function AppSidebar({setRoom, setIsInChat}) {
     const signUserOut = async () => {
         await signOut(auth);
         cookies.remove('auth-token');
-        setIsAuth(false);
+        // setIsAuth(false);
         setIsInChat(false);
     };
 
-    const handleCreateNewRoom = async (e) => {
+    const handleCreateNewRoom = async (e: React.FormEvent) => {
         e.preventDefault();
         if (roomName.trim() === '') {
             setError('Room name cannot be empty');
@@ -66,7 +71,7 @@ export function AppSidebar({setRoom, setIsInChat}) {
                 createdBy: auth.currentUser?.displayName,
             });
 
-            const userRoomRef = await addDoc(collection(db, 'userRooms'), {
+            await addDoc(collection(db, 'userRooms'), {
                 userId: auth.currentUser?.displayName,
                 roomId: roomName,
                 joinedAt: serverTimestamp(),

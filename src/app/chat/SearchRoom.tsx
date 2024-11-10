@@ -13,12 +13,22 @@ import React, { useEffect, useState } from 'react';
 
 import { auth, db } from '@/config/firebase-config';
 
-export function SearchRoom({setRoom, setIsInChat}) {
+interface RoomProps {
+    setRoom: (roomName: string) => void;
+    setIsInChat: (isInChat: boolean) => void;
+}
+
+interface RoomData {
+    room: string;
+    createdBy: string;
+    createdAt: Timestamp;
+}
+
+export function SearchRoom({setRoom, setIsInChat}: RoomProps) {
     const [roomName, setRoomName] = useState('');
-    const [rooms, setRooms] = useState([]);
+    const [rooms, setRooms] = useState<RoomData[]>([]);
 
     useEffect(() => {
-        // Firestore query to get rooms based on the search term
         const searchRooms = async () => {
             if (roomName.trim() === '') {
                 setRooms([]);
@@ -32,7 +42,9 @@ export function SearchRoom({setRoom, setIsInChat}) {
             );
 
             const querySnapshot = await getDocs(q);
-            const roomList = querySnapshot.docs.map((doc) => doc.data());
+            const roomList: RoomData[] = querySnapshot.docs.map(
+                (doc) => doc.data() as RoomData,
+            );
             setRooms(roomList);
         };
 
@@ -55,12 +67,11 @@ export function SearchRoom({setRoom, setIsInChat}) {
         }
     }
 
-    const handleEnterChat = (room) => {
+    const handleEnterChat = (room: string) => {
         joinRoom(room);
         setRoom(room);
         setIsInChat(true);
         setRoomName('');
-        setRooms('');
 
         console.log('Enter room: ', room);
     };

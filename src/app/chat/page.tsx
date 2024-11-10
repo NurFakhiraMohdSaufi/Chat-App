@@ -2,22 +2,34 @@
 
 import '@/styles/ListChat.css';
 
-import {
-	collection,
-	DocumentData,
-	getDocs,
-	onSnapshot,
-	query,
-	where,
-} from 'firebase/firestore';
+import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 import { auth, db } from '@/config/firebase-config';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 
-export default function ListChat({setRoom, setIsInChat}) {
-    const [rooms, setRooms] = useState<DocumentData[]>([]);
+interface RoomProps {
+    setRoom: (roomName: string) => void;
+    setIsInChat: (isInChat: boolean) => void;
+}
+
+interface Message {
+    id: string;
+    text: string;
+    room: string;
+    user: string;
+}
+
+interface ChatData {
+    [roomName: string]: Message[];
+}
+
+export default function ListChat({setRoom, setIsInChat}: RoomProps) {
+    const [rooms, setRooms] = useState<
+        {roomName: string; messages: Message[]}[]
+    >([]);
     const [loading, setLoading] = useState(true);
     const [noRooms, setNoRooms] = useState(false);
     const user = auth.currentUser?.displayName;
@@ -27,7 +39,8 @@ export default function ListChat({setRoom, setIsInChat}) {
             const chatRef = collection(db, 'messages');
             const queryChat = query(chatRef, where('user', '==', user));
             const unsubscribe = onSnapshot(queryChat, (snapshot) => {
-                const chatData = {};
+                const chatData: ChatData = {};
+
                 if (snapshot.empty) {
                     setNoRooms(true);
                 } else {
@@ -38,18 +51,26 @@ export default function ListChat({setRoom, setIsInChat}) {
                     const data = doc.data();
                     const room = data.room;
 
+                    const message: Message = {
+                        id: doc.id,
+                        text: data.text || '',
+                        room: room,
+                        user: data.user || '',
+                    };
+
                     if (!chatData[room]) {
                         chatData[room] = [];
                     }
-                    chatData[room].push({...data, id: doc.id});
+
+                    chatData[room].push(message);
                 });
 
                 const roomArray = Object.keys(chatData).map((room) => ({
                     roomName: room,
                     messages: chatData[room],
                 }));
+
                 setRooms(roomArray);
-                console.log('array', rooms);
                 setLoading(false);
             });
 
@@ -57,13 +78,10 @@ export default function ListChat({setRoom, setIsInChat}) {
         }
     }, [user]);
 
-    const handleRoomClick = (roomName) => {
+    const handleRoomClick = (roomName: string) => {
         setRoom(roomName);
         setIsInChat(true);
-        console.log('handle room click', roomName);
     };
-
-    console.log('Rooms data: ', rooms);
 
     return (
         <div className='flex flex-col mt-1'>
@@ -91,7 +109,7 @@ export default function ListChat({setRoom, setIsInChat}) {
                             aria-label={`Chat with ${room.roomName}`}
                         >
                             <div>
-                                <img
+                                <Image
                                     className='flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full'
                                     src='https://res.cloudinary.com/dc6deairt/image/upload/v1638102932/user-32-02_vll8uv.jpg'
                                     width='32'

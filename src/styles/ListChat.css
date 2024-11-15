@@ -1,5 +1,5 @@
 .list-chat {
-    @apply py-4 px-6;
+    @apply w-full;
 }
 
 .header-room {

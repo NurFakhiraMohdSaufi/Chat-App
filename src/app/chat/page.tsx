@@ -3,7 +3,6 @@
 import '@/styles/ListChat.css';
 
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 import { auth, db } from '@/config/firebase-config';
@@ -84,11 +83,11 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
     };
 
     return (
-        <div className='flex flex-col mt-1'>
+        <div className='flex flex-col mt-1 bg-gray-50'>
             <div className='flex flex-row items-center justify-between text-xs'>
                 <span className='font-bold'>Conversations</span>
             </div>
-            <div className='flex flex-col space-y-1 mt-1 -mx-2 h-40 overflow-y-auto'>
+            <div className='flex flex-col space-y-1 mt-1 -mx-2 h-60 overflow-y-auto'>
                 {loading ? (
                     <Box
                         sx={{
@@ -104,12 +103,12 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
                     rooms.map((room, index) => (
                         <button
                             key={index}
-                            className='flex flex-row items-center hover:bg-amber-100 rounded-xl p-2'
+                            className='flex flex-row items-center hover:bg-whatsappSender rounded-xl p-2'
                             onClick={() => handleRoomClick(room.roomName)}
                             aria-label={`Chat with ${room.roomName}`}
                         >
                             <div>
-                                <Image
+                                <img
                                     className='flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full'
                                     src='https://res.cloudinary.com/dc6deairt/image/upload/v1638102932/user-32-02_vll8uv.jpg'
                                     width='32'

@@ -158,8 +158,6 @@ export default function Room({room}: RoomProps) {
         <div className='chat-app'>
             <div className='header'>
                 <h1 className='header-title'>{room.toUpperCase()}</h1>
-
-                <button className='mdi mdi-logout sign-out-button'></button>
             </div>
 
             <div className='messages'>

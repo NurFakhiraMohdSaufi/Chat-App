@@ -12,16 +12,11 @@ import {
 import React, { useEffect, useState } from 'react';
 
 import { auth, db } from '@/config/firebase-config';
+import { RoomData } from '@/interfaces/RoomData';
 
 interface RoomProps {
     setRoom: (roomName: string) => void;
     setIsInChat: (isInChat: boolean) => void;
-}
-
-interface RoomData {
-    room: string;
-    createdBy: string;
-    createdAt: Timestamp;
 }
 
 export function SearchRoom({setRoom, setIsInChat}: RoomProps) {
@@ -78,7 +73,7 @@ export function SearchRoom({setRoom, setIsInChat}: RoomProps) {
 
     return (
         <div className='flex flex-col mt-1'>
-            <div className='flex flex-row items-center justify-between text-xs'>
+            <div className='flex flex-row items-center justify-between text-xs textt-black'>
                 <span className='font-bold'>Search</span>
             </div>
             <div className='relative mt-2 mb-2'>

@@ -1,9 +1,13 @@
+/* Main container that holds the entire chat application */
 .chat-app {
-    @apply w-full;
+    @apply w-full bg-background h-full flex flex-col; /* Flex column layout for chat app */
 }
 
+/* Header */
 .header {
-    @apply flex justify-between items-center bg-gray-800 text-white p-4 rounded-t-lg;
+    @apply text-left bg-black text-white p-4;
+    position: sticky;
+    top: 0;
 }
 
 .header-title {
@@ -22,24 +26,24 @@
     @apply bg-gray-700;
 }
 
-/* Messages Area */
+/* Messages Area - Ensures it grows to take available space and can scroll */
 .messages {
-    @apply flex flex-col overflow-y-auto p-4 flex-grow;
-    max-height: calc(100vh - 175px); /* Adjust height for responsive design */
+    @apply flex flex-col overflow-y-auto p-4 flex-grow; /* Allows scrolling and takes up available space */
     scroll-behavior: smooth;
 }
 
+/* Message Bubbles */
 .message {
     @apply mb-2 p-2 rounded-lg transition duration-300 ease-in-out;
 }
 
 .sent {
-    @apply bg-amber-400 text-black self-end;
+    @apply bg-gray-200 text-black self-end;
     @apply ml-auto;
 }
 
 .received {
-    @apply bg-gray-200 text-black self-start;
+    @apply bg-whatsapp text-black self-start;
     @apply mr-auto;
 }
 
@@ -55,14 +59,21 @@
     @apply text-xs text-gray-500;
 }
 
+/* New Message Form */
 .new-message-form {
-    @apply flex p-4 border-t border-gray-300 bg-white;
+    @apply flex p-2 border-t border-gray-300 bg-black;
+    position: sticky;
+    bottom: 0; /* Keeps the form at the bottom of the screen */
+    background-color: black; /* Ensures the form has a background and stays visible */
+    z-index: 10; /* Ensures the form stays above messages */
 }
 
+/* Input Field */
 .new-message-input {
     @apply flex-1 border border-gray-300 bg-gray-200 rounded-lg pl-10 pr-10 p-2 focus:outline-none focus:ring focus:ring-blue-400;
 }
 
+/* Icon Buttons (Emoticon, Camera, etc.) */
 .icon-buttons {
     @apply flex items-center justify-end space-x-2; /* Align icons to the right */
 }
@@ -80,6 +91,7 @@
     @apply border-none outline-none text-2xl bg-gray-200 w-12 h-12 rounded-full flex items-center justify-center cursor-pointer mx-4 mr-auto;
 }
 
+/* Emoji Picker */
 .emoji-picker {
     @apply absolute bottom-16 left-0 z-10 bg-white p-2 border border-gray-300 rounded-lg shadow-lg w-72 max-h-60 overflow-y-auto;
 }
@@ -113,7 +125,7 @@
     @apply text-sm text-gray-600 p-2 bg-gray-100 rounded-lg mb-2;
 }
 
-/* Responsive Design for Smaller Screens (still in progress)*/
+/* Responsive Design for Smaller Screens */
 @media (max-width: 600px) {
     .header-title {
         @apply text-lg;

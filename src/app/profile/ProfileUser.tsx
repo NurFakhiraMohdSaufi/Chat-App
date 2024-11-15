@@ -10,7 +10,11 @@ export function ProfileUser() {
         flex-col items-center bg-amber-100 border border-gray-200 mt-1 w-full py-6 px-4 rounded-lg'
         >
             <div className='h-20 w-20 rounded-full border overflow-hidden'>
+<<<<<<< HEAD
                 <img
+=======
+                <Image
+>>>>>>> e29e7927b8024f56ad5742363654f69429036cad
                     src='https://th.bing.com/th/id/R.bfa20ea18a0511a19e1e1ab717ccd381?rik=45VUQ8kcO3gXzw&pid=ImgRaw&r=0'
                     width={90}
                     height={10}

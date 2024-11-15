@@ -109,7 +109,11 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
                             aria-label={`Chat with ${room.roomName}`}
                         >
                             <div>
+<<<<<<< HEAD
                                 <img
+=======
+                                <Image
+>>>>>>> e29e7927b8024f56ad5742363654f69429036cad
                                     className='flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full'
                                     src='https://res.cloudinary.com/dc6deairt/image/upload/v1638102932/user-32-02_vll8uv.jpg'
                                     width='32'

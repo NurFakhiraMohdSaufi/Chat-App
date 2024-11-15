@@ -4,7 +4,11 @@ import { onAuthStateChanged, User } from 'firebase/auth'; // Firebase auth impor
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+<<<<<<< HEAD
 import LandingPage from '@/app/home/LandingPage';
+=======
+import LandingPage from '@/app/home/landingPage';
+>>>>>>> e29e7927b8024f56ad5742363654f69429036cad
 import { AppSidebar } from '@/components/sidebar/app-sidebar';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { auth } from '@/config/firebase-config';

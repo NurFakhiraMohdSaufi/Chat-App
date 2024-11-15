@@ -133,9 +133,6 @@
 
     .reply-button {
         @apply text-gray-600 cursor-pointer hover:text-blue-500 ml-2;
-        font-size: 1.25rem;
-        border: none;
-        background: transparent;
     }
 
     .reply-button:hover {

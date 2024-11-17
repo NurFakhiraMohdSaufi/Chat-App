@@ -1,6 +1,6 @@
 /* Main container that holds the entire chat application */
 .chat-app {
-    @apply w-full bg-background h-full flex flex-col; /* Flex column layout for chat app */
+    @apply w-full bg-backgroundChat h-full flex flex-col; /* Flex column layout for chat app */
 }
 
 /* Header */
@@ -11,24 +11,16 @@
 }
 
 .header-title {
-    @apply text-xl font-bold text-center flex-1;
+    @apply text-xl font-bold text-center text-white flex-1;
 }
 
-<<<<<<< HEAD
-.option-button,
-=======
 .sign-out-button,
->>>>>>> e29e7927b8024f56ad5742363654f69429036cad
 .profile-button,
 .send-button {
     @apply bg-transparent border-none transition duration-300 ease-in-out;
 }
 
-<<<<<<< HEAD
-.option-button:hover,
-=======
 .sign-out-button:hover,
->>>>>>> e29e7927b8024f56ad5742363654f69429036cad
 .profile-button:hover,
 .send-button:hover {
     @apply bg-gray-700;
@@ -151,20 +143,7 @@
         @apply bottom-12 w-60;
     }
 
-<<<<<<< HEAD
-    .reply-button {
-        @apply text-gray-600 cursor-pointer hover:text-blue-500 ml-2;
-    }
-
-    .reply-button:hover {
-        @apply text-blue-600;
-    }
-
-    .cancel-reply-button {
-        @apply ml-10 bg-transparent border-none cursor-pointer hover:text-red-700;
-=======
     .cancel-reply-button {
         @apply ml-2 bg-transparent border-none cursor-pointer hover:text-red-700;
->>>>>>> e29e7927b8024f56ad5742363654f69429036cad
     }
 }

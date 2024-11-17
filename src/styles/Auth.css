@@ -1,40 +1,75 @@
 .auth-container {
-    @apply relative flex flex-col justify-center my-20;
+    @apply h-screen flex relative bg-black;
+}
+
+.auth-background {
+    @apply w-full relative flex;
 }
 
 .card-auth {
-    @apply w-full p-10 m-auto bg-white rounded-md shadow-xl lg:max-w-xl;
+    @apply p-10 m-auto bg-white rounded-md shadow-xl lg:max-w-xl;
 }
 
-.headerName {
-    @apply text-3xl font-semibold text-center text-yellow-700 uppercase;
+.form-card {
+    @apply absolute mezzo flex flex-col;
 }
+
+.header-container {
+    @apply absolute top-0 p-8 flex justify-between w-full items-center;
+}
+
+.header-title {
+    @apply text-4xl text-black uppercase font-bold;
+}
+
+.header-t {
+    @apply text-3xl font-semibold text-center text-whatsapp uppercase;
+}
+
 .alert-warning {
     @apply text-red-500 text-center bg-white border rounded-md border-red-400;
 }
 
 .label {
-    @apply block text-sm font-semibold text-gray-800;
+    @apply block text-sm text-center font-semibold text-white mt-3 mb-1;
 }
 
 .input {
-    @apply block w-full px-4 py-2 mt-2 text-yellow-700 bg-white border rounded-md focus:border-yellow-400 focus:ring-yellow-300 focus:outline-none focus:ring focus:ring-opacity-40;
+    @apply block w-full px-4 py-2 text-black bg-white border rounded-md focus:border-whatsapp focus:ring-whatsapp focus:outline-none focus:ring focus:ring-opacity-40;
 }
 .button-submit {
-    @apply w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-yellow-700 rounded-md hover:bg-yellow-600 focus:outline-none focus:bg-yellow-600;
+    @apply w-full px-4 py-2 tracking-wide text-black transition-colors duration-200 transform bg-whatsapp uppercase font-bold rounded-md hover:bg-opacity-50 focus:outline-none focus:bg-whatsapp;
 }
 .button-google {
-    @apply flex items-center justify-center w-full p-2 border border-gray-600 rounded-md hover:bg-yellow-200 focus:ring-2 focus:ring-offset-1 focus:ring-violet-600;
+    @apply flex items-center justify-center w-full bg-whatsapp p-2 border border-gray-600 rounded-md hover:bg-whatsapp focus:ring-2 focus:ring-offset-1 hover:bg-opacity-50;
 }
 .or-area {
-    @apply relative flex items-center justify-center w-full mt-6 border border-t;
+    @apply relative flex items-center justify-center w-full mt-6 border border-b-2 border-whatsapp;
+}
+.or-text {
+    @apply absolute px-5 bg-black text-white;
+}
+.no-acc-text {
+    @apply mt-8 text-sm font-light text-center text-gray-300;
+}
+.link-text {
+    @apply font-medium text-whatsapp hover:underline;
 }
 .icon-google {
     @apply w-5 h-5 fill-current;
 }
 .forgot-password-label {
-    @apply mt-1 text-xs font-light text-center text-gray-700;
+    @apply m-3 text-xs font-light text-center text-whatsapp;
 }
 .forgot-password-button {
-    @apply font-medium text-yellow-600 hover:underline;
+    @apply font-medium font-bold text-whatsapp hover:underline;
+}
+
+h1 {
+    font-family: Montserrat, sans-serif;
+}
+
+.mezzo {
+    top: 10%;
+    left: 50%;
 }

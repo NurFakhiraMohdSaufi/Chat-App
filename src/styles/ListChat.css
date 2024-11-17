@@ -1,25 +1,51 @@
-.list-chat {
-    @apply w-full;
+.list-container {
+    @apply w-full flex flex-col mt-1 bg-gray-100;
 }
 
 .header-room {
     @apply text-lg font-semibold text-amber-600 mb-4;
 }
 
+.header-title {
+    @apply font-bold text-xs text-black;
+}
+
+.header-convo {
+    @apply font-bold text-xs text-black;
+}
+
 .card-list {
-    @apply divide-y divide-gray-300;
+    @apply divide-y divide-gray-300 flex flex-col space-y-1 mt-1 -mx-2 h-60 overflow-y-auto;
+}
+
+@screen sm {
+    .card-list {
+        @apply min-h-[500px];
+    }
+}
+
+@screen md {
+    .card-list {
+        @apply min-h-[700px];
+    }
+}
+
+@screen lg {
+    .card-list {
+        @apply min-h-[800px];
+    }
 }
 
 .button-chat {
-    @apply w-full text-left py-3 focus:outline-none transition duration-150 ease-in-out;
+    @apply w-full text-left py-3 focus:outline-none transition duration-150 ease-in-out flex flex-row items-center hover:bg-whatsappSender rounded-xl p-2;
 }
 
 .button-chat:hover {
-    @apply bg-amber-100 rounded-md shadow-sm;
+    @apply bg-whatsapp rounded-md shadow-sm;
 }
 
 .chat-list {
-    @apply flex px-2 py-2 space-x-3;
+    @apply flex flex-col ml-2;
 }
 
 .icon-profile {

@@ -13,7 +13,7 @@ export default {
                 whatsapp: '#86BC25',
                 whatsappSender: '#86BC25',
                 backgroundChat: '#DAD3CC',
-                background: '#DAD3CC',
+                background: 'black',
                 // background: 'hsl(var(--background))',
                 foreground: 'hsl(var(--foreground))',
                 card: {

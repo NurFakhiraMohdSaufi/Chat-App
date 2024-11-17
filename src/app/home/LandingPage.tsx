@@ -2,13 +2,13 @@ import Image from 'next/image';
 
 export default function LandingPage() {
     return (
-        <div className='bg-background w-full h-screen flex items-center justify-center relative overflow-hidden'>
+        <div className='bg-black w-full h-screen flex items-center justify-center relative overflow-hidden'>
             <div
                 className='absolute inset-0 bg-cover bg-center bg-opacity-30'
-                style={{backgroundImage: "url('/path-to-your-image.jpg')"}}
+                // style={{backgroundImage: "url('/path-to-your-image.jpg')"}}
             ></div>
 
-            <div className='z-10 text-center text-black'>
+            <div className='z-10 text-center text-white'>
                 <div className='text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-4 animate__animated animate__fadeIn animate__delay-1s'>
                     Welcome to Chat App
                 </div>
@@ -20,7 +20,7 @@ export default function LandingPage() {
                         alt='Chat App Logo'
                     ></img>
                 </div>
-                <p className='text-xl sm:text-2xl mb-6 opacity-80 animate__animated animate__fadeIn animate__delay-2s'>
+                <p className='text-xl text-white sm:text-2xl mb-6 opacity-80 animate__animated animate__fadeIn animate__delay-2s'>
                     Start a conversation now!
                 </p>
 

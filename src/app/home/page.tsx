@@ -4,15 +4,7 @@ import { onAuthStateChanged, User } from 'firebase/auth'; // Firebase auth impor
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-<<<<<<< HEAD
 import LandingPage from '@/app/home/LandingPage';
-=======
-<<<<<<< HEAD
-import LandingPage from '@/app/home/LandingPage';
-=======
-import LandingPage from '@/app/home/landingPage';
->>>>>>> e29e7927b8024f56ad5742363654f69429036cad
->>>>>>> 682b7beb368d88c61dd35cf8a0bb389f5a2364b2
 import { AppSidebar } from '@/components/sidebar/app-sidebar';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { auth } from '@/config/firebase-config';
@@ -23,6 +15,7 @@ export default function Home() {
     const [user, setUser] = useState<User | null>(null);
     const [room, setRoom] = useState<string | null>(null);
     const [isInChat, setIsInChat] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const router = useRouter();
 
     useEffect(() => {
@@ -41,10 +34,20 @@ export default function Home() {
         return <div>Loading...</div>;
     }
 
+    const toggleSidebar = () => {
+        setIsSidebarOpen((prevState) => !prevState);
+    };
     return (
         <SidebarProvider>
-            <AppSidebar setRoom={setRoom} setIsInChat={setIsInChat} />
-            <SidebarTrigger />
+            <AppSidebar
+                setRoom={setRoom}
+                setIsInChat={setIsInChat}
+                isSidebarOpen={isSidebarOpen}
+                toggleSidebar={toggleSidebar}
+            />
+
+            {!isSidebarOpen && <SidebarTrigger onClick={toggleSidebar} />}
+
             {!isInChat ? <LandingPage /> : room && <Room room={room} />}
         </SidebarProvider>
     );

@@ -1,5 +1,5 @@
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { PlusCircle } from 'lucide-react';
+import { MessageCirclePlusIcon, PlusCircle } from 'lucide-react';
 import { useState } from 'react';
 
 import { auth, db } from '@/config/firebase-config';
@@ -9,9 +9,12 @@ import {
 	Dialog,
 	DialogActions,
 	DialogContent,
+	IconButton,
 	Snackbar,
 	TextField,
 } from '@mui/material';
+
+import AddCommentIcon from '';
 
 interface RoomProps {
     setRoom: (roomName: string) => void;
@@ -65,32 +68,26 @@ export function ProfileUser({setRoom, setIsInChat}: RoomProps) {
 
     const AddButton = () => {
         return (
-            <MuiButton
-                size='medium'
-                onClick={() => setOpenModal(true)}
-                startIcon={<PlusCircle />}
-            ></MuiButton>
+            <IconButton className='bg-whatsapp'>
+                <MessageCirclePlusIcon
+                    className='justify-between text-sm font-semibold text-whatsapp hover:text-blue-500 '
+                    onClick={() => setOpenModal(true)}
+                />
+            </IconButton>
+            // <MuiButton
+            //     size='medium'
+            //     onClick={() => setOpenModal(true)}
+            //     startIcon={<MessageCirclePlusIcon />}
+            // >
+            //     {/* The button label or content */}
+            // </MuiButton>
         );
     };
 
     return (
-<<<<<<< HEAD
-        <div className='flex flex-row items-center space-x-2 p-2'>
-            {/* Avatar */}
+        <div className='flex flex-row items-center space-x-4 p-2 border border-md rounded-md'>
             <div className='h-10 w-10 rounded-full overflow-hidden border-2 border-gray-300'>
                 <img
-=======
-        <div
-            className='flex
-        flex-col items-center bg-amber-100 border border-gray-200 mt-1 w-full py-6 px-4 rounded-lg'
-        >
-            <div className='h-20 w-20 rounded-full border overflow-hidden'>
-<<<<<<< HEAD
-                <img
-=======
-                <Image
->>>>>>> e29e7927b8024f56ad5742363654f69429036cad
->>>>>>> 682b7beb368d88c61dd35cf8a0bb389f5a2364b2
                     src='https://th.bing.com/th/id/R.bfa20ea18a0511a19e1e1ab717ccd381?rik=45VUQ8kcO3gXzw&pid=ImgRaw&r=0'
                     width={50}
                     height={50}
@@ -99,11 +96,10 @@ export function ProfileUser({setRoom, setIsInChat}: RoomProps) {
                 />
             </div>
 
-            {/* User Name */}
             <div className='text-sm font-semibold text-gray-800'>{user}</div>
-
-            {/* Add Room Button */}
-            <AddButton />
+            <div className='flex-grow items-center'>
+                <AddButton />
+            </div>
 
             {/* Create Room Modal */}
             <Dialog open={openModal} onClose={() => setOpenModal(false)}>

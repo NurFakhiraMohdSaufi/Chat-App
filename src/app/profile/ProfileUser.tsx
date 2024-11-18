@@ -14,8 +14,6 @@ import {
 	TextField,
 } from '@mui/material';
 
-import AddCommentIcon from '';
-
 interface RoomProps {
     setRoom: (roomName: string) => void;
     setIsInChat: (isInChat: boolean) => void;
@@ -85,7 +83,6 @@ export function ProfileUser({setRoom, setIsInChat}: RoomProps) {
     };
 
     return (
-<<<<<<< Updated upstream
         <div className='flex flex-row items-center space-x-4 p-2 border border-md rounded-md'>
             <div className='h-10 w-10 rounded-full overflow-hidden border-2 border-gray-300'>
                 <img
@@ -150,82 +147,84 @@ export function ProfileUser({setRoom, setIsInChat}: RoomProps) {
                 anchorOrigin={{vertical: 'top', horizontal: 'center'}}
                 sx={{mt: 2}}
             />
-=======
-        <div className='flex flex-row items-center space-x-2 p-2'>
-            {/* Avatar */}
-            <div className='h-10 w-10 rounded-full overflow-hidden border-2 border-gray-300'>
-                <div className='h-20 w-20 rounded-full border overflow-hidden'>
-                    <img
-                        src='https://th.bing.com/th/id/R.bfa20ea18a0511a19e1e1ab717ccd381?rik=45VUQ8kcO3gXzw&pid=ImgRaw&r=0'
-                        width={50}
-                        height={50}
-                        alt='Avatar'
-                        // className='h-full w-full object-cover'
+            <div className='flex flex-row items-center space-x-2 p-2'>
+                {/* Avatar */}
+                <div className='h-10 w-10 rounded-full overflow-hidden border-2 border-gray-300'>
+                    <div className='h-20 w-20 rounded-full border overflow-hidden'>
+                        <img
+                            src='https://th.bing.com/th/id/R.bfa20ea18a0511a19e1e1ab717ccd381?rik=45VUQ8kcO3gXzw&pid=ImgRaw&r=0'
+                            width={50}
+                            height={50}
+                            alt='Avatar'
+                            // className='h-full w-full object-cover'
+                        />
+                    </div>
+
+                    {/* User Name */}
+                    <div className='text-sm font-semibold text-gray-800'>
+                        {user}
+                    </div>
+
+                    {/* Add Room Button */}
+                    <AddButton />
+
+                    {/* Create Room Modal */}
+                    <Dialog
+                        open={openModal}
+                        onClose={() => setOpenModal(false)}
+                    >
+                        <DialogContent>
+                            <div className='card-input'>
+                                <TextField
+                                    variant='outlined'
+                                    fullWidth
+                                    label='Room Name'
+                                    placeholder='New Group'
+                                    value={roomName}
+                                    onChange={(e) => {
+                                        setRoomName(e.target.value);
+                                        if (error) setError('');
+                                    }}
+                                    error={Boolean(error)}
+                                    helperText={error || ''}
+                                    autoFocus
+                                />
+                            </div>
+                        </DialogContent>
+                        <DialogActions>
+                            <MuiButton
+                                onClick={() => setOpenModal(false)}
+                                color='secondary'
+                                variant='outlined'
+                            >
+                                Cancel
+                            </MuiButton>
+                            <MuiButton
+                                onClick={handleCreateNewRoom}
+                                color='primary'
+                                variant='contained'
+                                disabled={loading}
+                            >
+                                {loading ? (
+                                    <CircularProgress size={24} />
+                                ) : (
+                                    'Create'
+                                )}
+                            </MuiButton>
+                        </DialogActions>
+                    </Dialog>
+
+                    {/* Snackbar for Success */}
+                    <Snackbar
+                        open={success}
+                        autoHideDuration={3000}
+                        onClose={() => setSuccess(false)}
+                        message='Room created successfully!'
+                        anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+                        sx={{mt: 2}}
                     />
                 </div>
-
-                {/* User Name */}
-                <div className='text-sm font-semibold text-gray-800'>
-                    {user}
-                </div>
-
-                {/* Add Room Button */}
-                <AddButton />
-
-                {/* Create Room Modal */}
-                <Dialog open={openModal} onClose={() => setOpenModal(false)}>
-                    <DialogContent>
-                        <div className='card-input'>
-                            <TextField
-                                variant='outlined'
-                                fullWidth
-                                label='Room Name'
-                                placeholder='New Group'
-                                value={roomName}
-                                onChange={(e) => {
-                                    setRoomName(e.target.value);
-                                    if (error) setError('');
-                                }}
-                                error={Boolean(error)}
-                                helperText={error || ''}
-                                autoFocus
-                            />
-                        </div>
-                    </DialogContent>
-                    <DialogActions>
-                        <MuiButton
-                            onClick={() => setOpenModal(false)}
-                            color='secondary'
-                            variant='outlined'
-                        >
-                            Cancel
-                        </MuiButton>
-                        <MuiButton
-                            onClick={handleCreateNewRoom}
-                            color='primary'
-                            variant='contained'
-                            disabled={loading}
-                        >
-                            {loading ? (
-                                <CircularProgress size={24} />
-                            ) : (
-                                'Create'
-                            )}
-                        </MuiButton>
-                    </DialogActions>
-                </Dialog>
-
-                {/* Snackbar for Success */}
-                <Snackbar
-                    open={success}
-                    autoHideDuration={3000}
-                    onClose={() => setSuccess(false)}
-                    message='Room created successfully!'
-                    anchorOrigin={{vertical: 'top', horizontal: 'center'}}
-                    sx={{mt: 2}}
-                />
             </div>
->>>>>>> Stashed changes
         </div>
     );
 }

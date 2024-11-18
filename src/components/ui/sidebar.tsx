@@ -286,7 +286,7 @@ const SidebarTrigger = React.forwardRef<
             data-sidebar='trigger'
             variant='ghost'
             size='icon'
-            className={cn('h-7 w-7', className)}
+            className={cn('h-7 w-7 bg-whatsapp', className)}
             onClick={(event) => {
                 onClick?.(event);
                 toggleSidebar();
@@ -294,7 +294,7 @@ const SidebarTrigger = React.forwardRef<
             {...props}
         >
             <PanelLeft />
-            <span className='sr-only bg-black'>Toggle Sidebar</span>
+            <span className='sr-only bg-whatsapp'>Toggle Sidebar</span>
         </Button>
     );
 });
@@ -318,7 +318,7 @@ const SidebarRail = React.forwardRef<
                 'absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] hover:after:bg-sidebar-border group-data-[side=left]:-right-4 group-data-[side=right]:left-0 sm:flex',
                 '[[data-side=left]_&]:cursor-w-resize [[data-side=right]_&]:cursor-e-resize',
                 '[[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-state=collapsed]_&]:cursor-w-resize',
-                'group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full group-data-[collapsible=offcanvas]:hover:bg-sidebar',
+                'group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full group-data-[collapsible=offcanvas]:hover:bg-whatsapp',
                 '[[data-side=left][data-collapsible=offcanvas]_&]:-right-2',
                 '[[data-side=right][data-collapsible=offcanvas]_&]:-left-2',
                 className,

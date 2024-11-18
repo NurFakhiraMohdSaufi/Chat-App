@@ -83,11 +83,11 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
     };
 
     return (
-        <div className='flex flex-col mt-1 bg-gray-50'>
-            <div className='flex flex-row items-center justify-between text-xs'>
-                <span className='font-bold'>Conversations</span>
+        <div className='list-container'>
+            <div>
+                <span className='header-convo'>Conversations</span>
             </div>
-            <div className='flex flex-col space-y-1 mt-1 -mx-2 h-60 overflow-y-auto'>
+            <div className='card-list'>
                 {loading ? (
                     <Box
                         sx={{
@@ -103,7 +103,7 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
                     rooms.map((room, index) => (
                         <button
                             key={index}
-                            className='flex flex-row items-center hover:bg-whatsappSender rounded-xl p-2'
+                            className='button-chat'
                             onClick={() => handleRoomClick(room.roomName)}
                             aria-label={`Chat with ${room.roomName}`}
                         >
@@ -116,7 +116,7 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
                                     alt='User Profile'
                                 />
                             </div>
-                            <div className='flex flex-col ml-2'>
+                            <div className=' chat-list'>
                                 <h4 className='title-name'>{room.roomName}</h4>
                                 <div className='title-chat'>
                                     {

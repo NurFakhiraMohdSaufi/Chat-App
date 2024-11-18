@@ -2,7 +2,7 @@ import '@/styles/Room.css';
 
 import { signOut } from 'firebase/auth';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { PlusCircle } from 'lucide-react';
+import { DeleteIcon, LogOutIcon, PlusCircle } from 'lucide-react';
 import { useState } from 'react';
 import Cookies from 'universal-cookie';
 
@@ -15,31 +15,30 @@ import {
 	SidebarFooter,
 	SidebarGroup,
 	SidebarGroupContent,
-	SidebarGroupLabel,
 	SidebarHeader,
 	SidebarMenu,
 	SidebarMenuItem,
+	SidebarTrigger,
 } from '@/components/ui/sidebar';
-import { auth, db } from '@/config/firebase-config';
-import {
-	Button as MuiButton,
-	CircularProgress,
-	Dialog,
-	DialogActions,
-	DialogContent,
-	DialogTitle,
-	Snackbar,
-} from '@mui/material';
+import { auth } from '@/config/firebase-config';
+import { IconButton } from '@mui/material';
 
 const cookies = new Cookies();
 
 interface RoomProps {
     setRoom: (roomName: string) => void;
     setIsInChat: (isInChat: boolean) => void;
+    isSidebarOpen: boolean;
+    toggleSidebar: () => void;
 }
 
-export function AppSidebar({setRoom, setIsInChat}: RoomProps) {
-    const user = auth.currentUser?.displayName;
+export function AppSidebar({
+    setRoom,
+    setIsInChat,
+    isSidebarOpen,
+    toggleSidebar,
+}: RoomProps) {
+    // const user = auth.currentUser?.displayName;
 
     const signUserOut = async () => {
         await signOut(auth);
@@ -48,10 +47,21 @@ export function AppSidebar({setRoom, setIsInChat}: RoomProps) {
         setIsInChat(false);
     };
     return (
-        <Sidebar className=' bg-gray-800 text-white'>
-            <SidebarHeader className='flex items-center justify-between border-b border-gray-700'>
-                <h1 className='text-2xl font-bold text-whatsapp'>Chat App</h1>
-            </SidebarHeader>
+        <Sidebar
+            className={`bg-gray-800 text-white ${
+                isSidebarOpen ? 'block' : 'hidden'
+            }`}
+        >
+            <div className='flex items-center justify-between border-b border-gray-700'>
+                <SidebarHeader>
+                    <h1 className='text-2xl font-bold text-whatsapp'>
+                        Chatify
+                    </h1>
+                </SidebarHeader>
+
+                <SidebarTrigger onClick={toggleSidebar} />
+            </div>
+
             <SidebarContent className='h-full overflow-y-auto flex-grow  border-b border-gray-700'>
                 <SidebarGroup>
                     <ProfileUser setRoom={setRoom} setIsInChat={setIsInChat} />
@@ -72,16 +82,16 @@ export function AppSidebar({setRoom, setIsInChat}: RoomProps) {
                 </SidebarGroup>
             </SidebarContent>
 
-            <SidebarFooter className='mt-auto'>
-                <button
-                    className='items-center justify-between text-sm font-semibold text-whatsapp hover:text-red-500 '
-                    onClick={signUserOut}
-                >
-                    Sign Out
-                </button>
+            <SidebarFooter>
+                <div className='items-right'>
+                    <IconButton>
+                        <LogOutIcon
+                            className='justify-between text-sm font-semibold text-whatsapp hover:text-red-500 '
+                            onClick={signUserOut}
+                        />
+                    </IconButton>
+                </div>
             </SidebarFooter>
-
-            {/* Modal for creating new room */}
         </Sidebar>
     );
 }

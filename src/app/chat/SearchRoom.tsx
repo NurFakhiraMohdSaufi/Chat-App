@@ -73,7 +73,7 @@ export function SearchRoom({setRoom, setIsInChat}: RoomProps) {
 
     return (
         <div className='flex flex-col mt-1'>
-            <div className='flex flex-row items-center justify-between text-xs textt-black'>
+            <div className='flex flex-row items-center justify-between text-xs text-black'>
                 <span className='font-bold'>Search</span>
             </div>
             <div className='relative mt-2 mb-2'>
@@ -81,9 +81,9 @@ export function SearchRoom({setRoom, setIsInChat}: RoomProps) {
                     type='text'
                     onChange={(e) => setRoomName(e.target.value)}
                     className='px-4 py-2 w-full text-black bg-white border-b border-gray-400 rounded-md pl-10 focus:outline-none focus:ring-2 focus:ring-blue-300'
-                    placeholder='Type to search...'
+                    placeholder='Search'
                 />
-                <i className='fa fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5'></i>
+                <i className='fa fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-black w-5 h-5'></i>
             </div>
 
             {rooms.length > 0 && (
@@ -93,7 +93,7 @@ export function SearchRoom({setRoom, setIsInChat}: RoomProps) {
                             <li
                                 key={index}
                                 onClick={() => handleEnterChat(room.room)}
-                                className='cursor-pointer p-2 bg-gray-100 hover:bg-gray-200 rounded-md'
+                                className='cursor-pointer p-2 bg-gray-500 hover:bg-whatsapp rounded-md'
                             >
                                 {room.room}
                             </li>

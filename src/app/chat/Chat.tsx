@@ -1,6 +1,7 @@
 import '@/styles/Chat.css';
 import '@mdi/font/css/materialdesignicons.min.css';
 
+import imageCompression from 'browser-image-compression';
 import {
 	addDoc,
 	collection,
@@ -26,6 +27,7 @@ interface Message {
     createdAt: Timestamp;
     room: string;
     replyTo: string | null;
+    image?: string | null;
 }
 
 export default function Room({room}: RoomProps) {
@@ -33,7 +35,8 @@ export default function Room({room}: RoomProps) {
     const [messages, setMessages] = useState<Message[]>([]);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [emojiCategory, setEmojiCategory] = useState('Smileys');
-    const [replyToMessageText, setReplyToMessageText] = useState(''); // Store replied message text
+    const [replyToMessageText, setReplyToMessageText] = useState('');
+    const [imageFile, setImageFile] = useState<string | null>(null);
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
     const messagesRef = collection(db, 'messages');
@@ -59,6 +62,7 @@ export default function Room({room}: RoomProps) {
                     createdAt: data.createdAt || null,
                     room: data.room || room,
                     replyTo: data.replyTo || null,
+                    image: data.image || null,
                 };
 
                 messages.push(message);
@@ -73,22 +77,22 @@ export default function Room({room}: RoomProps) {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (newMessage === '') return;
+        if (newMessage === '' && !imageFile) return;
 
         const newMessageData = {
             text: newMessage,
             createdAt: serverTimestamp(),
             user: auth.currentUser?.displayName,
             room: room,
-            replyTo: replyToMessageText || null, // Include the replied message text
+            replyTo: replyToMessageText || null,
+            image: imageFile || null,
         };
 
-        // Add the message to Firestore
         await addDoc(messagesRef, newMessageData);
 
-        // Reset the state after sending the message
         setNewMessage('');
-        setReplyToMessageText(''); // Clear the "Replying to" text
+        setReplyToMessageText('');
+        setImageFile(null);
     };
 
     const formatTimestamp = (timestamp: Timestamp) => {
@@ -100,27 +104,41 @@ export default function Room({room}: RoomProps) {
         messagesEndRef.current?.scrollIntoView({behavior: 'smooth'});
     };
 
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             handleSubmit(e);
         }
     };
 
-    const handleEmojiClick = (emoji: string) => {
-        setNewMessage((prevMessage) => prevMessage + emoji);
-        setShowEmojiPicker(false); // Hide emoji picker after selection
+    const handleFileChange = async (
+        event: React.ChangeEvent<HTMLInputElement>,
+    ) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            try {
+                const options = {
+                    maxSizeMB: 1,
+                    maxWidthOrHeight: 1024,
+                    useWebWorker: true,
+                };
+
+                const compressedFile = await imageCompression(file, options);
+                const reader = new FileReader();
+
+                reader.onloadend = () => {
+                    const base64String = reader.result as string;
+                    setImageFile(base64String);
+                };
+
+                reader.readAsDataURL(compressedFile);
+            } catch (error) {
+                console.error('Error compressing image:', error);
+            }
+        }
     };
 
-    const toggleEmojiPicker = () => {
-        setShowEmojiPicker((prev) => !prev);
-    };
-
-    const handleCategoryChange = (category: string) => {
-        setEmojiCategory(category);
-    };
-
-    const handleMessageClick = (message: Message) => {
+    const handleReplyClick = (message: Message) => {
         if (message.user !== auth.currentUser?.displayName) {
             setReplyToMessageText(message.text);
         }
@@ -158,6 +176,8 @@ export default function Room({room}: RoomProps) {
         <div className='chat-app'>
             <div className='header'>
                 <h1 className='header-title'>{room.toUpperCase()}</h1>
+
+                <button className='mdi mdi-dots-vertical option-button'></button>
             </div>
 
             <div className='messages'>
@@ -169,17 +189,18 @@ export default function Room({room}: RoomProps) {
                                 : 'received'
                         }`}
                         key={message.id}
-                        onClick={() =>
-                            message.user !== auth.currentUser?.displayName &&
-                            handleMessageClick(message)
-                        }
                     >
                         {message.user !== auth.currentUser?.displayName && (
                             <span className='user'>{message.user}</span>
                         )}
                         <span className='text'>{message.text}</span>
 
-                        {/* If the message is a reply, show the replied-to message text */}
+                        {message.image && (
+                            <div className='message-image'>
+                                <img src={message.image} alt='Image' />
+                            </div>
+                        )}
+
                         {message.replyTo && (
                             <div className='reply-info'>
                                 <span className='reply-to'>
@@ -191,20 +212,27 @@ export default function Room({room}: RoomProps) {
                         <span className='timestamp'>
                             {formatTimestamp(message.createdAt)}
                         </span>
+
+                        {/* Reply Button */}
+                        {message.user !== auth.currentUser?.displayName && (
+                            <button
+                                className='mdi mdi-reply reply-button'
+                                onClick={() => handleReplyClick(message)}
+                            ></button>
+                        )}
                     </div>
                 ))}
-                <div ref={messagesEndRef} /> {/* Scroll target */}
+                <div ref={messagesEndRef} />
             </div>
 
             <form onSubmit={handleSubmit} className='new-message-form'>
-                {/* Show the "Replying to" message text if applicable */}
                 {replyToMessageText && (
                     <div className='replying-to'>
                         <span>Replying to: {replyToMessageText}</span>
                         <button
                             type='button'
                             className='mdi mdi-alpha-x-circle cancel-reply-button'
-                            onClick={() => setReplyToMessageText('')} // Clear the reply text
+                            onClick={() => setReplyToMessageText('')}
                         ></button>
                     </div>
                 )}
@@ -213,44 +241,7 @@ export default function Room({room}: RoomProps) {
                     <button
                         type='button'
                         className='mdi mdi-emoticon-outline emoticon-button'
-                        onClick={toggleEmojiPicker}
                     ></button>
-
-                    {/* Emoji Picker */}
-                    {showEmojiPicker && (
-                        <div className='emoji-picker'>
-                            <div className='emoji-categories'>
-                                {Object.keys(emojis).map((category) => (
-                                    <button
-                                        key={category}
-                                        onClick={() =>
-                                            handleCategoryChange(category)
-                                        }
-                                        className={`emoji-category-button ${
-                                            emojiCategory === category
-                                                ? 'active'
-                                                : ''
-                                        }`}
-                                    >
-                                        {category}
-                                    </button>
-                                ))}
-                            </div>
-
-                            <div className='emoji-grid'>
-                                {emojis[emojiCategory].map((emoji, index) => (
-                                    <button
-                                        key={index}
-                                        type='button'
-                                        onClick={() => handleEmojiClick(emoji)}
-                                        className='emoji-item'
-                                    >
-                                        {emoji}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    )}
 
                     <input
                         className='new-message-input'
@@ -261,10 +252,17 @@ export default function Room({room}: RoomProps) {
                     />
 
                     <div className='icon-buttons'>
-                        <button
-                            type='button'
+                        <label
+                            htmlFor='image-upload'
                             className='mdi mdi-camera camera-button'
-                        ></button>
+                        ></label>
+                        <input
+                            id='image-upload'
+                            type='file'
+                            accept='image/*'
+                            style={{display: 'none'}}
+                            onChange={handleFileChange}
+                        />
                     </div>
 
                     <button

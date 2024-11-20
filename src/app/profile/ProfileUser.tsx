@@ -1,6 +1,6 @@
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { MessageCirclePlusIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { auth, db } from '@/config/firebase-config';
@@ -24,12 +24,19 @@ interface RoomProps {
 }
 
 export function ProfileUser({setRoom, setIsInChat}: RoomProps) {
-    const user = auth.currentUser?.displayName;
     const [openModal, setOpenModal] = useState(false);
     const [roomName, setRoomName] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
+    const [userName, setUserName] = useState('');
+    const userData = auth.currentUser;
+
+    useEffect(() => {
+        if (userData?.displayName) {
+            setUserName(userData.displayName);
+        }
+    }, [userData]);
 
     const handleCreateNewRoom = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -100,7 +107,9 @@ export function ProfileUser({setRoom, setIsInChat}: RoomProps) {
                 <UserImage />
             </div>
 
-            <div className='text-sm font-semibold text-gray-800'>{user}</div>
+            <div className='text-sm font-semibold text-gray-800'>
+                {userName}
+            </div>
             <div className='flex-grow items-center'>
                 <AddButton />
             </div>

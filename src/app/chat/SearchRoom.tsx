@@ -66,8 +66,6 @@ export function SearchRoom({setRoom, setIsInChat}: RoomProps) {
         };
 
         searchUsers();
-
-        console.log('user:', users);
     }, [roomName]);
 
     async function joinRoom(roomId: string) {

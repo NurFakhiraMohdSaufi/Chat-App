@@ -104,7 +104,7 @@ export default function Room({room}: RoomProps) {
         messagesEndRef.current?.scrollIntoView({behavior: 'smooth'});
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent) => {
+    const handleKeyDown = (e: React.KeyboardEvent<Element>) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             handleSubmit(e);

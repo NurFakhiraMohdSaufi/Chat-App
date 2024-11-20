@@ -1,9 +1,7 @@
 import '@/styles/Room.css';
 
 import { signOut } from 'firebase/auth';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { DeleteIcon, LogOutIcon, PlusCircle } from 'lucide-react';
-import { useState } from 'react';
+import { LogOutIcon } from 'lucide-react';
 import Cookies from 'universal-cookie';
 
 import ListChat from '@/app/chat/page';

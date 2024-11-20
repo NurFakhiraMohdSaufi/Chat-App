@@ -22,6 +22,7 @@ interface RoomProps {
 export function SearchRoom({setRoom, setIsInChat}: RoomProps) {
     const [roomName, setRoomName] = useState('');
     const [rooms, setRooms] = useState<RoomData[]>([]);
+    const [users, setUsers] = useState<any[]>([]);
 
     useEffect(() => {
         const searchRooms = async () => {
@@ -46,6 +47,29 @@ export function SearchRoom({setRoom, setIsInChat}: RoomProps) {
         searchRooms();
     }, [roomName]);
 
+    useEffect(() => {
+        const searchUsers = async () => {
+            if (roomName.trim() === '') {
+                setUsers([]);
+                return;
+            }
+
+            const q = query(
+                collection(db, 'users'),
+                where('name', '>=', roomName),
+                where('name', '<=', roomName + '\uf8ff'),
+            );
+
+            const querySnapshot = await getDocs(q);
+            const userList = querySnapshot.docs.map((doc) => doc.data());
+            setUsers(userList);
+        };
+
+        searchUsers();
+
+        console.log('user:', users);
+    }, [roomName]);
+
     async function joinRoom(roomId: string) {
         try {
             const user = auth.currentUser?.displayName;
@@ -67,8 +91,13 @@ export function SearchRoom({setRoom, setIsInChat}: RoomProps) {
         setRoom(room);
         setIsInChat(true);
         setRoomName('');
+        setRooms([]);
 
         console.log('Enter room: ', room);
+    };
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setRoomName(e.target.value);
     };
 
     return (
@@ -79,7 +108,7 @@ export function SearchRoom({setRoom, setIsInChat}: RoomProps) {
             <div className='relative mt-2 mb-2'>
                 <input
                     type='text'
-                    onChange={(e) => setRoomName(e.target.value)}
+                    onChange={handleSearchChange}
                     className='px-4 py-2 w-full text-black bg-white border-b border-gray-400 rounded-md pl-10 focus:outline-none focus:ring-2 focus:ring-blue-300'
                     placeholder='Search'
                 />

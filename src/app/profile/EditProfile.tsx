@@ -3,6 +3,7 @@ import { updateProfile } from 'firebase/auth';
 import {
 	collection,
 	doc,
+	DocumentSnapshot,
 	getDocs,
 	query,
 	updateDoc,
@@ -25,7 +26,7 @@ import { Input } from '@/components/ui/input';
 import { auth, db, storage } from '@/config/firebase-config';
 import { Label } from '@radix-ui/react-dropdown-menu';
 
-export function UserImage() {
+export function EditProfile() {
     const user = auth.currentUser?.displayName ?? '';
     const userData = auth.currentUser;
     const [userName, setUserName] = useState('');
@@ -49,11 +50,60 @@ export function UserImage() {
                     photoURL: imageFile,
                 });
 
+                // update name in messages table
+                const messageRef = collection(db, 'messages');
+                const qMessage = query(messageRef, where('user', '==', user));
+                const queryMessageSnapshot = await getDocs(qMessage);
+
+                if (!queryMessageSnapshot.empty) {
+                    for (const docSnapshot of queryMessageSnapshot.docs) {
+                        const docRef = doc(messageRef, docSnapshot.id);
+
+                        await updateDoc(docRef, {
+                            user: userName,
+                        });
+                    }
+                }
+
+                // update name in room table
+                const roomRef = collection(db, 'room');
+                const qRoom = query(roomRef, where('createdBy', '==', user));
+                const queryRoomSnapshot = await getDocs(qRoom);
+
+                if (!queryRoomSnapshot.empty) {
+                    for (const docSnapshot of queryRoomSnapshot.docs) {
+                        const docRef = doc(roomRef, docSnapshot.id);
+
+                        await updateDoc(docRef, {
+                            createdBy: userName,
+                        });
+                    }
+                }
+
+                // update name in user room table
+                const userRoomRef = collection(db, 'userRooms');
+                const qUserRoom = query(
+                    userRoomRef,
+                    where('userId', '==', user),
+                );
+                const queryUserRoomSnapshot = await getDocs(qUserRoom);
+
+                if (!queryUserRoomSnapshot.empty) {
+                    for (const docSnapshot of queryUserRoomSnapshot.docs) {
+                        const docRef = doc(userRoomRef, docSnapshot.id);
+
+                        await updateDoc(docRef, {
+                            userId: userName,
+                        });
+                    }
+                }
+
+                // update name in users table
                 const q = query(userRef, where('name', '==', user));
                 const querySnapshot = await getDocs(q);
 
                 if (!querySnapshot.empty) {
-                    const userDocRef = doc(userRef, querySnapshot.docs[0].id); // Get the user document reference
+                    const userDocRef = doc(userRef, querySnapshot.docs[0].id);
                     await updateDoc(userDocRef, {
                         name: userName,
                         photoURL: imageFile,

@@ -14,6 +14,8 @@ import React, { useEffect, useState } from 'react';
 import { auth, db } from '@/config/firebase-config';
 import { RoomData } from '@/interfaces/RoomData';
 
+import { CreateGroup } from './CreateGroup';
+
 interface RoomProps {
     setRoom: (roomName: string) => void;
     setIsInChat: (isInChat: boolean) => void;
@@ -103,14 +105,20 @@ export function SearchRoom({setRoom, setIsInChat}: RoomProps) {
             <div className='flex flex-row items-center justify-between text-xs text-black'>
                 <span className='font-bold'>Search</span>
             </div>
-            <div className='relative mt-2 mb-2'>
-                <input
-                    type='text'
-                    onChange={handleSearchChange}
-                    className='px-4 py-2 w-full text-black bg-white border-b border-gray-400 rounded-md pl-10 focus:outline-none focus:ring-2 focus:ring-blue-300'
-                    placeholder='Search'
-                />
-                <i className='fa fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-black w-5 h-5'></i>
+            <div className='flex flex-row justify-between items-center mt-2 mb-2'>
+                <div className='relative flex-grow'>
+                    <input
+                        type='text'
+                        onChange={handleSearchChange}
+                        className='px-4 py-2 w-full text-black bg-white border-b border-gray-400 rounded-md pl-10 focus:outline-none focus:ring-2 focus:ring-blue-300'
+                        placeholder='Search'
+                    />
+                    <i className='fa fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-black w-5 h-5'></i>
+                </div>
+
+                <div className='ml-4'>
+                    <CreateGroup setRoom={setRoom} setIsInChat={setIsInChat} />
+                </div>
             </div>
 
             {rooms.length > 0 && (

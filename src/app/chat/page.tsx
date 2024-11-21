@@ -2,7 +2,13 @@
 
 import '@/styles/ListChat.css';
 
-import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import {
+	collection,
+	onSnapshot,
+	orderBy,
+	query,
+	where,
+} from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 
 import { auth, db } from '@/config/firebase-config';
@@ -21,12 +27,11 @@ interface Message {
     user: string;
 }
 
-interface ChatData {
-    [roomName: string]: Message[];
-}
-
 export default function ListChat({setRoom, setIsInChat}: RoomProps) {
-    const [rooms, setRooms] = useState<
+    // State to hold the list of rooms
+    const [rooms, setRooms] = useState<{roomName: string}[]>([]);
+    // State to hold messages for each room
+    const [message, setMessage] = useState<
         {roomName: string; messages: Message[]}[]
     >([]);
     const [loading, setLoading] = useState(true);
@@ -35,10 +40,12 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
 
     useEffect(() => {
         if (user) {
+            // Step 1: Fetch rooms based on user
             const chatRef = collection(db, 'messages');
             const queryChat = query(chatRef, where('user', '==', user));
-            const unsubscribe = onSnapshot(queryChat, (snapshot) => {
-                const chatData: ChatData = {};
+
+            const unsubscribeRooms = onSnapshot(queryChat, (snapshot) => {
+                const roomsList: {roomName: string}[] = [];
 
                 if (snapshot.empty) {
                     setNoRooms(true);
@@ -50,32 +57,66 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
                     const data = doc.data();
                     const room = data.room;
 
-                    const message: Message = {
-                        id: doc.id,
-                        text: data.text || '',
-                        room: room,
-                        user: data.user || '',
-                    };
-
-                    if (!chatData[room]) {
-                        chatData[room] = [];
+                    // Add room to rooms list if it's not already there
+                    if (!roomsList.some((r) => r.roomName === room)) {
+                        roomsList.push({roomName: room});
                     }
-
-                    chatData[room].push(message);
                 });
 
-                const roomArray = Object.keys(chatData).map((room) => ({
-                    roomName: room,
-                    messages: chatData[room],
-                }));
-
-                setRooms(roomArray);
+                // Set the rooms state
+                setRooms(roomsList);
                 setLoading(false);
             });
 
-            return () => unsubscribe();
+            return () => unsubscribeRooms();
         }
     }, [user]);
+
+    useEffect(() => {
+        if (rooms.length > 0) {
+            // Step 2: Fetch messages for each room using onSnapshot for real-time updates
+            const unsubscribeMessages = rooms.map((room) => {
+                const chatRef = collection(db, 'messages');
+                const queryMessages = query(
+                    chatRef,
+                    where('room', '==', room.roomName),
+                    orderBy('createdAt'),
+                );
+
+                // Real-time listener for messages in each room
+                return onSnapshot(queryMessages, (snapshot) => {
+                    const messagesForRoom: Message[] = [];
+
+                    snapshot.forEach((doc) => {
+                        const data = doc.data();
+                        const message: Message = {
+                            id: doc.id,
+                            text: data.text || '',
+                            room: room.roomName,
+                            user: data.user || '',
+                        };
+
+                        messagesForRoom.push(message);
+                    });
+
+                    // Update the messages state
+                    setMessage((prevMessages) => {
+                        const updatedMessages = prevMessages.filter(
+                            (msg) => msg.roomName !== room.roomName,
+                        );
+                        updatedMessages.push({
+                            roomName: room.roomName,
+                            messages: messagesForRoom,
+                        });
+                        return updatedMessages;
+                    });
+                });
+            });
+
+            return () =>
+                unsubscribeMessages.forEach((unsubscribe) => unsubscribe());
+        }
+    }, [rooms]);
 
     const handleRoomClick = (roomName: string) => {
         setRoom(roomName);
@@ -89,12 +130,7 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
             </div>
             <div className='card-list'>
                 {loading ? (
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                        }}
-                    >
+                    <Box sx={{display: 'flex', justifyContent: 'center'}}>
                         <CircularProgress size='30px' />
                     </Box>
                 ) : noRooms ? (
@@ -116,14 +152,44 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
                                     alt='User Profile'
                                 />
                             </div>
-                            <div className=' chat-list'>
+                            <div className='chat-list'>
                                 <h4 className='title-name'>{room.roomName}</h4>
-                                <div className='title-chat'>
-                                    {
-                                        room.messages[room.messages.length - 1]
-                                            ?.text
-                                    }
-                                </div>
+                                {message.map(
+                                    (chat) =>
+                                        chat.roomName === room.roomName && (
+                                            <div
+                                                className='title-chat'
+                                                key={chat.roomName}
+                                            >
+                                                {chat.messages.length > 0
+                                                    ? chat.messages[
+                                                          chat.messages.length -
+                                                              1
+                                                      ]?.user === user
+                                                        ? `Me: ${
+                                                              chat.messages[
+                                                                  chat.messages
+                                                                      .length -
+                                                                      1
+                                                              ]?.text
+                                                          }`
+                                                        : `${
+                                                              chat.messages[
+                                                                  chat.messages
+                                                                      .length -
+                                                                      1
+                                                              ]?.user
+                                                          }: ${
+                                                              chat.messages[
+                                                                  chat.messages
+                                                                      .length -
+                                                                      1
+                                                              ]?.text
+                                                          }`
+                                                    : 'No messages'}
+                                            </div>
+                                        ),
+                                )}
                             </div>
                         </button>
                     ))

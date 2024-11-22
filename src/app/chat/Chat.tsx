@@ -16,6 +16,8 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { auth, db } from '@/config/firebase-config';
 
+import { RoomDescription } from './RoomInfo';
+
 interface RoomProps {
     room: string;
 }
@@ -35,12 +37,15 @@ export default function Room({room}: RoomProps) {
     const [messages, setMessages] = useState<Message[]>([]);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [emojiCategory, setEmojiCategory] = useState('Smileys');
-    const [replyToMessageText, setReplyToMessageText] = useState('');
+    const [replyToMessageText, setReplyToMessageText] = useState<string | null>(
+        '',
+    );
     const [imageFile, setImageFile] = useState<string | null>(null);
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
     const messagesRef = collection(db, 'messages');
 
+    // Fetch messages from Firebase
     useEffect(() => {
         const messagesRef = collection(db, 'messages');
         const queryMessages = query(
@@ -75,6 +80,7 @@ export default function Room({room}: RoomProps) {
         return () => unsubscribe();
     }, [room]);
 
+    // Submit message
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (newMessage === '' && !imageFile) return;
@@ -95,15 +101,18 @@ export default function Room({room}: RoomProps) {
         setImageFile(null);
     };
 
+    // Format timestamp
     const formatTimestamp = (timestamp: Timestamp) => {
         if (!timestamp) return '';
         return new Date(timestamp.seconds * 1000).toLocaleTimeString();
     };
 
+    // Scroll to bottom of chat
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({behavior: 'smooth'});
     };
 
+    // Handle Enter key press for message submit
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
@@ -111,6 +120,7 @@ export default function Room({room}: RoomProps) {
         }
     };
 
+    // Handle image file change and compression
     const handleFileChange = async (
         event: React.ChangeEvent<HTMLInputElement>,
     ) => {
@@ -138,12 +148,20 @@ export default function Room({room}: RoomProps) {
         }
     };
 
+    // Handle reply to a message
     const handleReplyClick = (message: Message) => {
         if (message.user !== auth.currentUser?.displayName) {
-            setReplyToMessageText(message.text);
+            setReplyToMessageText(message.text || 'Image');
         }
     };
 
+    // Handle emoji click
+    const handleEmojiClick = (emoji: string) => {
+        setNewMessage((prevMessage) => prevMessage + emoji);
+        setShowEmojiPicker(false); // Close the emoji picker after selecting
+    };
+
+    // Emoji categories and emojis
     const emojis = {
         Smileys: [
             '😊',
@@ -159,7 +177,7 @@ export default function Room({room}: RoomProps) {
             '😢',
             '🥳',
         ],
-        Animals: ['🐶', '🐱', '🐯', '🐸', '🦁', '🐯', '🦊', '🐻', '🦄', '🐨'],
+        Animals: ['🐶', '🐱', '🐯', '🐸', '🦁', '🦊', '🐻', '🦄', '🐨'],
         Food: ['🍏', '🍔', '🍕', '🍣', '🍩', '🍪', '🍔', '🍓', '🍉', '🍍'],
         Objects: ['💻', '📱', '📸', '🎧', '💼', '📚', '🏠', '🚗', '⚽'],
         Travel: ['🌍', '🌎', '🏖️', '🗽', '🏕️', '🚢', '✈️', '🚉'],
@@ -176,8 +194,7 @@ export default function Room({room}: RoomProps) {
         <div className='chat-app'>
             <div className='header'>
                 <h1 className='header-title'>{room.toUpperCase()}</h1>
-
-                <button className='mdi mdi-dots-vertical option-button'></button>
+                <RoomDescription />
             </div>
 
             <div className='messages'>
@@ -197,7 +214,11 @@ export default function Room({room}: RoomProps) {
 
                         {message.image && (
                             <div className='message-image'>
-                                <img src={message.image} alt='Image' />
+                                <img
+                                    src={message.image}
+                                    alt='Image'
+                                    onClick={() => handleReplyClick(message)}
+                                />
                             </div>
                         )}
 
@@ -213,7 +234,6 @@ export default function Room({room}: RoomProps) {
                             {formatTimestamp(message.createdAt)}
                         </span>
 
-                        {/* Reply Button */}
                         {message.user !== auth.currentUser?.displayName && (
                             <button
                                 className='mdi mdi-reply reply-button'
@@ -241,6 +261,7 @@ export default function Room({room}: RoomProps) {
                     <button
                         type='button'
                         className='mdi mdi-emoticon-outline emoticon-button'
+                        onClick={() => setShowEmojiPicker(!showEmojiPicker)}
                     ></button>
 
                     <input
@@ -270,6 +291,41 @@ export default function Room({room}: RoomProps) {
                         className='mdi mdi-send send-button'
                     ></button>
                 </div>
+
+                {/* Emoji Picker */}
+                {showEmojiPicker && (
+                    <div className='emoji-picker'>
+                        {/* Category Buttons */}
+                        <div className='emoji-categories'>
+                            {Object.keys(emojis).map((category) => (
+                                <button
+                                    key={category}
+                                    className={`emoji-category-button ${
+                                        emojiCategory === category
+                                            ? 'active'
+                                            : ''
+                                    }`}
+                                    onClick={() => setEmojiCategory(category)}
+                                >
+                                    {category}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Emoji Grid */}
+                        <div className='emoji-grid'>
+                            {emojis[emojiCategory].map((emoji, index) => (
+                                <button
+                                    key={index}
+                                    className='emoji-item'
+                                    onClick={() => handleEmojiClick(emoji)}
+                                >
+                                    {emoji}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )}
             </form>
         </div>
     );

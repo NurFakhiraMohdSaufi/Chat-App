@@ -17,6 +17,8 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { auth, db } from '@/config/firebase-config';
 
+import { RoomInfo } from './RoomInfo';
+
 interface RoomProps {
     room: string;
 }
@@ -36,14 +38,16 @@ export default function Room({room}: RoomProps) {
     const [messages, setMessages] = useState<Message[]>([]);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [emojiCategory, setEmojiCategory] = useState('Smileys');
-    const [replyToMessageText, setReplyToMessageText] = useState('');
-    const [imageFile, setImageFile] = useState<string | null>(null);
+    const [replyToMessageText, setReplyToMessageText] = useState<string | null>(
+        '',
+    );
+    const [imageFile, setImageFile] = useState<string | null>(null); // Image file state
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
     const messagesRef = collection(db, 'messages');
 
+    // Fetch messages from Firebase
     useEffect(() => {
-        const messagesRef = collection(db, 'messages');
         const queryMessages = query(
             messagesRef,
             where('room', '==', room),
@@ -76,6 +80,7 @@ export default function Room({room}: RoomProps) {
         return () => unsubscribe();
     }, [room]);
 
+    // Submit message
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (newMessage === '' && !imageFile) return;
@@ -96,49 +101,25 @@ export default function Room({room}: RoomProps) {
         setImageFile(null);
     };
 
-    const sendNotificationToUsers = async (messageData) => {
-        const payload = {
-            notification: {
-                title: `${messageData.user} sent a message`,
-                body: messageData.text,
-            },
-            topic: 'chatroom_' + room,
-        };
-
-        try {
-            const response = await fetch(
-                'https://fcm.googleapis.com/fcm/send',
-                {
-                    method: 'POST',
-                    headers: {
-                        Authorization: '',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload),
-                },
-            );
-            console.log('Notification sent successfully:', response);
-        } catch (error) {
-            console.error('Error sending notification: ', error);
-        }
-    };
-
     const formatTimestamp = (timestamp: Timestamp) => {
         if (!timestamp) return '';
         return new Date(timestamp.seconds * 1000).toLocaleTimeString();
     };
 
+    // Scroll to bottom of chat
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({behavior: 'smooth'});
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent<Element>) => {
+    // Handle Enter key press for message submit
+    const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             handleSubmit(e);
         }
     };
 
+    // Handle image file change and compression
     const handleFileChange = async (
         event: React.ChangeEvent<HTMLInputElement>,
     ) => {
@@ -166,12 +147,25 @@ export default function Room({room}: RoomProps) {
         }
     };
 
+    // Handle remove image preview
+    const handleRemoveImagePreview = () => {
+        setImageFile(null);
+    };
+
+    // Handle reply to a message
     const handleReplyClick = (message: Message) => {
         if (message.user !== auth.currentUser?.displayName) {
-            setReplyToMessageText(message.text);
+            setReplyToMessageText(message.text || 'Image');
         }
     };
 
+    // Handle emoji click
+    const handleEmojiClick = (emoji: string) => {
+        setNewMessage((prevMessage) => prevMessage + emoji);
+        setShowEmojiPicker(false); // Close the emoji picker after selecting
+    };
+
+    // Emoji categories and emojis
     const emojis = {
         Smileys: [
             '😊',
@@ -187,7 +181,7 @@ export default function Room({room}: RoomProps) {
             '😢',
             '🥳',
         ],
-        Animals: ['🐶', '🐱', '🐯', '🐸', '🦁', '🐯', '🦊', '🐻', '🦄', '🐨'],
+        Animals: ['🐶', '🐱', '🐯', '🐸', '🦁', '🦊', '🐻', '🦄', '🐨'],
         Food: ['🍏', '🍔', '🍕', '🍣', '🍩', '🍪', '🍔', '🍓', '🍉', '🍍'],
         Objects: ['💻', '📱', '📸', '🎧', '💼', '📚', '🏠', '🚗', '⚽'],
         Travel: ['🌍', '🌎', '🏖️', '🗽', '🏕️', '🚢', '✈️', '🚉'],
@@ -204,8 +198,7 @@ export default function Room({room}: RoomProps) {
         <div className='chat-app'>
             <div className='header'>
                 <h1 className='header-title'>{room.toUpperCase()}</h1>
-
-                <button className='mdi mdi-dots-vertical option-button'></button>
+                <RoomInfo />
             </div>
 
             <div className='messages'>
@@ -225,7 +218,11 @@ export default function Room({room}: RoomProps) {
 
                         {message.image && (
                             <div className='message-image'>
-                                <img src={message.image} alt='Image' />
+                                <img
+                                    src={message.image}
+                                    alt='Image'
+                                    onClick={() => handleReplyClick(message)}
+                                />
                             </div>
                         )}
 
@@ -241,7 +238,6 @@ export default function Room({room}: RoomProps) {
                             {formatTimestamp(message.createdAt)}
                         </span>
 
-                        {/* Reply Button */}
                         {message.user !== auth.currentUser?.displayName && (
                             <button
                                 className='mdi mdi-reply reply-button'
@@ -265,10 +261,23 @@ export default function Room({room}: RoomProps) {
                     </div>
                 )}
 
+                {/* Image Preview Section */}
+                {imageFile && (
+                    <div className='image-preview'>
+                        <img src={imageFile} alt='Image preview' />
+                        <button
+                            type='button'
+                            className='mdi mdi-close-circle close-preview-button'
+                            onClick={handleRemoveImagePreview}
+                        ></button>
+                    </div>
+                )}
+
                 <div className='relative flex items-center w-full'>
                     <button
                         type='button'
                         className='mdi mdi-emoticon-outline emoticon-button'
+                        onClick={() => setShowEmojiPicker(!showEmojiPicker)}
                     ></button>
 
                     <input
@@ -298,6 +307,29 @@ export default function Room({room}: RoomProps) {
                         className='mdi mdi-send send-button'
                     ></button>
                 </div>
+
+                {/* Emoji Picker */}
+                {showEmojiPicker && (
+                    <div className='emoji-picker'>
+                        {Object.keys(emojis).map((category) => (
+                            <div key={category}>
+                                <h4>{category}</h4>
+                                <div className='emoji-category'>
+                                    {emojis[category].map((emoji) => (
+                                        <span
+                                            key={emoji}
+                                            onClick={() =>
+                                                handleEmojiClick(emoji)
+                                            }
+                                        >
+                                            {emoji}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </form>
         </div>
     );

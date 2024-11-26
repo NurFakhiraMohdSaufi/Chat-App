@@ -5,31 +5,33 @@
 
 /* Header */
 .header {
-    @apply text-left bg-black text-white p-4;
-    position: sticky;
-    top: 0;
+    @apply flex justify-between items-center bg-black text-white p-4 sticky top-0; /* Use flex layout to align elements */
 }
 
 .header-title {
-    @apply text-xl font-bold text-center text-white flex-1;
+    @apply text-xl font-bold text-white text-left flex-1;
 }
 
-.sign-out-button,
+.description-button,
 .profile-button,
 .send-button {
     @apply bg-transparent border-none transition duration-300 ease-in-out;
 }
 
-.sign-out-button:hover,
+.description-button:hover,
 .profile-button:hover,
 .send-button:hover {
     @apply bg-gray-700;
 }
 
+/* Move the Information Button to the right side of the header */
+.header .information-button {
+    @apply text-xl text-white cursor-pointer; /* Ensure the button is styled and clickable */
+}
+
 /* Messages Area - Ensures it grows to take available space and can scroll */
 .messages {
-    @apply flex flex-col overflow-y-auto p-4 flex-grow; /* Allows scrolling and takes up available space */
-    scroll-behavior: smooth;
+    @apply flex flex-col overflow-y-auto p-4 flex-grow scroll-smooth; /* Allows scrolling and takes up available space */
 }
 
 /* Message Bubbles */
@@ -38,13 +40,11 @@
 }
 
 .sent {
-    @apply bg-gray-200 text-black self-end;
-    @apply ml-auto;
+    @apply bg-gray-200 text-black self-end ml-auto;
 }
 
 .received {
-    @apply bg-whatsapp text-black self-start;
-    @apply mr-auto;
+    @apply bg-whatsapp text-black self-start mr-auto;
 }
 
 .user {
@@ -61,16 +61,18 @@
 
 /* New Message Form */
 .new-message-form {
-    @apply flex p-2 border-t border-gray-300 bg-black;
-    position: sticky;
-    bottom: 0; /* Keeps the form at the bottom of the screen */
-    background-color: black; /* Ensures the form has a background and stays visible */
-    z-index: 10; /* Ensures the form stays above messages */
+    @apply flex flex-col p-2 border-t border-gray-300 bg-black sticky bottom-0 z-10; /* Flex column for form with reply box above */
 }
 
 /* Input Field */
 .new-message-input {
     @apply flex-1 border border-gray-300 bg-gray-200 rounded-lg pl-10 pr-10 p-2 focus:outline-none focus:ring focus:ring-blue-400;
+}
+
+/* Reply Box (Positioned Above the Input Field) */
+.replying-to {
+    @apply w-full text-sm text-gray-600 p-2 bg-gray-100 rounded-lg mb-2; /* Improved appearance */
+    position: relative; /* Ensures proper stacking above the input */
 }
 
 /* Icon Buttons (Emoticon, Camera, etc.) */
@@ -83,8 +85,7 @@
 }
 
 .camera-button {
-    @apply absolute text-xl text-gray-600;
-    right: 75px;
+    @apply absolute text-xl text-gray-600 right-20;
 }
 
 .send-button {
@@ -116,13 +117,9 @@
     @apply text-2xl cursor-pointer hover:bg-gray-200 rounded-lg p-2 transition ease-in-out duration-200;
 }
 
+/* Reply Info */
 .reply-info {
-    @apply text-sm text-gray-500 mt-1;
-    font-style: italic;
-}
-
-.replying-to {
-    @apply text-sm text-gray-600 p-2 bg-gray-100 rounded-lg mb-2;
+    @apply text-sm text-gray-500 mt-1 italic;
 }
 
 /* Responsive Design for Smaller Screens */

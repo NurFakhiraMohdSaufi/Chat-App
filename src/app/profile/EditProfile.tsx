@@ -3,7 +3,6 @@ import { updateProfile } from 'firebase/auth';
 import {
 	collection,
 	doc,
-	DocumentSnapshot,
 	getDocs,
 	query,
 	updateDoc,

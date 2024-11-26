@@ -44,6 +44,7 @@ export function CreateGroup({setRoom, setIsInChat}: RoomProps) {
                 room: roomName,
                 createdAt: serverTimestamp(),
                 createdBy: auth.currentUser?.displayName,
+                roomDesc: null,
             });
 
             // Add user to userRooms collection

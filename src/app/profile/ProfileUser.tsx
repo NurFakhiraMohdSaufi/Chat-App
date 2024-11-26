@@ -1,20 +1,6 @@
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { MessageCirclePlusIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-import { Button } from '@/components/ui/button';
-import { auth, db } from '@/config/firebase-config';
-import {
-	Button as MuiButton,
-	CircularProgress,
-	Dialog,
-	DialogActions,
-	DialogContent,
-	DialogTitle,
-	IconButton,
-	Snackbar,
-	TextField,
-} from '@mui/material';
+import { auth } from '@/config/firebase-config';
 
 import { EditProfile } from './EditProfile';
 

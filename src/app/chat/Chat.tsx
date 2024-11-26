@@ -196,7 +196,7 @@ export default function Room({room}: RoomProps) {
         <div className='chat-app'>
             <div className='header'>
                 <h1 className='header-title'>{room.toUpperCase()}</h1>
-                <RoomInfo />
+                <RoomInfo room={room} />
             </div>
 
             <div className='messages'>

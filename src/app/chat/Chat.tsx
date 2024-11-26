@@ -12,7 +12,6 @@ import {
 	Timestamp,
 	where,
 } from 'firebase/firestore';
-import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import React, { useEffect, useRef, useState } from 'react';
 
 import { auth, db } from '@/config/firebase-config';
@@ -95,7 +94,6 @@ export default function Room({room}: RoomProps) {
         };
 
         await addDoc(messagesRef, newMessageData);
-        sendNotificationToUsers(newMessageData);
         setNewMessage('');
         setReplyToMessageText('');
         setImageFile(null);

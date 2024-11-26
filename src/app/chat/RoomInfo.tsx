@@ -11,7 +11,7 @@ import {
 import { Input } from '@mui/material';
 import { Label } from '@radix-ui/react-dropdown-menu';
 
-export function RoomDescription() {
+export function RoomInfo() {
     return (
         <Dialog>
             <DialogTrigger asChild>

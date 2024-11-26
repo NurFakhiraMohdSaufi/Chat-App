@@ -1,5 +1,5 @@
 {
   "storage": {
-    "rules": "service firebase.storage {"
+    "rules": "users_images/"
   }
 }

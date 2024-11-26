@@ -16,7 +16,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { auth, db } from '@/config/firebase-config';
 
-import { RoomDescription } from './RoomInfo';
+import { RoomInfo } from './RoomInfo';
 
 interface RoomProps {
     room: string;
@@ -40,14 +40,13 @@ export default function Room({room}: RoomProps) {
     const [replyToMessageText, setReplyToMessageText] = useState<string | null>(
         '',
     );
-    const [imageFile, setImageFile] = useState<string | null>(null);
+    const [imageFile, setImageFile] = useState<string | null>(null); // Image file state
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
     const messagesRef = collection(db, 'messages');
 
     // Fetch messages from Firebase
     useEffect(() => {
-        const messagesRef = collection(db, 'messages');
         const queryMessages = query(
             messagesRef,
             where('room', '==', room),
@@ -148,6 +147,11 @@ export default function Room({room}: RoomProps) {
         }
     };
 
+    // Handle remove image preview
+    const handleRemoveImagePreview = () => {
+        setImageFile(null);
+    };
+
     // Handle reply to a message
     const handleReplyClick = (message: Message) => {
         if (message.user !== auth.currentUser?.displayName) {
@@ -194,7 +198,7 @@ export default function Room({room}: RoomProps) {
         <div className='chat-app'>
             <div className='header'>
                 <h1 className='header-title'>{room.toUpperCase()}</h1>
-                <RoomDescription />
+                <RoomInfo />
             </div>
 
             <div className='messages'>
@@ -257,6 +261,18 @@ export default function Room({room}: RoomProps) {
                     </div>
                 )}
 
+                {/* Image Preview Section */}
+                {imageFile && (
+                    <div className='image-preview'>
+                        <img src={imageFile} alt='Image preview' />
+                        <button
+                            type='button'
+                            className='mdi mdi-close-circle close-preview-button'
+                            onClick={handleRemoveImagePreview}
+                        ></button>
+                    </div>
+                )}
+
                 <div className='relative flex items-center w-full'>
                     <button
                         type='button'
@@ -295,35 +311,23 @@ export default function Room({room}: RoomProps) {
                 {/* Emoji Picker */}
                 {showEmojiPicker && (
                     <div className='emoji-picker'>
-                        {/* Category Buttons */}
-                        <div className='emoji-categories'>
-                            {Object.keys(emojis).map((category) => (
-                                <button
-                                    key={category}
-                                    className={`emoji-category-button ${
-                                        emojiCategory === category
-                                            ? 'active'
-                                            : ''
-                                    }`}
-                                    onClick={() => setEmojiCategory(category)}
-                                >
-                                    {category}
-                                </button>
-                            ))}
-                        </div>
-
-                        {/* Emoji Grid */}
-                        <div className='emoji-grid'>
-                            {emojis[emojiCategory].map((emoji, index) => (
-                                <button
-                                    key={index}
-                                    className='emoji-item'
-                                    onClick={() => handleEmojiClick(emoji)}
-                                >
-                                    {emoji}
-                                </button>
-                            ))}
-                        </div>
+                        {Object.keys(emojis).map((category) => (
+                            <div key={category}>
+                                <h4>{category}</h4>
+                                <div className='emoji-category'>
+                                    {emojis[category].map((emoji) => (
+                                        <span
+                                            key={emoji}
+                                            onClick={() =>
+                                                handleEmojiClick(emoji)
+                                            }
+                                        >
+                                            {emoji}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 )}
             </form>

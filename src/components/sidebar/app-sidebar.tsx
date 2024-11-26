@@ -1,13 +1,12 @@
 import '@/styles/Room.css';
 
 import { signOut } from 'firebase/auth';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { DeleteIcon, LogOutIcon, PlusCircle } from 'lucide-react';
-import { useState } from 'react';
+import { LogOutIcon } from 'lucide-react';
 import Cookies from 'universal-cookie';
 
 import ListChat from '@/app/chat/page';
 import { SearchRoom } from '@/app/chat/SearchRoom';
+import { UserImage } from '@/app/profile/EditProfile';
 import { ProfileUser } from '@/app/profile/ProfileUser';
 import {
 	Sidebar,
@@ -64,7 +63,6 @@ export function AppSidebar({
 
             <SidebarContent className='h-full overflow-y-auto flex-grow  border-b border-gray-700'>
                 <SidebarGroup>
-                    <ProfileUser setRoom={setRoom} setIsInChat={setIsInChat} />
                     <SidebarGroupContent className='flex flex-col h-full'>
                         <SidebarMenu className='flex-grow mt-2'>
                             <SidebarMenuItem>
@@ -83,13 +81,21 @@ export function AppSidebar({
             </SidebarContent>
 
             <SidebarFooter>
-                <div className='items-right'>
-                    <IconButton>
-                        <LogOutIcon
-                            className='justify-between text-sm font-semibold text-whatsapp hover:text-red-500 '
-                            onClick={signUserOut}
+                <div className='flex flex-row justify-between items-center'>
+                    <div className='relative flex-grow'>
+                        <ProfileUser
+                            setRoom={setRoom}
+                            setIsInChat={setIsInChat}
                         />
-                    </IconButton>
+                    </div>
+                    <div className='ml-4'>
+                        <IconButton>
+                            <LogOutIcon
+                                className='justify-between text-sm font-semibold text-whatsapp hover:text-red-500 '
+                                onClick={signUserOut}
+                            />
+                        </IconButton>
+                    </div>
                 </div>
             </SidebarFooter>
         </Sidebar>

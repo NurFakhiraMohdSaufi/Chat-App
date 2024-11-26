@@ -1,5 +1,3 @@
-import Image from 'next/image';
-
 export default function LandingPage() {
     return (
         <div className='bg-black w-full h-screen flex items-center justify-center relative overflow-hidden'>

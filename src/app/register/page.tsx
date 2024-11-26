@@ -8,13 +8,14 @@ import {
 	signInWithPopup,
 	updateProfile,
 } from 'firebase/auth';
+import { collection, doc, setDoc } from 'firebase/firestore';
 import { AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Cookies from 'universal-cookie';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { auth, provider } from '@/config/firebase-config';
+import { auth, db, provider } from '@/config/firebase-config';
 
 const cookies = new Cookies();
 
@@ -44,6 +45,12 @@ export default function Register() {
                 displayName: name,
             });
 
+            await setDoc(doc(collection(db, 'users'), user.uid), {
+                name,
+                email,
+                createdAt: new Date(),
+            });
+
             await sendEmailVerification(user);
 
             // Check if the email is verified
@@ -60,7 +67,6 @@ export default function Register() {
             setPassword('');
         } catch (err) {
             console.error(err);
-
             setError('The email is already exist');
         } finally {
             setIsSubmitting(false);
@@ -79,6 +85,12 @@ export default function Register() {
                 alert('Please verify your email before logging in.');
                 return;
             }
+
+            await setDoc(doc(collection(db, 'users'), user.uid), {
+                name: user.displayName,
+                email: user.email,
+                createdAt: new Date(),
+            });
 
             cookies.set('auth-token', user.refreshToken);
             alert('Verification email sent. Please check your inbox');

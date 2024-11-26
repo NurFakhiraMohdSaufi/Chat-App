@@ -12,6 +12,7 @@ import {
 	Timestamp,
 	where,
 } from 'firebase/firestore';
+import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import React, { useEffect, useRef, useState } from 'react';
 
 import { auth, db } from '@/config/firebase-config';
@@ -89,10 +90,37 @@ export default function Room({room}: RoomProps) {
         };
 
         await addDoc(messagesRef, newMessageData);
-
+        sendNotificationToUsers(newMessageData);
         setNewMessage('');
         setReplyToMessageText('');
         setImageFile(null);
+    };
+
+    const sendNotificationToUsers = async (messageData) => {
+        const payload = {
+            notification: {
+                title: `${messageData.user} sent a message`,
+                body: messageData.text,
+            },
+            topic: 'chatroom_' + room,
+        };
+
+        try {
+            const response = await fetch(
+                'https://fcm.googleapis.com/fcm/send',
+                {
+                    method: 'POST',
+                    headers: {
+                        Authorization: '',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                },
+            );
+            console.log('Notification sent successfully:', response);
+        } catch (error) {
+            console.error('Error sending notification: ', error);
+        }
     };
 
     const formatTimestamp = (timestamp: Timestamp) => {

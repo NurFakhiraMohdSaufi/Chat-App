@@ -52,7 +52,7 @@ export function SearchRoom({setRoom, setIsInChat}: RoomProps) {
     useEffect(() => {
         const searchUsers = async () => {
             if (roomName.trim() === '') {
-                setUsers([]);
+                // setUsers([]);
                 return;
             }
 
@@ -90,8 +90,9 @@ export function SearchRoom({setRoom, setIsInChat}: RoomProps) {
         joinRoom(room);
         setRoom(room);
         setIsInChat(true);
-        setRoomName('');
+
         setRooms([]);
+        setRoomName('');
 
         console.log('Enter room: ', room);
     };

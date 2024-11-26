@@ -2,6 +2,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
+// import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import { getStorage } from 'firebase/storage';
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -28,3 +29,24 @@ export const storage = getStorage(
     app,
     'gs://chat-app-98075.firebasestorage.app',
 );
+// const messaging = getMessaging(app);
+
+// export const requestNotificationPermission = async () => {
+//     try {
+//         const token = await getToken(messaging, {
+//             vapidKey:
+//                 'BJVAya1NZ6Lq6_U2jdgrz73CMZbc6v9i-aBzhAXg4lfvjpv_OIs6lUNoBJDqgasS-iYVwddJq3RUR3HAGJs2bLA',
+//         });
+//         console.log('FCM Token: ', token);
+//         return token;
+//     } catch (error) {
+//         console.error('Error getting FCM token: ', error);
+//     }
+// };
+
+// export const listenForNotifications = () => {
+//     onMessage(messaging, (payload) => {
+//         console.log('Message received: ', payload);
+//         alert(`New message: ${payload.notification?.title}`);
+//     });
+// };

@@ -26,7 +26,7 @@ import { Input } from '@/components/ui/input';
 import { auth, db, storage } from '@/config/firebase-config';
 import { Label } from '@radix-ui/react-dropdown-menu';
 
-export function EditProfile() {
+export function EditProfile({onProfileEdit}) {
     const user = auth.currentUser?.displayName ?? '';
     const userData = auth.currentUser;
     const [userName, setUserName] = useState('');
@@ -110,7 +110,7 @@ export function EditProfile() {
                     });
                 }
             }
-
+            onProfileEdit();
             setOpen(false);
         } catch (error) {
             console.error('Error updating name: ', error);
@@ -183,8 +183,8 @@ export function EditProfile() {
                         Edit Profile
                     </DialogTitle>
                     <DialogDescription>
-                        Make changes to your profile here. Click save when
-                        you're done.
+                        Make changes to your profile here. Click save when you
+                        are done.
                     </DialogDescription>
                 </DialogHeader>
                 <div className='grid gap-4 py-4'>

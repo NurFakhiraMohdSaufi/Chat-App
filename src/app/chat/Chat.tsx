@@ -154,6 +154,9 @@ export default function Room({room}: RoomProps) {
     const handleReplyClick = (message: Message) => {
         if (message.user !== auth.currentUser?.displayName) {
             setReplyToMessageText(message.text || 'Image');
+            if (message.image) {
+                setImageFile(message.image);
+            }
         }
     };
 
@@ -214,16 +217,21 @@ export default function Room({room}: RoomProps) {
                         )}
                         <span className='text'>{message.text}</span>
 
+                        {/* Display image and make it smaller if it's part of a reply */}
                         {message.image && (
                             <div className='message-image'>
                                 <img
                                     src={message.image}
                                     alt='Image'
                                     onClick={() => handleReplyClick(message)}
+                                    className={
+                                        message.replyTo ? 'quoted-image' : ''
+                                    } // Apply class if it's a reply
                                 />
                             </div>
                         )}
 
+                        {/* Display reply information if it's a reply */}
                         {message.replyTo && (
                             <div className='reply-info'>
                                 <span className='reply-to'>
@@ -236,6 +244,7 @@ export default function Room({room}: RoomProps) {
                             {formatTimestamp(message.createdAt)}
                         </span>
 
+                        {/* Reply button for received messages */}
                         {message.user !== auth.currentUser?.displayName && (
                             <button
                                 className='mdi mdi-reply reply-button'
@@ -282,50 +291,52 @@ export default function Room({room}: RoomProps) {
                         className='new-message-input'
                         placeholder='Type a message...'
                         onKeyDown={handleKeyDown}
-                        onChange={(e) => setNewMessage(e.target.value)}
                         value={newMessage}
+                        onChange={(e) => setNewMessage(e.target.value)}
                     />
-
-                    <div className='icon-buttons'>
-                        <label
-                            htmlFor='image-upload'
-                            className='mdi mdi-camera camera-button'
-                        ></label>
-                        <input
-                            id='image-upload'
-                            type='file'
-                            accept='image/*'
-                            style={{display: 'none'}}
-                            onChange={handleFileChange}
-                        />
-                    </div>
+                    <input
+                        type='file'
+                        accept='image/*'
+                        onChange={handleFileChange}
+                        className='hidden'
+                    />
 
                     <button
                         type='submit'
                         className='mdi mdi-send send-button'
+                        disabled={newMessage === '' && !imageFile}
                     ></button>
                 </div>
 
                 {/* Emoji Picker */}
                 {showEmojiPicker && (
                     <div className='emoji-picker'>
-                        {Object.keys(emojis).map((category) => (
-                            <div key={category}>
-                                <h4>{category}</h4>
-                                <div className='emoji-category'>
-                                    {emojis[category].map((emoji) => (
-                                        <span
-                                            key={emoji}
-                                            onClick={() =>
-                                                handleEmojiClick(emoji)
-                                            }
-                                        >
-                                            {emoji}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-                        ))}
+                        <div className='emoji-categories'>
+                            {Object.keys(emojis).map((category) => (
+                                <button
+                                    key={category}
+                                    className={`emoji-category ${
+                                        emojiCategory === category
+                                            ? 'active'
+                                            : ''
+                                    }`}
+                                    onClick={() => setEmojiCategory(category)}
+                                >
+                                    {category}
+                                </button>
+                            ))}
+                        </div>
+                        <div className='emoji-grid'>
+                            {emojis[emojiCategory]?.map((emoji) => (
+                                <button
+                                    key={emoji}
+                                    className='emoji'
+                                    onClick={() => handleEmojiClick(emoji)}
+                                >
+                                    {emoji}
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 )}
             </form>

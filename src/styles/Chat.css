@@ -39,6 +39,20 @@
     @apply mb-2 p-2 rounded-lg transition duration-300 ease-in-out;
 }
 
+.message .message-image img.quoted-image {
+    max-width: 100px; /* Resize image for reply */
+    max-height: 100px;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+/* Message container for images */
+.message .message-image img {
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+}
+
 .sent {
     @apply bg-gray-200 text-black self-end ml-auto;
 }
@@ -90,6 +104,10 @@
 
 .send-button {
     @apply border-none outline-none text-2xl bg-gray-200 w-12 h-12 rounded-full flex items-center justify-center cursor-pointer mx-4 mr-auto;
+}
+
+.reply-button {
+    @apply gap-4 place-items-end;
 }
 
 /* Emoji Picker */

@@ -29,12 +29,15 @@ interface RoomProps {
 
 export function RoomInfo({room}: RoomProps) {
     const [roomDesc, setRoomDesc] = useState('');
+    const [members, setMembers] = useState<string[]>([]); // To store the list of members
     const [open, setOpen] = useState(false);
     const roomRef = collection(db, 'room');
+    const userRoomsRef = collection(db, 'userRooms'); // Reference to userRooms collection
 
     useEffect(() => {
-        const fetchRoomDesc = async () => {
-            const qRoom = query(roomRef, where('room', '==', room)); // change to real room later
+        const fetchRoomData = async () => {
+            // Fetch room description
+            const qRoom = query(roomRef, where('room', '==', room));
             const queryRoomSnapshot = await getDocs(qRoom);
 
             if (!queryRoomSnapshot.empty) {
@@ -43,13 +46,24 @@ export function RoomInfo({room}: RoomProps) {
                     RoomData.roomDesc || 'No room description available',
                 );
             }
+
+            // Fetch room members
+            const qMembers = query(userRoomsRef, where('roomId', '==', room));
+            const queryMembersSnapshot = await getDocs(qMembers);
+
+            if (!queryMembersSnapshot.empty) {
+                const membersList = queryMembersSnapshot.docs.map(
+                    (doc) => doc.data().userId,
+                );
+                setMembers(membersList);
+            }
         };
 
-        fetchRoomDesc();
+        fetchRoomData();
     }, [room]);
 
     const handleUpdateDesc = async () => {
-        const qRoom = query(roomRef, where('room', '==', room)); // change to real room later
+        const qRoom = query(roomRef, where('room', '==', room));
         const queryRoomSnapshot = await getDocs(qRoom);
 
         if (!queryRoomSnapshot.empty) {
@@ -84,7 +98,7 @@ export function RoomInfo({room}: RoomProps) {
                         <h3 className='text-base/7 font-semibold text-gray-900'>
                             Room Description:
                         </h3>
-                        <br></br>
+                        <br />
                         <Input
                             id='name'
                             value={roomDesc}
@@ -92,10 +106,28 @@ export function RoomInfo({room}: RoomProps) {
                             onChange={(e) => setRoomDesc(e.target.value)}
                         />
                     </div>
+
+                    {/* Display Room Members */}
                     <div className='grid items-center gap-4'>
                         <h6 className='text-base/7 font-semibold text-gray-900'>
                             Room Member(s):
                         </h6>
+                        <ul>
+                            {members.length > 0 ? (
+                                members.map((memberId, index) => (
+                                    <li
+                                        key={index}
+                                        className='text-sm text-gray-600'
+                                    >
+                                        {memberId}
+                                    </li>
+                                ))
+                            ) : (
+                                <li className='text-sm text-gray-600'>
+                                    No members yet
+                                </li>
+                            )}
+                        </ul>
                     </div>
                 </div>
                 <DialogFooter>

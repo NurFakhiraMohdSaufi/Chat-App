@@ -1,6 +1,6 @@
 /* Main container that holds the entire chat application */
 .chat-app {
-    @apply w-full bg-backgroundChat h-full flex flex-col; /* Flex column layout for chat app */
+    @apply w-full bg-black h-full flex flex-col; /* Flex column layout for chat app */
 }
 
 /* Header */

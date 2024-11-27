@@ -52,7 +52,7 @@ export function SearchRoom({setRoom, setIsInChat}: RoomProps) {
     useEffect(() => {
         const searchUsers = async () => {
             if (roomName.trim() === '') {
-                setUsers([]);
+                // setUsers([]);
                 return;
             }
 
@@ -90,8 +90,9 @@ export function SearchRoom({setRoom, setIsInChat}: RoomProps) {
         joinRoom(room);
         setRoom(room);
         setIsInChat(true);
-        setRoomName('');
+
         setRooms([]);
+        setRoomName('');
 
         console.log('Enter room: ', room);
     };
@@ -103,7 +104,7 @@ export function SearchRoom({setRoom, setIsInChat}: RoomProps) {
     return (
         <div className='flex flex-col mt-1'>
             <div className='flex flex-row items-center justify-between text-xs text-black'>
-                <span className='font-bold'>Search</span>
+                <span className='font-bold font-white'>Search</span>
             </div>
             <div className='flex flex-row justify-between items-center mt-2 mb-2'>
                 <div className='relative flex-grow'>

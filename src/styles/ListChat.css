@@ -1,5 +1,5 @@
 .list-container {
-    @apply w-full flex flex-col mt-1 bg-gray-100;
+    @apply w-full flex flex-col mt-1;
 }
 
 .header-room {
@@ -7,11 +7,11 @@
 }
 
 .header-title {
-    @apply font-bold text-xs text-black;
+    @apply font-bold text-xs text-white;
 }
 
 .header-convo {
-    @apply font-bold text-xs text-black;
+    @apply font-bold text-xs text-white;
 }
 
 .card-list {
@@ -53,9 +53,9 @@
 }
 
 .title-name {
-    @apply text-sm font-semibold text-gray-900 text-left ml-2;
+    @apply text-sm font-semibold text-white text-left ml-2;
 }
 
 .title-chat {
-    @apply text-xs text-gray-600 text-left ml-2;
+    @apply text-xs text-white text-left ml-2;
 }

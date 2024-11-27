@@ -1,3 +1,13 @@
+import {
+	collection,
+	doc,
+	getDocs,
+	query,
+	updateDoc,
+	where,
+} from 'firebase/firestore';
+import { useEffect, useState } from 'react';
+
 import { Button } from '@/components/ui/button';
 import {
 	Dialog,
@@ -8,16 +18,57 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@/components/ui/dialog';
+import { db } from '@/config/firebase-config';
 import { Input } from '@mui/material';
-import { Label } from '@radix-ui/react-dropdown-menu';
 
-export function RoomInfo() {
+import { RoomData } from '../../interfaces/RoomData';
+
+interface RoomProps {
+    room: string;
+}
+
+export function RoomInfo({room}: RoomProps) {
+    const [roomDesc, setRoomDesc] = useState('');
+    const [open, setOpen] = useState(false);
+    const roomRef = collection(db, 'room');
+
+    useEffect(() => {
+        const fetchRoomDesc = async () => {
+            const qRoom = query(roomRef, where('room', '==', room)); // change to real room later
+            const queryRoomSnapshot = await getDocs(qRoom);
+
+            if (!queryRoomSnapshot.empty) {
+                const RoomData = queryRoomSnapshot.docs[0].data();
+                setRoomDesc(
+                    RoomData.roomDesc || 'No room description available',
+                );
+            }
+        };
+
+        fetchRoomDesc();
+    }, [room]);
+
+    const handleUpdateDesc = async () => {
+        const qRoom = query(roomRef, where('room', '==', room)); // change to real room later
+        const queryRoomSnapshot = await getDocs(qRoom);
+
+        if (!queryRoomSnapshot.empty) {
+            const roomDocRef = doc(roomRef, queryRoomSnapshot.docs[0].id);
+            await updateDoc(roomDocRef, {
+                roomDesc: roomDesc,
+            });
+        }
+
+        setOpen(false);
+    };
+
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <button
                     type='button'
                     className='mdi mdi-information-outline description-button'
+                    onClick={() => setOpen(true)}
                 ></button>
             </DialogTrigger>
             <DialogContent className='sm:max-w-[425px] bg-white'>
@@ -36,8 +87,9 @@ export function RoomInfo() {
                         <br></br>
                         <Input
                             id='name'
-                            defaultValue='Add group description here...'
+                            value={roomDesc}
                             className='col-span-3'
+                            onChange={(e) => setRoomDesc(e.target.value)}
                         />
                     </div>
                     <div className='grid items-center gap-4'>
@@ -47,7 +99,9 @@ export function RoomInfo() {
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button type='submit'>Save changes</Button>
+                    <Button type='submit' onClick={handleUpdateDesc}>
+                        Save changes
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

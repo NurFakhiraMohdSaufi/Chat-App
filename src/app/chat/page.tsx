@@ -36,13 +36,14 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
     >([]);
     const [loading, setLoading] = useState(true);
     const [noRooms, setNoRooms] = useState(false);
+    const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
     const user = auth.currentUser?.displayName;
 
     useEffect(() => {
         if (user) {
             // Step 1: Fetch rooms based on user
-            const chatRef = collection(db, 'messages');
-            const queryChat = query(chatRef, where('user', '==', user));
+            const chatRef = collection(db, 'userRooms');
+            const queryChat = query(chatRef, where('userId', '==', user));
 
             const unsubscribeRooms = onSnapshot(queryChat, (snapshot) => {
                 const roomsList: {roomName: string}[] = [];
@@ -55,7 +56,7 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
 
                 snapshot.forEach((doc) => {
                     const data = doc.data();
-                    const room = data.room;
+                    const room = data.roomId;
 
                     // Add room to rooms list if it's not already there
                     if (!roomsList.some((r) => r.roomName === room)) {
@@ -65,6 +66,8 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
 
                 // Set the rooms state
                 setRooms(roomsList);
+                console.log('room List: ', roomsList);
+
                 setLoading(false);
             });
 
@@ -121,6 +124,7 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
     const handleRoomClick = (roomName: string) => {
         setRoom(roomName);
         setIsInChat(true);
+        setSelectedRoom(roomName);
     };
 
     return (
@@ -134,12 +138,18 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
                         <CircularProgress size='30px' />
                     </Box>
                 ) : noRooms ? (
-                    <div>No recent chat rooms found.</div>
+                    <div className='text-white'>
+                        No recent chat rooms found.
+                    </div>
                 ) : (
                     rooms.map((room, index) => (
                         <button
                             key={index}
-                            className='button-chat'
+                            className={`button-chat ${
+                                selectedRoom === room.roomName
+                                    ? 'bg-whatsapp'
+                                    : ''
+                            }`}
                             onClick={() => handleRoomClick(room.roomName)}
                             aria-label={`Chat with ${room.roomName}`}
                         >

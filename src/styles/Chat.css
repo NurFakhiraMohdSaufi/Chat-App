@@ -39,6 +39,20 @@
     @apply mb-2 p-2 rounded-lg transition duration-300 ease-in-out;
 }
 
+.message .message-image img.quoted-image {
+    max-width: 100px; /* Resize image for reply */
+    max-height: 100px;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+/* Message container for images */
+.message .message-image img {
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+}
+
 .sent {
     @apply bg-gray-200 text-black self-end ml-auto;
 }
@@ -92,6 +106,10 @@
     @apply border-none outline-none text-2xl bg-gray-200 w-12 h-12 rounded-full flex items-center justify-center cursor-pointer mx-4 mr-auto;
 }
 
+.reply-button {
+    @apply gap-4 place-items-end;
+}
+
 /* Emoji Picker */
 .emoji-picker {
     @apply absolute bottom-16 left-0 z-10 bg-white p-2 border border-gray-300 rounded-lg shadow-lg w-72 max-h-60 overflow-y-auto;
@@ -120,6 +138,71 @@
 /* Reply Info */
 .reply-info {
     @apply text-sm text-gray-500 mt-1 italic;
+}
+
+/* Image Preview Section */
+.image-preview {
+    @apply relative inline-block rounded-lg overflow-hidden; /* Rounded corners */
+    width: 140px; /* Slightly smaller than before for a more compact look */
+    height: 140px; /* Square shape for consistency */
+    margin: 0 auto 10px auto; /* Centered horizontally and space below */
+    border: none; /* No border for a cleaner look */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle, deeper shadow for more depth */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Smooth transition for zoom and shadow */
+}
+
+/* Image inside preview */
+/* Image Preview Section */
+.image-preview {
+    @apply relative inline-block rounded-lg overflow-hidden; /* Rounded corners */
+    width: 140px; /* Slightly smaller than before for a more compact look */
+    height: 140px; /* Square shape for consistency */
+    margin: 0 auto 10px auto; /* Centered horizontally and space below */
+    border: none; /* No border for a cleaner look */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle, deeper shadow for more depth */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Smooth transition for zoom and shadow */
+}
+
+/* Image inside preview */
+.image-preview img {
+    @apply w-full h-full object-cover; /* Ensure image covers the entire preview area */
+    border-radius: 10px; /* Rounded corners for the image */
+    display: block; /* Remove unwanted spaces around the image */
+    transition: transform 0.3s ease-in-out; /* Smooth zoom effect for image */
+}
+
+/* Hover effect on image preview */
+.image-preview:hover {
+    transform: scale(1.05); /* Slight zoom effect on hover */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Deeper shadow on hover */
+}
+
+/* Overlay Gradient for Image Preview (optional) */
+.image-preview::before {
+    content: ''; /* Empty content for the pseudo-element */
+    @apply absolute inset-0 bg-gradient-to-t from-black opacity-40; /* Gradient from black for a subtle overlay */
+    z-index: 5; /* Ensure overlay stays on top of image */
+    border-radius: 10px; /* Matching rounded corners */
+}
+
+/* Close Button Styling */
+.close-preview-button {
+    @apply absolute top-1 right-1 bg-black text-white rounded-full p-1 opacity-60 hover:opacity-100 transition duration-200 ease-in-out; /* Minimal and subtle close button */
+    cursor: pointer;
+    font-size: 12px; /* Smaller close button */
+    z-index: 10; /* Ensure button stays above the image */
+}
+
+/* Close button hover effect */
+.close-preview-button:hover {
+    @apply bg-red-600; /* Change to red when hovered */
+    transform: scale(1.2); /* Slight zoom effect on hover */
+}
+
+/* Optional: Add a subtle zoom effect on image when hovered */
+.image-preview img:hover {
+    transform: scale(1.1); /* Slight zoom effect for image */
+    transition: transform 0.3s ease-in-out; /* Smooth transition */
 }
 
 /* Responsive Design for Smaller Screens */

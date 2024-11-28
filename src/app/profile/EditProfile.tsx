@@ -153,7 +153,9 @@ export function EditProfile({onProfileEdit}) {
                         const downloadURL = await getDownloadURL(
                             uploadTask.snapshot.ref,
                         );
+
                         setImageFile(downloadURL);
+                        console.log('imageFile: ', imageFile);
                     },
                 );
             } catch (error) {
@@ -202,11 +204,11 @@ export function EditProfile({onProfileEdit}) {
                         </div>
                         <div className='icon-buttons'>
                             <label
-                                htmlFor='image-upload'
+                                htmlFor='profile-upload'
                                 className='mdi mdi-camera camera-button'
                             ></label>
                             <input
-                                id='image-upload'
+                                id='profile-upload'
                                 type='file'
                                 accept='image/*'
                                 style={{display: 'none'}}

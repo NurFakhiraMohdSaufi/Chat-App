@@ -153,10 +153,10 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
                             onClick={() => handleRoomClick(room.roomName)}
                             aria-label={`Chat with ${room.roomName}`}
                         >
-                            <div>
+                            <div className='flex'>
                                 <img
-                                    className='flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full'
-                                    src='https://res.cloudinary.com/dc6deairt/image/upload/v1638102932/user-32-02_vll8uv.jpg'
+                                    className='flex items-center justify-center h-8 w-8 bg-indigo-200 ml-1 rounded-full'
+                                    src='https://static.vecteezy.com/system/resources/previews/026/019/617/original/group-profile-avatar-icon-default-social-media-forum-profile-photo-vector.jpg'
                                     width='32'
                                     height='32'
                                     alt='User Profile'
@@ -196,7 +196,7 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
                                                                       1
                                                               ]?.text
                                                           }`
-                                                    : 'No messages'}
+                                                    : 'No messages available'}
                                             </div>
                                         ),
                                 )}

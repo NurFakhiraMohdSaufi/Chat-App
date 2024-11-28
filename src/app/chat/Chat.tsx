@@ -14,6 +14,7 @@ import {
 } from 'firebase/firestore';
 import React, { useEffect, useRef, useState } from 'react';
 
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { auth, db } from '@/config/firebase-config';
 
 import { RoomInfo } from './RoomInfo';
@@ -192,6 +193,17 @@ export default function Room({room}: RoomProps) {
         }
     }, [messages]);
 
+    // const refreshChatInfo = async () => {
+    //     if (userData) {
+    //         await userData.reload();
+    //         setUserName(userData?.displayName || '');
+    //     }
+    // };
+
+    // const handleDescEdit = async () => {
+    //     await refreshChatInfo();
+    // };
+
     return (
         <div className='chat-app'>
             <div className='header'>
@@ -199,53 +211,57 @@ export default function Room({room}: RoomProps) {
                 <RoomInfo room={room} />
             </div>
 
-            <div className='messages'>
-                {messages.map((message) => (
-                    <div
-                        className={`message ${
-                            message.user === auth.currentUser?.displayName
-                                ? 'sent'
-                                : 'received'
-                        }`}
-                        key={message.id}
-                    >
-                        {message.user !== auth.currentUser?.displayName && (
-                            <span className='user'>{message.user}</span>
-                        )}
-                        <span className='text'>{message.text}</span>
+            <ScrollArea className='h-screen'>
+                <div className='messages'>
+                    {messages.map((message) => (
+                        <div
+                            className={`message ${
+                                message.user === auth.currentUser?.displayName
+                                    ? 'sent'
+                                    : 'received'
+                            }`}
+                            key={message.id}
+                        >
+                            {message.user !== auth.currentUser?.displayName && (
+                                <span className='user'>{message.user}</span>
+                            )}
+                            <span className='text'>{message.text}</span>
 
-                        {message.image && (
-                            <div className='message-image'>
-                                <img
-                                    src={message.image}
-                                    alt='Image'
+                            {message.image && (
+                                <div className='message-image'>
+                                    <img
+                                        src={message.image}
+                                        alt='Image'
+                                        onClick={() =>
+                                            handleReplyClick(message)
+                                        }
+                                    />
+                                </div>
+                            )}
+
+                            {message.replyTo && (
+                                <div className='reply-info'>
+                                    <span className='reply-to'>
+                                        Replying to: {message.replyTo}
+                                    </span>
+                                </div>
+                            )}
+
+                            <span className='timestamp'>
+                                {formatTimestamp(message.createdAt)}
+                            </span>
+
+                            {message.user !== auth.currentUser?.displayName && (
+                                <button
+                                    className='mdi mdi-reply reply-button'
                                     onClick={() => handleReplyClick(message)}
-                                />
-                            </div>
-                        )}
-
-                        {message.replyTo && (
-                            <div className='reply-info'>
-                                <span className='reply-to'>
-                                    Replying to: {message.replyTo}
-                                </span>
-                            </div>
-                        )}
-
-                        <span className='timestamp'>
-                            {formatTimestamp(message.createdAt)}
-                        </span>
-
-                        {message.user !== auth.currentUser?.displayName && (
-                            <button
-                                className='mdi mdi-reply reply-button'
-                                onClick={() => handleReplyClick(message)}
-                            ></button>
-                        )}
-                    </div>
-                ))}
-                <div ref={messagesEndRef} />
-            </div>
+                                ></button>
+                            )}
+                        </div>
+                    ))}
+                    <div ref={messagesEndRef} />
+                </div>
+            </ScrollArea>
 
             <form onSubmit={handleSubmit} className='new-message-form'>
                 {replyToMessageText && (

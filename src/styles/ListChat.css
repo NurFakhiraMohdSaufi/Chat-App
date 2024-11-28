@@ -1,5 +1,5 @@
 .list-container {
-    @apply w-full flex flex-col mt-1;
+    @apply w-full flex flex-col mt-1 h-screen;
 }
 
 .header-room {
@@ -11,37 +11,19 @@
 }
 
 .header-convo {
-    @apply font-bold text-xs text-white;
+    @apply font-bold text-sm text-white;
 }
 
 .card-list {
-    @apply divide-y divide-gray-300 flex flex-col space-y-1 mt-1 -mx-2 h-60 overflow-y-auto;
-}
-
-@screen sm {
-    .card-list {
-        @apply min-h-[500px];
-    }
-}
-
-@screen md {
-    .card-list {
-        @apply min-h-[700px];
-    }
-}
-
-@screen lg {
-    .card-list {
-        @apply min-h-[800px];
-    }
+    @apply divide-y divide-gray-100 flex flex-col -mx-2 h-auto overflow-y-auto;
 }
 
 .button-chat {
-    @apply w-full text-left py-3 focus:outline-none transition duration-150 ease-in-out flex flex-row items-center hover:bg-whatsappSender rounded-xl p-2;
+    @apply w-full text-left py-3 transition duration-150 ease-in-out flex flex-row items-center hover:bg-whatsapp;
 }
 
 .button-chat:hover {
-    @apply bg-whatsapp rounded-md shadow-sm;
+    @apply bg-whatsapp;
 }
 
 .chat-list {
@@ -53,9 +35,13 @@
 }
 
 .title-name {
-    @apply text-sm font-semibold text-white text-left ml-2;
+    @apply text-sm font-semibold text-white text-left mr-2;
 }
 
 .title-chat {
-    @apply text-xs text-white text-left ml-2;
+    @apply text-xs text-white text-left mr-2;
+    /* overflow: hidden;
+    white-space: normal;
+    text-overflow: ellipsis;
+    max-width: 80%; */
 }

@@ -286,7 +286,7 @@ const SidebarTrigger = React.forwardRef<
             data-sidebar='trigger'
             variant='ghost'
             size='icon'
-            className={cn('h-7 w-7 bg-whatsapp', className)}
+            className={cn('h-7 w-7 text-white', className)}
             onClick={(event) => {
                 onClick?.(event);
                 toggleSidebar();
@@ -294,7 +294,7 @@ const SidebarTrigger = React.forwardRef<
             {...props}
         >
             <PanelLeft />
-            <span className='sr-only bg-whatsapp'>Toggle Sidebar</span>
+            <span className='sr-only text-white'>Toggle Sidebar</span>
         </Button>
     );
 });
@@ -388,7 +388,7 @@ const SidebarFooter = React.forwardRef<
         <div
             ref={ref}
             data-sidebar='footer'
-            className={cn('flex flex-col gap-2 p-2', className)}
+            className={cn('flex flex-col p-1 ', className)}
             {...props}
         />
     );

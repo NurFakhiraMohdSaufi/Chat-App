@@ -76,11 +76,29 @@ export function SearchRoom({setRoom, setIsInChat}: RoomProps) {
 
             if (!user) return;
 
+            // Check if the user is already part of the room
+            const q = query(
+                collection(db, 'userRooms'),
+                where('userId', '==', user),
+                where('roomId', '==', roomId),
+            );
+
+            const querySnapshot = await getDocs(q);
+
+            // If a document already exists, don't add a new one
+            if (!querySnapshot.empty) {
+                console.log('User is already in the room');
+                return;
+            }
+
+            // If the user is not already in the room, add a new document
             await addDoc(collection(db, 'userRooms'), {
                 userId: user,
                 roomId,
                 joinedAt: Timestamp.fromDate(new Date()),
             });
+
+            console.log('User added to the room:', roomId);
         } catch (e) {
             console.log('Error joining room', e);
         }
@@ -102,9 +120,9 @@ export function SearchRoom({setRoom, setIsInChat}: RoomProps) {
     };
 
     return (
-        <div className='flex flex-col mt-1'>
+        <div className='flex flex-col'>
             <div className='flex flex-row items-center justify-between text-xs text-black'>
-                <span className='font-bold font-white'>Search</span>
+                <span className='font-bold text-white text-sm'>Search</span>
             </div>
             <div className='flex flex-row justify-between items-center mt-2 mb-2'>
                 <div className='relative flex-grow'>

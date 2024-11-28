@@ -31,7 +31,6 @@ interface RoomProps {
 
 export function RoomInfo({room}: RoomProps) {
     const [roomDesc, setRoomDesc] = useState('');
-<<<<<<< HEAD
     const [roomName, setRoomName] = useState('');
     const [idRoom, setIdRoom] = useState('');
     const [imageRoomFile, setImageRoomFile] = useState<string | null>(null);
@@ -44,16 +43,6 @@ export function RoomInfo({room}: RoomProps) {
 
     useEffect(() => {
         const fetchRoomDesc = async () => {
-=======
-    const [members, setMembers] = useState<string[]>([]); // To store the list of members
-    const [open, setOpen] = useState(false);
-    const roomRef = collection(db, 'room');
-    const userRoomsRef = collection(db, 'userRooms'); // Reference to userRooms collection
-
-    useEffect(() => {
-        const fetchRoomData = async () => {
-            // Fetch room description
->>>>>>> 4b4b63d63f0e0033b192586014f8c8e4e9293674
             const qRoom = query(roomRef, where('room', '==', room));
             const queryRoomSnapshot = await getDocs(qRoom);
             console.log('queryRoomSnapshot: ', queryRoomSnapshot);
@@ -78,29 +67,13 @@ export function RoomInfo({room}: RoomProps) {
                 );
                 setMembers(membersList);
             }
-
-            // Fetch room members
-            const qMembers = query(userRoomsRef, where('roomId', '==', room));
-            const queryMembersSnapshot = await getDocs(qMembers);
-
-            if (!queryMembersSnapshot.empty) {
-                const membersList = queryMembersSnapshot.docs.map(
-                    (doc) => doc.data().userId,
-                );
-                setMembers(membersList);
-            }
         };
 
-        fetchRoomData();
+        fetchRoomDesc();
     }, [room]);
 
-<<<<<<< HEAD
     const handleUpdateRoomInfo = async () => {
         const qRoom = query(roomRef, where('room', '==', room)); // change to real room later
-=======
-    const handleUpdateDesc = async () => {
-        const qRoom = query(roomRef, where('room', '==', room));
->>>>>>> 4b4b63d63f0e0033b192586014f8c8e4e9293674
         const queryRoomSnapshot = await getDocs(qRoom);
 
         if (!queryRoomSnapshot.empty) {
@@ -216,7 +189,6 @@ export function RoomInfo({room}: RoomProps) {
                         done.
                     </DialogDescription>
                 </DialogHeader>
-<<<<<<< HEAD
 
                 <ScrollArea className='flex-1 overflow-y-auto max-h-[400px]'>
                     <div className='grid gap-4 py-4'>
@@ -294,45 +266,6 @@ export function RoomInfo({room}: RoomProps) {
                     </div>
                 </ScrollArea>
 
-=======
-                <div className='grid gap-4 py-4'>
-                    <div className='grid items-center gap-4'>
-                        <h3 className='text-base/7 font-semibold text-gray-900'>
-                            Room Description:
-                        </h3>
-                        <br />
-                        <Input
-                            id='name'
-                            value={roomDesc}
-                            className='col-span-3'
-                            onChange={(e) => setRoomDesc(e.target.value)}
-                        />
-                    </div>
-
-                    {/* Display Room Members */}
-                    <div className='grid items-center gap-4'>
-                        <h6 className='text-base/7 font-semibold text-gray-900'>
-                            Room Member(s):
-                        </h6>
-                        <ul>
-                            {members.length > 0 ? (
-                                members.map((memberId, index) => (
-                                    <li
-                                        key={index}
-                                        className='text-sm text-gray-600'
-                                    >
-                                        {memberId}
-                                    </li>
-                                ))
-                            ) : (
-                                <li className='text-sm text-gray-600'>
-                                    No members yet
-                                </li>
-                            )}
-                        </ul>
-                    </div>
-                </div>
->>>>>>> 4b4b63d63f0e0033b192586014f8c8e4e9293674
                 <DialogFooter>
                     <Button type='submit' onClick={handleUpdateRoomInfo}>
                         Save changes

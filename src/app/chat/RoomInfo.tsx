@@ -39,8 +39,6 @@ export function RoomInfo({room}: RoomProps) {
     const roomRef = collection(db, 'room');
     const userRoomsRef = collection(db, 'userRooms');
 
-    console.log('imageRoomFile: ', imageRoomFile);
-
     useEffect(() => {
         const fetchRoomDesc = async () => {
             const qRoom = query(roomRef, where('room', '==', room));
@@ -82,7 +80,7 @@ export function RoomInfo({room}: RoomProps) {
             await updateDoc(roomDocRef, {
                 roomDesc: roomDesc,
                 room: roomName,
-                roomPhotoURL: imageRoomFile,
+                roomPhotoURL: imageRoomFile || '', // fetch roomPhotoURL
             });
         }
 
@@ -126,7 +124,6 @@ export function RoomInfo({room}: RoomProps) {
 
         if (!file) return;
 
-        // Optional: Image compression
         try {
             const options = {
                 maxSizeMB: 1, // max file size in MB
@@ -137,10 +134,7 @@ export function RoomInfo({room}: RoomProps) {
             const compressedFile = await imageCompression(file, options);
 
             // Upload the compressed image to Firebase Storage
-            const storageRef = ref(
-                storage,
-                `room_images/${Date.now()}_${compressedFile.name}`,
-            );
+            const storageRef = ref(storage, `room_images/${idRoom}`);
 
             const uploadTask = uploadBytesResumable(storageRef, compressedFile);
 

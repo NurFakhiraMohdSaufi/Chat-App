@@ -4,6 +4,9 @@ import '@/styles/ListChat.css';
 
 import {
 	collection,
+	doc,
+	getDoc,
+	getDocs,
 	onSnapshot,
 	orderBy,
 	query,
@@ -29,11 +32,14 @@ interface Message {
 
 export default function ListChat({setRoom, setIsInChat}: RoomProps) {
     // State to hold the list of rooms
-    const [rooms, setRooms] = useState<{roomName: string}[]>([]);
+    const [rooms, setRooms] = useState<
+        {roomName: string; roomPhotoURL: string}[]
+    >([]);
     // State to hold messages for each room
     const [message, setMessage] = useState<
         {roomName: string; messages: Message[]}[]
     >([]);
+    const [roomProfile, setRoomProfile] = useState('');
     const [loading, setLoading] = useState(true);
     const [noRooms, setNoRooms] = useState(false);
     const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
@@ -45,8 +51,9 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
             const chatRef = collection(db, 'userRooms');
             const queryChat = query(chatRef, where('userId', '==', user));
 
-            const unsubscribeRooms = onSnapshot(queryChat, (snapshot) => {
-                const roomsList: {roomName: string}[] = [];
+            const unsubscribeRooms = onSnapshot(queryChat, async (snapshot) => {
+                const roomsList: {roomName: string; roomPhotoURL: string}[] =
+                    [];
 
                 if (snapshot.empty) {
                     setNoRooms(true);
@@ -54,20 +61,36 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
                     setNoRooms(false);
                 }
 
-                snapshot.forEach((doc) => {
-                    const data = doc.data();
-                    const room = data.roomId;
+                // Step 2: For each room associated with the user, fetch the room's data (including photo URL)
+                for (const docSnap of snapshot.docs) {
+                    const data = docSnap.data();
+                    const roomName = data.roomId; // Assuming roomId is the room name
 
-                    // Add room to rooms list if it's not already there
-                    if (!roomsList.some((r) => r.roomName === room)) {
-                        roomsList.push({roomName: room});
-                    }
-                });
+                    // Fetch room details where the 'room' field matches the roomName
+                    const roomRef = query(
+                        collection(db, 'room'),
+                        where('room', '==', roomName),
+                    ); // Filter rooms collection by room field
+                    const roomQuerySnapshot = await getDocs(roomRef); // Fetch matching rooms
 
-                // Set the rooms state
+                    // If room exists, process the data
+                    roomQuerySnapshot.forEach((roomDoc) => {
+                        const roomData = roomDoc.data();
+                        const roomPhotoURL = roomData?.roomPhotoURL || ''; // Default to empty string if not found
+
+                        // Add room to the list if it's not already in there
+                        if (!roomsList.some((r) => r.roomName === roomName)) {
+                            roomsList.push({
+                                roomName: roomName,
+                                roomPhotoURL,
+                            });
+                        }
+                    });
+                }
+
+                // Step 3: Update state with the fetched rooms (including photo URLs)
                 setRooms(roomsList);
-                console.log('room List: ', roomsList);
-
+                console.log('Room List with Photos: ', roomsList);
                 setLoading(false);
             });
 
@@ -127,6 +150,13 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
         setSelectedRoom(roomName);
     };
 
+    const isImageMessage = (text: string) => {
+        const base64ImagePattern =
+            /^data:image\/(png|jpeg|jpg|gif|bmp);base64,/;
+        const imageUrlPattern = /\.(jpg|jpeg|png|gif|bmp)$/i;
+        return base64ImagePattern.test(text) || imageUrlPattern.test(text);
+    };
+
     return (
         <div className='list-container'>
             <div>
@@ -156,7 +186,10 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
                             <div className='flex'>
                                 <img
                                     className='flex items-center justify-center h-8 w-8 bg-indigo-200 ml-1 rounded-full'
-                                    src='https://static.vecteezy.com/system/resources/previews/026/019/617/original/group-profile-avatar-icon-default-social-media-forum-profile-photo-vector.jpg'
+                                    src={
+                                        room.roomPhotoURL ||
+                                        'https://static.vecteezy.com/system/resources/previews/026/019/617/original/group-profile-avatar-icon-default-social-media-forum-profile-photo-vector.jpg'
+                                    }
                                     width='32'
                                     height='32'
                                     alt='User Profile'

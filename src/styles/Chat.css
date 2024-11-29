@@ -1,6 +1,6 @@
 /* Main container that holds the entire chat application */
 .chat-app {
-    @apply w-full bg-black h-full flex flex-col h-screen; /* Flex column layout for chat app */
+    @apply w-full bg-background h-full flex flex-col h-screen; /* Flex column layout for chat app */
 }
 
 /* Header */
@@ -24,12 +24,10 @@
     @apply bg-gray-700;
 }
 
-/* Move the Information Button to the right side of the header */
 .header .information-button {
     @apply text-xl text-white cursor-pointer; /* Ensure the button is styled and clickable */
 }
 
-/* Messages Area - Ensures it grows to take available space and can scroll */
 .messages {
     @apply flex flex-col overflow-y-auto p-4 flex-grow scroll-smooth; /* Allows scrolling and takes up available space */
 }

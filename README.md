@@ -22,8 +22,6 @@ A real-time chat application that allows users to send and receive messages, cre
 - Backend: D
 - Database: Firebase
 - Deployment: D
-  
-## Installation
 
 ### Clone the repository
 
@@ -37,6 +35,18 @@ cd Chat-App
 ```bash
 npm install
 ```
+
+## Installation
+
+To run the project locally, use the following command:
+
+```bash
+npm run dev
+```
+
+This will start the app in development mode.
+
+Open [Local Host](http://localhost:3000) in your browser to interact with the Chatify.
 
 ### Steps to upload
 

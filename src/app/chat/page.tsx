@@ -12,6 +12,7 @@ import {
 	query,
 	where,
 } from 'firebase/firestore';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 import { auth, db } from '@/config/firebase-config';
@@ -184,14 +185,14 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
                             aria-label={`Chat with ${room.roomName}`}
                         >
                             <div className='flex'>
-                                <img
+                                <Image
                                     className='flex items-center justify-center h-8 w-8 bg-indigo-200 ml-1 rounded-full'
                                     src={
                                         room.roomPhotoURL ||
                                         'https://static.vecteezy.com/system/resources/previews/026/019/617/original/group-profile-avatar-icon-default-social-media-forum-profile-photo-vector.jpg'
                                     }
-                                    width='32'
-                                    height='32'
+                                    width={200}
+                                    height={200}
                                     alt='User Profile'
                                 />
                             </div>

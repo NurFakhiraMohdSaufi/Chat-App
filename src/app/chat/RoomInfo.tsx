@@ -8,6 +8,7 @@ import {
 	where,
 } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -188,13 +189,13 @@ export function RoomInfo({room}: RoomProps) {
                     <div className='grid gap-4 py-4'>
                         <div className='flex justify-center items-center p-7'>
                             <div className='h-40 w-40 rounded-full overflow-hidden border-2 border-gray-300 flex items-center justify-center'>
-                                <img
+                                <Image
                                     src={
                                         imageRoomFile ||
                                         'https://static.vecteezy.com/system/resources/previews/026/019/617/original/group-profile-avatar-icon-default-social-media-forum-profile-photo-vector.jpg'
                                     }
-                                    width={170}
-                                    height={170}
+                                    width={200}
+                                    height={200}
                                     alt='Avatar'
                                 />
                             </div>

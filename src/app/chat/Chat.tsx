@@ -12,6 +12,7 @@ import {
 	Timestamp,
 	where,
 } from 'firebase/firestore';
+import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react';
 
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -37,7 +38,6 @@ export default function Room({room}: RoomProps) {
     const [newMessage, setNewMessage] = useState('');
     const [messages, setMessages] = useState<Message[]>([]);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-    const [emojiCategory, setEmojiCategory] = useState('Smileys');
     const [replyToMessageText, setReplyToMessageText] = useState<string | null>(
         '',
     );
@@ -193,17 +193,6 @@ export default function Room({room}: RoomProps) {
         }
     }, [messages]);
 
-    // const refreshChatInfo = async () => {
-    //     if (userData) {
-    //         await userData.reload();
-    //         setUserName(userData?.displayName || '');
-    //     }
-    // };
-
-    // const handleDescEdit = async () => {
-    //     await refreshChatInfo();
-    // };
-
     return (
         <div className='chat-app'>
             <div className='header'>
@@ -229,12 +218,14 @@ export default function Room({room}: RoomProps) {
 
                             {message.image && (
                                 <div className='message-image'>
-                                    <img
+                                    <Image
                                         src={message.image}
                                         alt='Image'
                                         onClick={() =>
                                             handleReplyClick(message)
                                         }
+                                        width={200}
+                                        height={200}
                                     />
                                 </div>
                             )}
@@ -278,7 +269,12 @@ export default function Room({room}: RoomProps) {
                 {/* Image Preview Section */}
                 {imageFile && (
                     <div className='image-preview'>
-                        <img src={imageFile} alt='Image preview' />
+                        <Image
+                            src={imageFile}
+                            alt='Image preview'
+                            width={200}
+                            height={200}
+                        />
                         <button
                             type='button'
                             className='mdi mdi-close-circle close-preview-button'

@@ -55,9 +55,11 @@ npm run dev
 
 This will start the app in development mode.
 
-Open [](http://localhost:3000) in your browser to interact with the Chatify.
+Open [localhost](http://localhost:3000) in your browser to interact with the Chatify.
 
-### Steps to upload
+## GitHub Tutorial
+
+### Steps to upload in Git Hub
 
 ```bash
 - git add .

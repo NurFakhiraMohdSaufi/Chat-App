@@ -7,12 +7,14 @@ import {
 	signInWithPopup,
 } from 'firebase/auth';
 import { AlertCircle } from 'lucide-react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Cookies from 'universal-cookie';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { auth, provider } from '@/config/firebase-config';
+import logo from '@/logo chatify.png';
 
 const cookies = new Cookies();
 
@@ -85,6 +87,10 @@ export default function Login() {
         router.push('/register');
     };
 
+    const homeButton = () => {
+        router.push('/');
+    };
+
     return (
         <div className=' auth-container'>
             <div className='auth-background'>
@@ -108,6 +114,14 @@ export default function Login() {
                     ></path>
                 </svg>
                 <div className='header-container'>
+                    <Image
+                        className='cursor-pointer'
+                        src={logo}
+                        width={300}
+                        height={300}
+                        alt='Chatify Logo'
+                        onClick={homeButton}
+                    />
                     <h1 className='header-title'>Chatify</h1>
                     {/* <button className='text-white p-2 hover:bg-whatsapp hover:text-black rounded transition duration-500 ease-in-out font-medium'>
                         Register

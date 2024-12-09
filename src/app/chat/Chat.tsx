@@ -224,8 +224,8 @@ export default function Room({room}: RoomProps) {
                                         onClick={() =>
                                             handleReplyClick(message)
                                         }
-                                        width={200}
-                                        height={200}
+                                        width={500}
+                                        height={500}
                                     />
                                 </div>
                             )}
@@ -272,8 +272,8 @@ export default function Room({room}: RoomProps) {
                         <Image
                             src={imageFile}
                             alt='Image preview'
-                            width={200}
-                            height={200}
+                            width={800}
+                            height={800}
                         />
                         <button
                             type='button'

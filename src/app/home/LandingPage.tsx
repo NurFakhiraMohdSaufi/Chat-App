@@ -1,3 +1,7 @@
+import Image from 'next/image';
+
+import logo from '@/logo chatify.png';
+
 export default function LandingPage() {
     return (
         <div className='bg-black w-full h-screen flex items-center justify-center relative overflow-hidden'>
@@ -8,17 +12,17 @@ export default function LandingPage() {
 
             <div className='z-10 text-center text-white'>
                 <div className='text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-4 animate__animated animate__fadeIn animate__delay-1s'>
-                    Welcome to Chat App
+                    Welcome to Chatify
                 </div>
                 <div className='place-items-center m-7'>
-                    <img
-                        src='https://www.pngmart.com/files/16/Chat-Icon-PNG-Pic.png'
-                        width={100}
-                        height={100}
+                    <Image
+                        src={logo}
+                        width={300}
+                        height={300}
                         alt='Chat App Logo'
-                    ></img>
+                    />
                 </div>
-                <p className='text-xl text-white sm:text-2xl mb-6 opacity-80 animate__animated animate__fadeIn animate__delay-2s'>
+                <p className='text-xl text-bold text-white sm:text-2xl mb-6 opacity-80 animate__animated animate__fadeIn animate__delay-2s'>
                     Start a conversation now!
                 </p>
 

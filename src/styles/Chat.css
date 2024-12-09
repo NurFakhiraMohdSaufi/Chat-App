@@ -5,7 +5,7 @@
 
 /* Header */
 .header {
-    @apply flex justify-between items-center bg-whatsapp text-white p-4 sticky top-0; /* Use flex layout to align elements */
+    @apply flex justify-between items-center bg-whatsapp text-white p-4 sticky top-0 h-14; /* Use flex layout to align elements */
 }
 
 .header-title {

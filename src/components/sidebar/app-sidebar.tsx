@@ -2,6 +2,7 @@ import '@/styles/Room.css';
 
 import { signOut } from 'firebase/auth';
 import { LogOutIcon } from 'lucide-react';
+import Image from 'next/image';
 import Cookies from 'universal-cookie';
 
 import ListChat from '@/app/chat/page';
@@ -20,6 +21,7 @@ import {
 	SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { auth } from '@/config/firebase-config';
+import logo from '@/logo chatify.png';
 import { IconButton } from '@mui/material';
 
 const cookies = new Cookies();
@@ -45,17 +47,21 @@ export function AppSidebar({
         // setIsAuth(false);
         setIsInChat(false);
     };
+
     return (
         <Sidebar
             className={`bg-gray-800 text-white ${
                 isSidebarOpen ? 'block' : 'hidden'
             }`}
         >
-            <div className='flex items-center justify-between border-b border-gray-700 p-1'>
+            <div className='flex items-center justify-between border-b border-gray-700 p-1 h-14'>
                 <SidebarHeader>
-                    <h1 className='text-3xl font-bold text-whatsapp'>
-                        Chatify
-                    </h1>
+                    <Image
+                        src={logo}
+                        width={100}
+                        height={100}
+                        alt='Chatify Logo'
+                    />
                 </SidebarHeader>
 
                 <SidebarTrigger onClick={toggleSidebar} />

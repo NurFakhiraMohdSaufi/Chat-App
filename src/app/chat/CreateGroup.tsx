@@ -5,7 +5,6 @@ import { useState } from 'react';
 import {
 	Dialog,
 	DialogContent,
-	DialogDescription,
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
@@ -13,8 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { auth, db } from '@/config/firebase-config';
-import { Button, IconButton, TextField } from '@mui/material';
-import { Label } from '@radix-ui/react-dropdown-menu';
+import { Button, IconButton } from '@mui/material';
 
 interface RoomProps {
     setRoom: (roomName: string) => void;
@@ -54,7 +52,6 @@ export function CreateGroup({setRoom, setIsInChat}: RoomProps) {
                 joinedAt: serverTimestamp(),
             });
 
-            setRoom(roomName);
             setIsInChat(true);
             setRoomName('');
             setOpen(false);
@@ -65,19 +62,6 @@ export function CreateGroup({setRoom, setIsInChat}: RoomProps) {
         } finally {
             setLoading(false);
         }
-    };
-
-    const handleCancel = () => {
-        setOpen(false);
-    };
-
-    const AddButton = () => {
-        <IconButton className='bg-whatsapp'>
-            <MessageCirclePlusIcon
-                className='justify-between text-sm font-semibold text-whatsapp hover:text-blue-500'
-                onClick={() => setOpen(true)}
-            />
-        </IconButton>;
     };
 
     return (
@@ -92,19 +76,17 @@ export function CreateGroup({setRoom, setIsInChat}: RoomProps) {
             </DialogTrigger>
             <DialogContent className='bg-white'>
                 <DialogHeader>
-                    <DialogTitle>Create New Group</DialogTitle>
+                    <DialogTitle>Create New Room</DialogTitle>
                 </DialogHeader>
                 <div className='grid grid-cols-2 items-center gap-4'>
                     <Input
                         className='col-span-2'
-                        placeholder='New Group'
+                        placeholder='New Room'
                         value={roomName}
                         onChange={(e) => {
                             setRoomName(e.target.value);
                             if (error) setError('');
                         }}
-                        // error={Boolean(error)}
-                        // helperText={error || ''}
                         autoFocus
                     />
                 </div>

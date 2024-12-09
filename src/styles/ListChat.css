@@ -1,5 +1,5 @@
 .list-container {
-    @apply w-full flex flex-col mt-1 h-screen;
+    @apply w-full flex flex-col mt-1 h-screen bg-black;
 }
 
 .header-room {

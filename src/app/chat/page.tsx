@@ -7,6 +7,7 @@ import {
 	doc,
 	getDoc,
 	getDocs,
+	limit,
 	onSnapshot,
 	orderBy,
 	query,
@@ -40,7 +41,9 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
     const [message, setMessage] = useState<
         {roomName: string; messages: Message[]}[]
     >([]);
-    const [roomProfile, setRoomProfile] = useState('');
+    const [notification, setNotification] = useState<
+        {roomName: string; hasNewMessage: boolean}[]
+    >([]);
     const [loading, setLoading] = useState(true);
     const [noRooms, setNoRooms] = useState(false);
     const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
@@ -48,7 +51,6 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
 
     useEffect(() => {
         if (user) {
-            // Step 1: Fetch rooms based on user
             const chatRef = collection(db, 'userRooms');
             const queryChat = query(chatRef, where('userId', '==', user));
 
@@ -62,12 +64,10 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
                     setNoRooms(false);
                 }
 
-                // Step 2: For each room associated with the user, fetch the room's data (including photo URL)
                 for (const docSnap of snapshot.docs) {
                     const data = docSnap.data();
                     const roomName = data.roomId; // Assuming roomId is the room name
 
-                    // Fetch room details where the 'room' field matches the roomName
                     const roomRef = query(
                         collection(db, 'room'),
                         where('room', '==', roomName),
@@ -89,9 +89,7 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
                     });
                 }
 
-                // Step 3: Update state with the fetched rooms (including photo URLs)
                 setRooms(roomsList);
-                console.log('Room List with Photos: ', roomsList);
                 setLoading(false);
             });
 
@@ -101,7 +99,6 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
 
     useEffect(() => {
         if (rooms.length > 0) {
-            // Step 2: Fetch messages for each room using onSnapshot for real-time updates
             const unsubscribeMessages = rooms.map((room) => {
                 const chatRef = collection(db, 'messages');
                 const queryMessages = query(

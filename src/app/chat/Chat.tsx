@@ -212,10 +212,19 @@ export default function Room({room}: RoomProps) {
                         }`}
                         key={message.id}
                     >
-                        {message.user !== auth.currentUser?.displayName && (
-                            <span className='user'>{message.user}</span>
-                        )}
-                        <span className='text'>{message.text}</span>
+                        <div className='message-header'>
+                            {message.user !== auth.currentUser?.displayName && (
+                                <span className='user'>{message.user}</span>
+                            )}
+
+                            {/* Reply button for received messages */}
+                            {message.user !== auth.currentUser?.displayName && (
+                                <button
+                                    className='mdi mdi-reply reply-button'
+                                    onClick={() => handleReplyClick(message)}
+                                ></button>
+                            )}
+                        </div>
 
                         {/* Display image and make it smaller if it's part of a reply */}
                         {message.image && (
@@ -226,10 +235,13 @@ export default function Room({room}: RoomProps) {
                                     onClick={() => handleReplyClick(message)}
                                     className={
                                         message.replyTo ? 'quoted-image' : ''
-                                    } // Apply class if it's a reply
+                                    }
                                 />
                             </div>
                         )}
+
+                        {/* Display message text below the image */}
+                        <span className='text'>{message.text}</span>
 
                         {/* Display reply information if it's a reply */}
                         {message.replyTo && (
@@ -243,14 +255,6 @@ export default function Room({room}: RoomProps) {
                         <span className='timestamp'>
                             {formatTimestamp(message.createdAt)}
                         </span>
-
-                        {/* Reply button for received messages */}
-                        {message.user !== auth.currentUser?.displayName && (
-                            <button
-                                className='mdi mdi-reply reply-button'
-                                onClick={() => handleReplyClick(message)}
-                            ></button>
-                        )}
                     </div>
                 ))}
                 <div ref={messagesEndRef} />
@@ -262,7 +266,7 @@ export default function Room({room}: RoomProps) {
                         <span>Replying to: {replyToMessageText}</span>
                         <button
                             type='button'
-                            className='mdi mdi-alpha-x-circle cancel-reply-button'
+                            className='mdi mdi-close cancel-reply-button'
                             onClick={() => setReplyToMessageText('')}
                         ></button>
                     </div>
@@ -294,12 +298,19 @@ export default function Room({room}: RoomProps) {
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
                     />
-                    <input
-                        type='file'
-                        accept='image/*'
-                        onChange={handleFileChange}
-                        className='hidden'
-                    />
+                    <div className='icon-buttons'>
+                        <label
+                            htmlFor='image-upload'
+                            className='mdi mdi-camera camera-button'
+                        ></label>
+                        <input
+                            id='image-upload'
+                            type='file'
+                            accept='image/*'
+                            style={{display: 'none'}}
+                            onChange={handleFileChange}
+                        />
+                    </div>
 
                     <button
                         type='submit'

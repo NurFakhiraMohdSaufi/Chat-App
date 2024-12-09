@@ -9,6 +9,7 @@ import {
 	where,
 } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -153,7 +154,9 @@ export function EditProfile({onProfileEdit}) {
                         const downloadURL = await getDownloadURL(
                             uploadTask.snapshot.ref,
                         );
+
                         setImageFile(downloadURL);
+                        console.log('imageFile: ', imageFile);
                     },
                 );
             } catch (error) {
@@ -165,13 +168,13 @@ export function EditProfile({onProfileEdit}) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <img
+                <Image
                     src={
                         userData?.photoURL ||
                         'https://i.pinimg.com/736x/d2/98/4e/d2984ec4b65a8568eab3dc2b640fc58e.jpg'
                     }
-                    width={50}
-                    height={50}
+                    width={200}
+                    height={200}
                     alt='Avatar'
                     onClick={() => setOpen(true)}
                 />
@@ -189,24 +192,24 @@ export function EditProfile({onProfileEdit}) {
                 <div className='grid gap-4 py-4'>
                     <div className='flex justify-center items-center p-7'>
                         <div className='h-40 w-40 rounded-full overflow-hidden border-2 border-gray-300 flex items-center justify-center'>
-                            <img
+                            <Image
                                 src={
                                     imageFile || // Show the updated image if available
                                     userData?.photoURL ||
                                     'https://i.pinimg.com/736x/d2/98/4e/d2984ec4b65a8568eab3dc2b640fc58e.jpg'
                                 }
-                                width={170}
-                                height={170}
+                                width={200}
+                                height={200}
                                 alt='Avatar'
                             />
                         </div>
                         <div className='icon-buttons'>
                             <label
-                                htmlFor='image-upload'
+                                htmlFor='profile-upload'
                                 className='mdi mdi-camera camera-button'
                             ></label>
                             <input
-                                id='image-upload'
+                                id='profile-upload'
                                 type='file'
                                 accept='image/*'
                                 style={{display: 'none'}}

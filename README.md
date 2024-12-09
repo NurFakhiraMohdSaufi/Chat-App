@@ -22,13 +22,20 @@ A real-time chat application that allows users to send and receive messages, cre
 - Backend: D
 - Database: Firebase
 - Deployment: D
-  
+
 ## Installation
 
-### Clone the repository
+To set up the project on your local machine, follow these steps: 
+
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/NurFakhiraMohdSaufi/Chat-App.git
+```
+
+### 2. Navigate to the project directory
+
+```bash
 cd Chat-App
 ```
 
@@ -38,7 +45,21 @@ cd Chat-App
 npm install
 ```
 
-### Steps to upload
+## Usage
+
+To run the project locally, use the following command:
+
+```bash
+npm run dev
+```
+
+This will start the app in development mode.
+
+Open [localhost](http://localhost:3000) in your browser to interact with the Chatify.
+
+## GitHub Tutorial
+
+### Steps to upload in Git Hub
 
 ```bash
 - git add .

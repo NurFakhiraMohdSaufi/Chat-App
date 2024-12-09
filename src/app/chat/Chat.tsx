@@ -12,10 +12,8 @@ import {
 	Timestamp,
 	where,
 } from 'firebase/firestore';
-import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react';
 
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { auth, db } from '@/config/firebase-config';
 
 import { RoomInfo } from './RoomInfo';
@@ -38,6 +36,7 @@ export default function Room({room}: RoomProps) {
     const [newMessage, setNewMessage] = useState('');
     const [messages, setMessages] = useState<Message[]>([]);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+    const [emojiCategory, setEmojiCategory] = useState('Smileys');
     const [replyToMessageText, setReplyToMessageText] = useState<string | null>(
         '',
     );
@@ -155,6 +154,9 @@ export default function Room({room}: RoomProps) {
     const handleReplyClick = (message: Message) => {
         if (message.user !== auth.currentUser?.displayName) {
             setReplyToMessageText(message.text || 'Image');
+            if (message.image) {
+                setImageFile(message.image);
+            }
         }
     };
 
@@ -200,48 +202,22 @@ export default function Room({room}: RoomProps) {
                 <RoomInfo room={room} />
             </div>
 
-            <ScrollArea className='h-screen'>
-                <div className='messages'>
-                    {messages.map((message) => (
-                        <div
-                            className={`message ${
-                                message.user === auth.currentUser?.displayName
-                                    ? 'sent'
-                                    : 'received'
-                            }`}
-                            key={message.id}
-                        >
+            <div className='messages'>
+                {messages.map((message) => (
+                    <div
+                        className={`message ${
+                            message.user === auth.currentUser?.displayName
+                                ? 'sent'
+                                : 'received'
+                        }`}
+                        key={message.id}
+                    >
+                        <div className='message-header'>
                             {message.user !== auth.currentUser?.displayName && (
                                 <span className='user'>{message.user}</span>
                             )}
-                            <span className='text'>{message.text}</span>
 
-                            {message.image && (
-                                <div className='message-image'>
-                                    <Image
-                                        src={message.image}
-                                        alt='Image'
-                                        onClick={() =>
-                                            handleReplyClick(message)
-                                        }
-                                        width={500}
-                                        height={500}
-                                    />
-                                </div>
-                            )}
-
-                            {message.replyTo && (
-                                <div className='reply-info'>
-                                    <span className='reply-to'>
-                                        Replying to: {message.replyTo}
-                                    </span>
-                                </div>
-                            )}
-
-                            <span className='timestamp'>
-                                {formatTimestamp(message.createdAt)}
-                            </span>
-
+                            {/* Reply button for received messages */}
                             {message.user !== auth.currentUser?.displayName && (
                                 <button
                                     className='mdi mdi-reply reply-button'
@@ -249,10 +225,40 @@ export default function Room({room}: RoomProps) {
                                 ></button>
                             )}
                         </div>
-                    ))}
-                    <div ref={messagesEndRef} />
-                </div>
-            </ScrollArea>
+
+                        {/* Display image and make it smaller if it's part of a reply */}
+                        {message.image && (
+                            <div className='message-image'>
+                                <img
+                                    src={message.image}
+                                    alt='Image'
+                                    onClick={() => handleReplyClick(message)}
+                                    className={
+                                        message.replyTo ? 'quoted-image' : ''
+                                    }
+                                />
+                            </div>
+                        )}
+
+                        {/* Display message text below the image */}
+                        <span className='text'>{message.text}</span>
+
+                        {/* Display reply information if it's a reply */}
+                        {message.replyTo && (
+                            <div className='reply-info'>
+                                <span className='reply-to'>
+                                    Replying to: {message.replyTo}
+                                </span>
+                            </div>
+                        )}
+
+                        <span className='timestamp'>
+                            {formatTimestamp(message.createdAt)}
+                        </span>
+                    </div>
+                ))}
+                <div ref={messagesEndRef} />
+            </div>
 
             <form onSubmit={handleSubmit} className='new-message-form'>
                 {replyToMessageText && (
@@ -260,7 +266,7 @@ export default function Room({room}: RoomProps) {
                         <span>Replying to: {replyToMessageText}</span>
                         <button
                             type='button'
-                            className='mdi mdi-alpha-x-circle cancel-reply-button'
+                            className='mdi mdi-close cancel-reply-button'
                             onClick={() => setReplyToMessageText('')}
                         ></button>
                     </div>
@@ -269,12 +275,7 @@ export default function Room({room}: RoomProps) {
                 {/* Image Preview Section */}
                 {imageFile && (
                     <div className='image-preview'>
-                        <Image
-                            src={imageFile}
-                            alt='Image preview'
-                            width={800}
-                            height={800}
-                        />
+                        <img src={imageFile} alt='Image preview' />
                         <button
                             type='button'
                             className='mdi mdi-close-circle close-preview-button'
@@ -294,10 +295,9 @@ export default function Room({room}: RoomProps) {
                         className='new-message-input'
                         placeholder='Type a message...'
                         onKeyDown={handleKeyDown}
-                        onChange={(e) => setNewMessage(e.target.value)}
                         value={newMessage}
+                        onChange={(e) => setNewMessage(e.target.value)}
                     />
-
                     <div className='icon-buttons'>
                         <label
                             htmlFor='image-upload'
@@ -315,29 +315,39 @@ export default function Room({room}: RoomProps) {
                     <button
                         type='submit'
                         className='mdi mdi-send send-button'
+                        disabled={newMessage === '' && !imageFile}
                     ></button>
                 </div>
 
                 {/* Emoji Picker */}
                 {showEmojiPicker && (
                     <div className='emoji-picker'>
-                        {Object.keys(emojis).map((category) => (
-                            <div key={category}>
-                                <h4>{category}</h4>
-                                <div className='emoji-category'>
-                                    {emojis[category].map((emoji) => (
-                                        <span
-                                            key={emoji}
-                                            onClick={() =>
-                                                handleEmojiClick(emoji)
-                                            }
-                                        >
-                                            {emoji}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-                        ))}
+                        <div className='emoji-categories'>
+                            {Object.keys(emojis).map((category) => (
+                                <button
+                                    key={category}
+                                    className={`emoji-category ${
+                                        emojiCategory === category
+                                            ? 'active'
+                                            : ''
+                                    }`}
+                                    onClick={() => setEmojiCategory(category)}
+                                >
+                                    {category}
+                                </button>
+                            ))}
+                        </div>
+                        <div className='emoji-grid'>
+                            {emojis[emojiCategory]?.map((emoji) => (
+                                <button
+                                    key={emoji}
+                                    className='emoji'
+                                    onClick={() => handleEmojiClick(emoji)}
+                                >
+                                    {emoji}
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 )}
             </form>

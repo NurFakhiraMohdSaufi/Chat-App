@@ -403,7 +403,7 @@ const SidebarSeparator = React.forwardRef<
         <Separator
             ref={ref}
             data-sidebar='separator'
-            className={cn('mx-2 w-auto bg-sidebar-border', className)}
+            className={cn('mx-2 w-auto bg-whatsapp', className)}
             {...props}
         />
     );
@@ -419,7 +419,7 @@ const SidebarContent = React.forwardRef<
             ref={ref}
             data-sidebar='content'
             className={cn(
-                'flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden',
+                'flex h-auto flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden',
                 className,
             )}
             {...props}

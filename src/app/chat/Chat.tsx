@@ -14,6 +14,7 @@ import {
 } from 'firebase/firestore';
 import React, { useEffect, useRef, useState } from 'react';
 
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { auth, db } from '@/config/firebase-config';
 
 import { RoomInfo } from './RoomInfo';
@@ -202,63 +203,75 @@ export default function Room({room}: RoomProps) {
                 <RoomInfo room={room} />
             </div>
 
+            <ScrollArea>
             <div className='messages'>
-                {messages.map((message) => (
-                    <div
-                        className={`message ${
-                            message.user === auth.currentUser?.displayName
-                                ? 'sent'
-                                : 'received'
-                        }`}
-                        key={message.id}
-                    >
-                        <div className='message-header'>
-                            {message.user !== auth.currentUser?.displayName && (
-                                <span className='user'>{message.user}</span>
+
+                    {messages.map((message) => (
+                        <div
+                            className={`message ${
+                                message.user === auth.currentUser?.displayName
+                                    ? 'sent'
+                                    : 'received'
+                            }`}
+                            key={message.id}
+                        >
+                            <div className='message-header'>
+                                {message.user !==
+                                    auth.currentUser?.displayName && (
+                                    <span className='user'>{message.user}</span>
+                                )}
+
+                                {/* Reply button for received messages */}
+                                {message.user !==
+                                    auth.currentUser?.displayName && (
+                                    <button
+                                        className='mdi mdi-reply reply-button'
+                                        onClick={() =>
+                                            handleReplyClick(message)
+                                        }
+                                    ></button>
+                                )}
+                            </div>
+
+                            {/* Display image and make it smaller if it's part of a reply */}
+                            {message.image && (
+                                <div className='message-image'>
+                                    <img
+                                        src={message.image}
+                                        alt='Image'
+                                        onClick={() =>
+                                            handleReplyClick(message)
+                                        }
+                                        className={
+                                            message.replyTo
+                                                ? 'quoted-image'
+                                                : ''
+                                        }
+                                    />
+                                </div>
                             )}
 
-                            {/* Reply button for received messages */}
-                            {message.user !== auth.currentUser?.displayName && (
-                                <button
-                                    className='mdi mdi-reply reply-button'
-                                    onClick={() => handleReplyClick(message)}
-                                ></button>
+                            {/* Display message text below the image */}
+                            <span className='text'>{message.text}</span>
+
+                            {/* Display reply information if it's a reply */}
+                            {message.replyTo && (
+                                <div className='reply-info'>
+                                    <span className='reply-to'>
+                                        Replying to: {message.replyTo}
+                                    </span>
+                                </div>
                             )}
+
+                            <span className='timestamp'>
+                                {formatTimestamp(message.createdAt)}
+                            </span>
                         </div>
+                    ))}
+                    <div ref={messagesEndRef} />
 
-                        {/* Display image and make it smaller if it's part of a reply */}
-                        {message.image && (
-                            <div className='message-image'>
-                                <img
-                                    src={message.image}
-                                    alt='Image'
-                                    onClick={() => handleReplyClick(message)}
-                                    className={
-                                        message.replyTo ? 'quoted-image' : ''
-                                    }
-                                />
-                            </div>
-                        )}
-
-                        {/* Display message text below the image */}
-                        <span className='text'>{message.text}</span>
-
-                        {/* Display reply information if it's a reply */}
-                        {message.replyTo && (
-                            <div className='reply-info'>
-                                <span className='reply-to'>
-                                    Replying to: {message.replyTo}
-                                </span>
-                            </div>
-                        )}
-
-                        <span className='timestamp'>
-                            {formatTimestamp(message.createdAt)}
-                        </span>
-                    </div>
-                ))}
-                <div ref={messagesEndRef} />
             </div>
+            </ScrollArea>
 
             <form onSubmit={handleSubmit} className='new-message-form'>
                 {replyToMessageText && (

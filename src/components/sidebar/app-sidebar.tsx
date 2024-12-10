@@ -66,6 +66,7 @@ export function AppSidebar({
 
                 <SidebarTrigger onClick={toggleSidebar} />
             </div>
+
             <ScrollArea>
                 <SidebarContent className='border-b border-gray-700'>
                     <SidebarGroup>

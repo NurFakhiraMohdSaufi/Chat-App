@@ -30,12 +30,12 @@
     @apply flex flex-col ml-2;
 }
 
-.icon-profile {
-    @apply rounded-full h-8 w-8 flex-shrink-0;
+.title-name {
+    @apply flex justify-between items-center text-sm font-semibold text-white text-left mr-2;
 }
 
-.title-name {
-    @apply text-sm font-semibold text-white text-left mr-2;
+.icon-profile {
+    @apply rounded-full h-8 w-8 flex-shrink-0;
 }
 
 .title-chat {

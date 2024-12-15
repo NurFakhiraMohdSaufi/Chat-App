@@ -5,14 +5,16 @@ import '@/styles/ListChat.css';
 import {
 	collection,
 	doc,
-	getDoc,
 	getDocs,
-	limit,
 	onSnapshot,
 	orderBy,
 	query,
+	serverTimestamp,
+	setDoc,
+	updateDoc,
 	where,
 } from 'firebase/firestore';
+import { Circle } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
@@ -20,29 +22,25 @@ import { auth, db } from '@/config/firebase-config';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 
-interface RoomProps {
-    setRoom: (roomName: string) => void;
-    setIsInChat: (isInChat: boolean) => void;
-}
+import { RoomProps } from '../../interfaces/RoomProps';
 
 interface Message {
     id: string;
     text: string;
     room: string;
     user: string;
+    createdAt: number;
 }
 
 export default function ListChat({setRoom, setIsInChat}: RoomProps) {
-    // State to hold the list of rooms
     const [rooms, setRooms] = useState<
         {roomName: string; roomPhotoURL: string}[]
     >([]);
-    // State to hold messages for each room
     const [message, setMessage] = useState<
         {roomName: string; messages: Message[]}[]
     >([]);
-    const [notification, setNotification] = useState<
-        {roomName: string; hasNewMessage: boolean}[]
+    const [notifications, setNotifications] = useState<
+        {roomName: string; hasNewMessage: boolean; newMessageCount: number}[]
     >([]);
     const [loading, setLoading] = useState(true);
     const [noRooms, setNoRooms] = useState(false);
@@ -57,34 +55,24 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
             const unsubscribeRooms = onSnapshot(queryChat, async (snapshot) => {
                 const roomsList: {roomName: string; roomPhotoURL: string}[] =
                     [];
-
-                if (snapshot.empty) {
-                    setNoRooms(true);
-                } else {
-                    setNoRooms(false);
-                }
+                if (snapshot.empty) setNoRooms(true);
+                else setNoRooms(false);
 
                 for (const docSnap of snapshot.docs) {
                     const data = docSnap.data();
-                    const roomName = data.roomId; // Assuming roomId is the room name
+                    const roomName = data.roomId;
 
                     const roomRef = query(
                         collection(db, 'room'),
                         where('room', '==', roomName),
-                    ); // Filter rooms collection by room field
-                    const roomQuerySnapshot = await getDocs(roomRef); // Fetch matching rooms
+                    );
+                    const roomQuerySnapshot = await getDocs(roomRef);
 
-                    // If room exists, process the data
                     roomQuerySnapshot.forEach((roomDoc) => {
                         const roomData = roomDoc.data();
-                        const roomPhotoURL = roomData?.roomPhotoURL || ''; // Default to empty string if not found
-
-                        // Add room to the list if it's not already in there
+                        const roomPhotoURL = roomData?.roomPhotoURL || '';
                         if (!roomsList.some((r) => r.roomName === roomName)) {
-                            roomsList.push({
-                                roomName: roomName,
-                                roomPhotoURL,
-                            });
+                            roomsList.push({roomName, roomPhotoURL});
                         }
                     });
                 }
@@ -107,9 +95,31 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
                     orderBy('createdAt'),
                 );
 
-                // Real-time listener for messages in each room
-                return onSnapshot(queryMessages, (snapshot) => {
+                return onSnapshot(queryMessages, async (snapshot) => {
                     const messagesForRoom: Message[] = [];
+                    let hasNewMessage = false;
+
+                    // Query the 'userRooms' collection where 'userId' matches the current user and 'roomId' matches the room name
+                    const userRoomQuery = query(
+                        collection(db, 'userRooms'),
+                        where('userId', '==', user),
+                        where('roomId', '==', room.roomName),
+                    );
+
+                    // Execute the query
+                    const querySnapshot = await getDocs(userRoomQuery);
+
+                    // Check if the query returned any documents
+                    let lastRead = 0; // Default value if no document exists
+                    if (!querySnapshot.empty) {
+                        // If a matching document exists, retrieve the 'lastRead' timestamp
+                        querySnapshot.forEach((doc) => {
+                            const data = doc.data();
+                            lastRead = data?.lastRead || 0; // Use the 'lastRead' field if it exists, otherwise default to 0
+                        });
+                    }
+
+                    let newMessageCount = 0;
 
                     snapshot.forEach((doc) => {
                         const data = doc.data();
@@ -118,12 +128,19 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
                             text: data.text || '',
                             room: room.roomName,
                             user: data.user || '',
+                            createdAt: data.createdAt,
                         };
+
+                        // Determine if the message is new
+                        if (data.createdAt > lastRead && data.user !== user) {
+                            hasNewMessage = true;
+                            newMessageCount++;
+                        }
 
                         messagesForRoom.push(message);
                     });
 
-                    // Update the messages state
+                    // Update messages state
                     setMessage((prevMessages) => {
                         const updatedMessages = prevMessages.filter(
                             (msg) => msg.roomName !== room.roomName,
@@ -134,6 +151,19 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
                         });
                         return updatedMessages;
                     });
+
+                    // Update notifications state
+                    setNotifications((prevNotifications) => {
+                        const updatedNotifications = prevNotifications.filter(
+                            (notif) => notif.roomName !== room.roomName,
+                        );
+                        updatedNotifications.push({
+                            roomName: room.roomName,
+                            hasNewMessage,
+                            newMessageCount,
+                        });
+                        return updatedNotifications;
+                    });
                 });
             });
 
@@ -142,17 +172,50 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
         }
     }, [rooms]);
 
-    const handleRoomClick = (roomName: string) => {
+    const handleRoomClick = async (roomName: string) => {
         setRoom(roomName);
         setIsInChat(true);
         setSelectedRoom(roomName);
-    };
 
-    const isImageMessage = (text: string) => {
-        const base64ImagePattern =
-            /^data:image\/(png|jpeg|jpg|gif|bmp);base64,/;
-        const imageUrlPattern = /\.(jpg|jpeg|png|gif|bmp)$/i;
-        return base64ImagePattern.test(text) || imageUrlPattern.test(text);
+        // Clear the badge notification for this room
+        setNotifications((prevNotifications) =>
+            prevNotifications.map((notif) =>
+                notif.roomName === roomName
+                    ? {...notif, hasNewMessage: false}
+                    : notif,
+            ),
+        );
+
+        try {
+            // Query userRooms collection for documents where userId matches the current user
+            const userRoomQuery = query(
+                collection(db, 'userRooms'),
+                where('userId', '==', user),
+                where('roomId', '==', roomName),
+            );
+
+            const querySnapshot = await getDocs(userRoomQuery);
+
+            if (!querySnapshot.empty) {
+                // If a document exists, update the lastRead timestamp
+                querySnapshot.forEach(async (doc) => {
+                    await updateDoc(doc.ref, {lastRead: serverTimestamp()});
+                });
+            } else {
+                // If no matching document exists, create a new one
+                const userRoomRef = doc(
+                    collection(db, 'userRooms'),
+                    `${user}_${roomName}`,
+                );
+                await setDoc(userRoomRef, {
+                    lastRead: Date.now(),
+                    userId: user,
+                    roomId: roomName,
+                });
+            }
+        } catch (error) {
+            console.error('Error updating userRooms:', error);
+        }
     };
 
     return (
@@ -194,7 +257,29 @@ export default function ListChat({setRoom, setIsInChat}: RoomProps) {
                                 />
                             </div>
                             <div className='chat-list'>
-                                <h4 className='title-name'>{room.roomName}</h4>
+                                <h4 className='title-name'>
+                                    <span>{room.roomName}</span>
+                                    {notifications.map((notify) =>
+                                        notify.roomName === room.roomName &&
+                                        notify.hasNewMessage ? (
+                                            <span
+                                                className='ml-1 flex items-center relative'
+                                                key={notify.roomName}
+                                            >
+                                                <Circle
+                                                    fill='#86BC25'
+                                                    size={25}
+                                                    stroke='none'
+                                                    className='circle-icon'
+                                                />
+                                                <span className='absolute text-xs font-bold text-white inset-0 flex items-center justify-center'>
+                                                    {notify.newMessageCount}
+                                                </span>
+                                            </span>
+                                        ) : null,
+                                    )}
+                                </h4>
+
                                 {message.map(
                                     (chat) =>
                                         chat.roomName === room.roomName && (

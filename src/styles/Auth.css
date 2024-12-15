@@ -2,16 +2,12 @@
     @apply h-screen flex relative bg-black;
 }
 
-.auth-background {
-    @apply w-full relative flex;
-}
-
 .card-auth {
     @apply p-10 m-auto bg-white rounded-md shadow-xl lg:max-w-xl;
 }
 
 .form-card {
-    @apply absolute mezzo flex flex-col;
+    @apply absolute mezzo w-80;
 }
 
 .header-container {
@@ -71,5 +67,5 @@ h1 {
 
 .mezzo {
     top: 10%;
-    left: 50%;
+    left: 55%;
 }

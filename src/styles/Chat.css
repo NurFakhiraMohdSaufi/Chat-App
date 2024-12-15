@@ -29,7 +29,7 @@
 }
 
 .messages {
-    @apply flex flex-col overflow-y-auto p-4 flex-grow scroll-smooth h-screen; /* Allows scrolling and takes up available space */
+    @apply flex flex-col overflow-y-auto p-4 flex-grow scroll-smooth; /* Allows scrolling and takes up available space */
 }
 
 /* Message Bubbles */

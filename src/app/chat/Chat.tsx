@@ -12,32 +12,25 @@ import {
 	Timestamp,
 	where,
 } from 'firebase/firestore';
+import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react';
 
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { auth, db } from '@/config/firebase-config';
 
+import { Message } from '../../interfaces/Message';
 import { RoomInfo } from './RoomInfo';
 
 interface RoomProps {
     room: string;
 }
 
-interface Message {
-    id: string;
-    text: string;
-    user: string;
-    createdAt: Timestamp;
-    room: string;
-    replyTo: string | null;
-    image?: string | null;
-}
-
 export default function Room({room}: RoomProps) {
     const [newMessage, setNewMessage] = useState('');
     const [messages, setMessages] = useState<Message[]>([]);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-    const [emojiCategory, setEmojiCategory] = useState('Smileys');
+    const [emojiCategory, setEmojiCategory] =
+        useState<keyof typeof emojis>('Smileys');
     const [replyToMessageText, setReplyToMessageText] = useState<string | null>(
         '',
     );
@@ -114,7 +107,7 @@ export default function Room({room}: RoomProps) {
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
-            handleSubmit(e);
+            handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
         }
     };
 
@@ -168,7 +161,15 @@ export default function Room({room}: RoomProps) {
     };
 
     // Emoji categories and emojis
-    const emojis = {
+    const emojis: {
+        [key in
+            | 'Smileys'
+            | 'Animals'
+            | 'Food'
+            | 'Objects'
+            | 'Travel'
+            | 'Symbols']: string[];
+    } = {
         Smileys: [
             '😊',
             '😂',
@@ -203,9 +204,8 @@ export default function Room({room}: RoomProps) {
                 <RoomInfo room={room} />
             </div>
 
-            <ScrollArea>
-            <div className='messages'>
-
+            <ScrollArea className='h-screen'>
+                <div className='messages'>
                     {messages.map((message) => (
                         <div
                             className={`message ${
@@ -236,7 +236,7 @@ export default function Room({room}: RoomProps) {
                             {/* Display image and make it smaller if it's part of a reply */}
                             {message.image && (
                                 <div className='message-image'>
-                                    <img
+                                    <Image
                                         src={message.image}
                                         alt='Image'
                                         onClick={() =>
@@ -269,8 +269,7 @@ export default function Room({room}: RoomProps) {
                         </div>
                     ))}
                     <div ref={messagesEndRef} />
-
-            </div>
+                </div>
             </ScrollArea>
 
             <form onSubmit={handleSubmit} className='new-message-form'>
@@ -288,7 +287,7 @@ export default function Room({room}: RoomProps) {
                 {/* Image Preview Section */}
                 {imageFile && (
                     <div className='image-preview'>
-                        <img src={imageFile} alt='Image preview' />
+                        <Image src={imageFile} alt='Image preview' />
                         <button
                             type='button'
                             className='mdi mdi-close-circle close-preview-button'
@@ -310,6 +309,7 @@ export default function Room({room}: RoomProps) {
                         onKeyDown={handleKeyDown}
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
+                        autoFocus
                     />
                     <div className='icon-buttons'>
                         <label

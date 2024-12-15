@@ -96,6 +96,7 @@ export function SearchRoom({setRoom, setIsInChat}: RoomProps) {
                 userId: user,
                 roomId,
                 joinedAt: Timestamp.fromDate(new Date()),
+                lastRead: null,
             });
 
             console.log('User added to the room:', roomId);

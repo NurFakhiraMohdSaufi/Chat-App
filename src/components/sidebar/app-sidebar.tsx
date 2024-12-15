@@ -68,7 +68,7 @@ export function AppSidebar({
             </div>
 
             <ScrollArea>
-                <SidebarContent className='border-b border-gray-700'>
+                <SidebarContent className='border-b border-gray-700 h-screen'>
                     <SidebarGroup>
                         <SidebarGroupContent className='flex flex-col'>
                             <SidebarMenu className='flex-grow mt-2'>
@@ -89,7 +89,7 @@ export function AppSidebar({
             </ScrollArea>
 
             <SidebarFooter>
-                <div className='flex flex-row justify-between items-center'>
+                <div className='flex flex-row justify-between items-center '>
                     <div className='relative flex-grow'>
                         <ProfileUser
                             setRoom={setRoom}

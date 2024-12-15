@@ -14,18 +14,13 @@ import { Input } from '@/components/ui/input';
 import { auth, db } from '@/config/firebase-config';
 import { Button, IconButton } from '@mui/material';
 
-interface RoomProps {
-    setRoom: (roomName: string) => void;
-    setIsInChat: (isInChat: boolean) => void;
-}
+import { RoomProps } from '../../interfaces/RoomProps';
 
-export function CreateGroup({setRoom, setIsInChat}: RoomProps) {
+export function CreateGroup({setIsInChat}: RoomProps) {
     const [open, setOpen] = useState(false);
     const [roomName, setRoomName] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [success, setSuccess] = useState(false);
-    const userData = auth.currentUser;
 
     const handleCreateNewRoom = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -55,7 +50,6 @@ export function CreateGroup({setRoom, setIsInChat}: RoomProps) {
             setIsInChat(true);
             setRoomName('');
             setOpen(false);
-            setSuccess(true);
         } catch (err) {
             setError('Failed to create room. Please try again.');
             console.error('Error creating room: ', err);
@@ -96,8 +90,9 @@ export function CreateGroup({setRoom, setIsInChat}: RoomProps) {
                         type='submit'
                         className='text-black'
                         onClick={handleCreateNewRoom}
+                        disabled={loading}
                     >
-                        Create
+                        {loading ? 'Creating...' : 'Create'}
                     </Button>
                 </DialogFooter>
             </DialogContent>

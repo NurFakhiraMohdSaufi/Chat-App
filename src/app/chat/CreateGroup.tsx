@@ -37,7 +37,7 @@ export function CreateGroup({setIsInChat}: RoomProps) {
                 room: roomName,
                 createdAt: serverTimestamp(),
                 createdBy: auth.currentUser?.displayName,
-                roomDesc: null,
+                roomDesc: 'Type your group description here...',
             });
 
             // Add user to userRooms collection
@@ -61,20 +61,22 @@ export function CreateGroup({setIsInChat}: RoomProps) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <IconButton className='bg-whatsapp'>
+                <IconButton className='bg-[#86BC25] p-3 rounded-full shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-110'>
                     <MessageCirclePlusIcon
-                        className='justify-between text-sm font-semibold text-whatsapp hover:text-blue-500'
+                        className='text-white text-lg hover:text-blue-500'
                         onClick={() => setOpen(true)}
                     />
                 </IconButton>
             </DialogTrigger>
-            <DialogContent className='bg-white'>
+            <DialogContent className='bg-black p-6 rounded-xl shadow-lg transition-all duration-500 transform hover:scale-105'>
                 <DialogHeader>
-                    <DialogTitle>Create New Room</DialogTitle>
+                    <DialogTitle className='text-2xl font-semibold text-[#86BC25]'>
+                        Create New Room
+                    </DialogTitle>
                 </DialogHeader>
-                <div className='grid grid-cols-2 items-center gap-4'>
+                <div className='grid grid-cols-1 gap-6'>
                     <Input
-                        className='col-span-2'
+                        className='p-3 border-2 border-white rounded-md focus:outline-none focus:border-[#86BC25] transition-all duration-300 transform hover:scale-105 text-white bg-transparent'
                         placeholder='New Room'
                         value={roomName}
                         onChange={(e) => {
@@ -83,16 +85,37 @@ export function CreateGroup({setIsInChat}: RoomProps) {
                         }}
                         autoFocus
                     />
+                    {error && (
+                        <p className='text-sm text-red-600 font-medium transition-all duration-300 transform'>
+                            {error}
+                        </p>
+                    )}
                 </div>
 
-                <DialogFooter>
+                <DialogFooter className='flex justify-between'>
+                    {/* Close Button */}
+                    <Button
+                        type='button'
+                        className='bg-[#86BC25] text-black px-6 py-3 rounded-md hover:bg-white hover:text-black focus:ring-2 focus:ring-[#86BC25] transition-all duration-300 transform hover:scale-105'
+                        onClick={() => setOpen(false)} // Closes the modal
+                    >
+                        Close
+                    </Button>
+
+                    {/* Create Button */}
                     <Button
                         type='submit'
-                        className='text-black'
+                        className='bg-[#86BC25] text-black px-6 py-3 rounded-md hover:bg-white hover:text-black focus:ring-2 focus:ring-[#86BC25] transition-all duration-300 transform hover:scale-105'
                         onClick={handleCreateNewRoom}
                         disabled={loading}
                     >
-                        {loading ? 'Creating...' : 'Create'}
+                        {loading ? (
+                            <span className='animate-spin inline-block'>
+                                Creating...
+                            </span>
+                        ) : (
+                            'Create'
+                        )}
                     </Button>
                 </DialogFooter>
             </DialogContent>

@@ -30,7 +30,7 @@ export default function Login() {
             const result = await signInWithPopup(auth, provider);
             cookies.set('auth-token', result.user.refreshToken);
             // setIsAuth(true);
-            alert('Successfully logged in!');
+            // alert('Successfully logged in!');
             router.push('/home'); // Redirect to home page after login
         } catch (err) {
             console.error(err);

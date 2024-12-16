@@ -14,12 +14,8 @@ import React, { useEffect, useState } from 'react';
 import { auth, db } from '@/config/firebase-config';
 import { RoomData } from '@/interfaces/RoomData';
 
+import { RoomProps } from '../../interfaces/RoomProps';
 import { CreateGroup } from './CreateGroup';
-
-interface RoomProps {
-    setRoom: (roomName: string) => void;
-    setIsInChat: (isInChat: boolean) => void;
-}
 
 export function SearchRoom({setRoom, setIsInChat}: RoomProps) {
     const [roomName, setRoomName] = useState('');

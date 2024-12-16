@@ -239,6 +239,8 @@ export default function Room({room}: RoomProps) {
                                     <Image
                                         src={message.image}
                                         alt='Image'
+                                        width={200}
+                                        height={200}
                                         onClick={() =>
                                             handleReplyClick(message)
                                         }
@@ -287,7 +289,12 @@ export default function Room({room}: RoomProps) {
                 {/* Image Preview Section */}
                 {imageFile && (
                     <div className='image-preview'>
-                        <Image src={imageFile} alt='Image preview' />
+                        <Image
+                            src={imageFile}
+                            alt='Image preview'
+                            height={200}
+                            width={200}
+                        />
                         <button
                             type='button'
                             className='mdi mdi-close-circle close-preview-button'
@@ -344,7 +351,11 @@ export default function Room({room}: RoomProps) {
                                             ? 'active'
                                             : ''
                                     }`}
-                                    onClick={() => setEmojiCategory(category)}
+                                    onClick={() =>
+                                        setEmojiCategory(
+                                            category as keyof typeof emojis,
+                                        )
+                                    }
                                 >
                                     {category}
                                 </button>

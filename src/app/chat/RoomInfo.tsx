@@ -26,17 +26,22 @@ import { db, storage } from '@/config/firebase-config';
 import { Input } from '@mui/material';
 import { Label } from '@radix-ui/react-dropdown-menu';
 
-interface RoomProps {
+interface Room {
     room: string;
 }
 
-export function RoomInfo({room}: RoomProps) {
+export function RoomInfo({room}: Room) {
     const [roomDesc, setRoomDesc] = useState('');
     const [roomName, setRoomName] = useState('');
     const [idRoom, setIdRoom] = useState('');
     const [imageRoomFile, setImageRoomFile] = useState<string | null>(null);
     const [members, setMembers] = useState<string[]>([]);
     const [open, setOpen] = useState(false);
+
+    const defaultImageProfile =
+        'https://static.vecteezy.com/system/resources/previews/026/019/617/original/group-profile-avatar-icon-default-social-media-forum-profile-photo-vector.jpg';
+
+    //  Firebase
     const roomRef = collection(db, 'room');
     const userRoomsRef = collection(db, 'userRooms');
 
@@ -72,7 +77,7 @@ export function RoomInfo({room}: RoomProps) {
     }, [room]);
 
     const handleUpdateRoomInfo = async () => {
-        const qRoom = query(roomRef, where('room', '==', room)); // change to real room later
+        const qRoom = query(roomRef, where('room', '==', room));
         const queryRoomSnapshot = await getDocs(qRoom);
 
         if (!queryRoomSnapshot.empty) {
@@ -190,10 +195,7 @@ export function RoomInfo({room}: RoomProps) {
                         <div className='flex justify-center items-center p-7'>
                             <div className='h-40 w-40 rounded-full overflow-hidden border-2 border-gray-300 flex items-center justify-center'>
                                 <Image
-                                    src={
-                                        imageRoomFile ||
-                                        'https://static.vecteezy.com/system/resources/previews/026/019/617/original/group-profile-avatar-icon-default-social-media-forum-profile-photo-vector.jpg'
-                                    }
+                                    src={imageRoomFile || defaultImageProfile}
                                     width={200}
                                     height={200}
                                     alt='Avatar'

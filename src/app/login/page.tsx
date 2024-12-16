@@ -23,6 +23,7 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+
     const router = useRouter();
 
     const signInWithGoogle = async () => {
@@ -30,7 +31,7 @@ export default function Login() {
             const result = await signInWithPopup(auth, provider);
             cookies.set('auth-token', result.user.refreshToken);
             // setIsAuth(true);
-            alert('Successfully logged in!');
+
             router.push('/home'); // Redirect to home page after login
         } catch (err) {
             console.error(err);
@@ -61,7 +62,7 @@ export default function Login() {
             }
 
             cookies.set('auth-token', result.user.refreshToken);
-            alert('Successfully logged in!');
+
             router.push('/home'); // Redirect to home page after login
             // setIsAuth(true);
             setError('');
@@ -161,14 +162,7 @@ export default function Login() {
                         className='input'
                         placeholder='Enter your password'
                     />
-                    <p className='forgot-password-label'>
-                        <a
-                            onClick={forgotPassword}
-                            className='forgot-password-button'
-                        >
-                            Forgot Password?
-                        </a>
-                    </p>
+                    <p className='forgot-password-label'></p>
                     <button
                         type='submit'
                         disabled={isSubmitting}

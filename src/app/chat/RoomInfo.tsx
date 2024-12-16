@@ -49,7 +49,6 @@ export function RoomInfo({room}: Room) {
         const fetchRoomDesc = async () => {
             const qRoom = query(roomRef, where('room', '==', room));
             const queryRoomSnapshot = await getDocs(qRoom);
-            console.log('queryRoomSnapshot: ', queryRoomSnapshot);
 
             if (!queryRoomSnapshot.empty) {
                 const RoomData = queryRoomSnapshot.docs[0].data();
@@ -177,34 +176,35 @@ export function RoomInfo({room}: Room) {
             <DialogTrigger asChild>
                 <button
                     type='button'
-                    className='mdi mdi-information-outline text-black hover:text-white'
+                    className='mdi mdi-information-outline text-white hover:text-[#86BC25] transition-all duration-300 transform hover:scale-125'
                     onClick={() => setOpen(true)}
                 ></button>
             </DialogTrigger>
-            <DialogContent className='sm:max-w-[425px] bg-white overflow-y-auto flex flex-col'>
+            <DialogContent className='sm:max-w-[425px] bg-black text-white overflow-y-auto flex flex-col'>
                 <DialogHeader>
-                    <DialogTitle>Room Info</DialogTitle>
-                    <DialogDescription>
+                    <DialogTitle className='text-white'>Room Info</DialogTitle>
+                    <DialogDescription className='text-white'>
                         Make changes to your room here. Click save when you are
                         done.
                     </DialogDescription>
                 </DialogHeader>
 
-                <ScrollArea className='flex-1 overflow-y-auto max-h-[400px]'>
+                <ScrollArea className='flex-1 overflow-y-auto max-h-[400px] hover:border-2 hover:border-[#86BC25] transition-all'>
                     <div className='grid gap-4 py-4'>
                         <div className='flex justify-center items-center p-7'>
-                            <div className='h-40 w-40 rounded-full overflow-hidden border-2 border-gray-300 flex items-center justify-center'>
+                            <div className='h-40 w-40 rounded-full overflow-hidden border-2 border-[#86BC25] flex items-center justify-center hover:scale-105 transition-all'>
                                 <Image
                                     src={imageRoomFile || defaultImageProfile}
                                     width={200}
                                     height={200}
                                     alt='Avatar'
+                                    className='transition-transform duration-300'
                                 />
                             </div>
-                            <div className='icon-buttons'>
+                            <div className='absolute top-2 right-0'>
                                 <label
                                     htmlFor='imageRoom-upload'
-                                    className='mdi mdi-camera camera-button'
+                                    className='mdi mdi-camera text-white hover:text-[#86BC25] transition-all duration-300 transform hover:scale-125'
                                 ></label>
                                 <input
                                     id='imageRoom-upload'
@@ -216,31 +216,34 @@ export function RoomInfo({room}: Room) {
                             </div>
                         </div>
                         <div className='grid items-center gap-4'>
-                            <Label className='text-base/7 font-semibold text-gray-900'>
+                            <Label className='text-base font-semibold text-white'>
                                 Room Name:
                             </Label>
                             <Input
                                 id='name'
                                 value={roomName}
-                                className='col-span-3'
+                                className='col-span-3 bg-black text-white border-[#86BC25] focus:ring-[#86BC25] hover:scale-105 transition-all'
                                 onChange={(e) => setRoomName(e.target.value)}
+                                style={{color: 'white'}}
                             />
                         </div>
 
                         <div className='grid items-center gap-4'>
-                            <Label className='text-base/7 font-semibold text-gray-900'>
+                            <Label className='text-base font-semibold text-white'>
                                 Room Description:
                             </Label>
                             <Input
-                                id='name'
+                                id='desc'
                                 value={roomDesc}
-                                className='col-span-3'
+                                className='col-span-3 bg-black text-white border-[#86BC25] focus:ring-[#86BC25] hover:scale-105 transition-all'
                                 onChange={(e) => setRoomDesc(e.target.value)}
+                                style={{color: 'white'}}
                             />
                         </div>
+
                         {/* Display Room Members */}
                         <div className='grid items-center gap-4'>
-                            <h6 className='text-base/7 font-semibold text-gray-900'>
+                            <h6 className='text-base font-semibold text-white'>
                                 Room Member(s):
                             </h6>
                             <ul>
@@ -248,13 +251,13 @@ export function RoomInfo({room}: Room) {
                                     members.map((memberId, index) => (
                                         <li
                                             key={index}
-                                            className='text-sm text-gray-600'
+                                            className='text-sm text-white'
                                         >
                                             {memberId}
                                         </li>
                                     ))
                                 ) : (
-                                    <li className='text-sm text-gray-600'>
+                                    <li className='text-sm text-white'>
                                         No members yet
                                     </li>
                                 )}
@@ -264,8 +267,12 @@ export function RoomInfo({room}: Room) {
                 </ScrollArea>
 
                 <DialogFooter>
-                    <Button type='submit' onClick={handleUpdateRoomInfo}>
-                        Save changes
+                    <Button
+                        className='bg-[#86BC25] text-black px-6 py-3 rounded-md hover:bg-white hover:text-black focus:ring-2 focus:ring-[#86BC25] transform hover:scale-105 transition-all duration-300'
+                        type='submit'
+                        onClick={handleUpdateRoomInfo}
+                    >
+                        Save Changes
                     </Button>
                 </DialogFooter>
             </DialogContent>

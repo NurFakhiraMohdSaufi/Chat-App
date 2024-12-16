@@ -12,29 +12,35 @@ import {
 	Timestamp,
 	where,
 } from 'firebase/firestore';
-import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react';
 
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { auth, db } from '@/config/firebase-config';
 
-import { Message } from '../../interfaces/Message';
 import { RoomInfo } from './RoomInfo';
 
 interface RoomProps {
     room: string;
 }
 
+interface Message {
+    id: string;
+    text: string;
+    user: string;
+    createdAt: Timestamp;
+    room: string;
+    replyTo: string | null;
+    image?: string | null;
+}
+
 export default function Room({room}: RoomProps) {
     const [newMessage, setNewMessage] = useState('');
     const [messages, setMessages] = useState<Message[]>([]);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-    const [emojiCategory, setEmojiCategory] =
-        useState<keyof typeof emojis>('Smileys');
+    const [emojiCategory, setEmojiCategory] = useState('😊'); // Default category to Smileys emoji
     const [replyToMessageText, setReplyToMessageText] = useState<string | null>(
         '',
     );
-    const [imageFile, setImageFile] = useState<string | null>(null); // Image file state
+    const [imageFile, setImageFile] = useState<string | null>(null);
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
     const messagesRef = collection(db, 'messages');
@@ -107,7 +113,7 @@ export default function Room({room}: RoomProps) {
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
-            handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
+            handleSubmit(e);
         }
     };
 
@@ -161,16 +167,8 @@ export default function Room({room}: RoomProps) {
     };
 
     // Emoji categories and emojis
-    const emojis: {
-        [key in
-            | 'Smileys'
-            | 'Animals'
-            | 'Food'
-            | 'Objects'
-            | 'Travel'
-            | 'Symbols']: string[];
-    } = {
-        Smileys: [
+    const emojis = {
+        '😊': [
             '😊',
             '😂',
             '😍',
@@ -183,12 +181,127 @@ export default function Room({room}: RoomProps) {
             '🤗',
             '😢',
             '🥳',
+            '😃',
+            '😄',
+            '😆',
+            '😋',
+            '😛',
+            '😝',
+            '😇',
+            '🤩',
+            '😌',
+            '😏',
         ],
-        Animals: ['🐶', '🐱', '🐯', '🐸', '🦁', '🦊', '🐻', '🦄', '🐨'],
-        Food: ['🍏', '🍔', '🍕', '🍣', '🍩', '🍪', '🍔', '🍓', '🍉', '🍍'],
-        Objects: ['💻', '📱', '📸', '🎧', '💼', '📚', '🏠', '🚗', '⚽'],
-        Travel: ['🌍', '🌎', '🏖️', '🗽', '🏕️', '🚢', '✈️', '🚉'],
-        Symbols: ['❤️', '💔', '💯', '👍', '👎', '✨', '🔥', '⚡'],
+        '🐶': [
+            '🐶',
+            '🐱',
+            '🐯',
+            '🐸',
+            '🦁',
+            '🦊',
+            '🐻',
+            '🦄',
+            '🐨',
+            '🐵',
+            '🐒',
+            '🐼',
+            '🦓',
+            '🐧',
+            '🦔',
+            '🦇',
+            '🦘',
+            '🦣',
+            '🦃',
+            '🐾',
+        ],
+        '🍔': [
+            '🍏',
+            '🍔',
+            '🍕',
+            '🍣',
+            '🍩',
+            '🍪',
+            '🍓',
+            '🍉',
+            '🍍',
+            '🍇',
+            '🍒',
+            '🥗',
+            '🥓',
+            '🥩',
+            '🥪',
+            '🍲',
+            '🍝',
+            '🍛',
+            '🍜',
+            '🥘',
+        ],
+        '💻': [
+            '💻',
+            '📱',
+            '📸',
+            '🎧',
+            '💼',
+            '📚',
+            '🏠',
+            '🚗',
+            '⚽',
+            '🎮',
+            '🖥️',
+            '⌨️',
+            '🖱️',
+            '📺',
+            '📡',
+            '🔌',
+            '🔋',
+            '💡',
+            '🕹️',
+        ],
+        '🌍': [
+            '🌍',
+            '🌎',
+            '🏖️',
+            '🗽',
+            '🏕️',
+            '🚢',
+            '✈️',
+            '🚉',
+            '🏞️',
+            '🏙️',
+            '🌆',
+            '🏜️',
+            '🌄',
+            '🏔️',
+            '🏖️',
+            '🌌',
+            '🌋',
+            '⛷️',
+            '🛶',
+            '🏝️',
+        ],
+        '❤️': [
+            '❤️',
+            '💔',
+            '💯',
+            '👍',
+            '👎',
+            '✨',
+            '🔥',
+            '⚡',
+            '💥',
+            '🧡',
+            '💛',
+            '💚',
+            '💙',
+            '💜',
+            '💝',
+            '💗',
+            '💓',
+            '💞',
+            '❣️',
+            '💌',
+            '💕',
+        ],
     };
 
     useEffect(() => {
@@ -204,75 +317,63 @@ export default function Room({room}: RoomProps) {
                 <RoomInfo room={room} />
             </div>
 
-            <ScrollArea className='h-screen'>
-                <div className='messages'>
-                    {messages.map((message) => (
-                        <div
-                            className={`message ${
-                                message.user === auth.currentUser?.displayName
-                                    ? 'sent'
-                                    : 'received'
-                            }`}
-                            key={message.id}
-                        >
-                            <div className='message-header'>
-                                {message.user !==
-                                    auth.currentUser?.displayName && (
-                                    <span className='user'>{message.user}</span>
-                                )}
-
-                                {/* Reply button for received messages */}
-                                {message.user !==
-                                    auth.currentUser?.displayName && (
-                                    <button
-                                        className='mdi mdi-reply reply-button'
-                                        onClick={() =>
-                                            handleReplyClick(message)
-                                        }
-                                    ></button>
-                                )}
-                            </div>
-
-                            {/* Display image and make it smaller if it's part of a reply */}
-                            {message.image && (
-                                <div className='message-image'>
-                                    <Image
-                                        src={message.image}
-                                        alt='Image'
-                                        width={200}
-                                        height={200}
-                                        onClick={() =>
-                                            handleReplyClick(message)
-                                        }
-                                        className={
-                                            message.replyTo
-                                                ? 'quoted-image'
-                                                : ''
-                                        }
-                                    />
-                                </div>
+            <div className='messages'>
+                {messages.map((message) => (
+                    <div
+                        className={`message ${
+                            message.user === auth.currentUser?.displayName
+                                ? 'sent'
+                                : 'received'
+                        }`}
+                        key={message.id}
+                    >
+                        <div className='message-header'>
+                            {message.user !== auth.currentUser?.displayName && (
+                                <span className='user'>{message.user}</span>
                             )}
 
-                            {/* Display message text below the image */}
-                            <span className='text'>{message.text}</span>
-
-                            {/* Display reply information if it's a reply */}
-                            {message.replyTo && (
-                                <div className='reply-info'>
-                                    <span className='reply-to'>
-                                        Replying to: {message.replyTo}
-                                    </span>
-                                </div>
+                            {/* Reply button for received messages */}
+                            {message.user !== auth.currentUser?.displayName && (
+                                <button
+                                    className='mdi mdi-reply reply-button'
+                                    onClick={() => handleReplyClick(message)}
+                                ></button>
                             )}
-
-                            <span className='timestamp'>
-                                {formatTimestamp(message.createdAt)}
-                            </span>
                         </div>
-                    ))}
-                    <div ref={messagesEndRef} />
-                </div>
-            </ScrollArea>
+
+                        {/* Display image and make it smaller if it's part of a reply */}
+                        {message.image && (
+                            <div className='message-image'>
+                                <img
+                                    src={message.image}
+                                    alt='Image'
+                                    onClick={() => handleReplyClick(message)}
+                                    className={
+                                        message.replyTo ? 'quoted-image' : ''
+                                    }
+                                />
+                            </div>
+                        )}
+
+                        {/* Display message text below the image */}
+                        <span className='text'>{message.text}</span>
+
+                        {/* Display reply information if it's a reply */}
+                        {message.replyTo && (
+                            <div className='reply-info'>
+                                <span className='reply-to'>
+                                    Replying to: {message.replyTo}
+                                </span>
+                            </div>
+                        )}
+
+                        <span className='timestamp'>
+                            {formatTimestamp(message.createdAt)}
+                        </span>
+                    </div>
+                ))}
+                <div ref={messagesEndRef} />
+            </div>
 
             <form onSubmit={handleSubmit} className='new-message-form'>
                 {replyToMessageText && (
@@ -289,12 +390,7 @@ export default function Room({room}: RoomProps) {
                 {/* Image Preview Section */}
                 {imageFile && (
                     <div className='image-preview'>
-                        <Image
-                            src={imageFile}
-                            alt='Image preview'
-                            height={200}
-                            width={200}
-                        />
+                        <img src={imageFile} alt='Image preview' />
                         <button
                             type='button'
                             className='mdi mdi-close-circle close-preview-button'
@@ -316,7 +412,6 @@ export default function Room({room}: RoomProps) {
                         onKeyDown={handleKeyDown}
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
-                        autoFocus
                     />
                     <div className='icon-buttons'>
                         <label
@@ -357,7 +452,8 @@ export default function Room({room}: RoomProps) {
                                         )
                                     }
                                 >
-                                    {category}
+                                    {category}{' '}
+                                    {/* Use the emoji key for display */}
                                 </button>
                             ))}
                         </div>

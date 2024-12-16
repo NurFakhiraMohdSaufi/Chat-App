@@ -1,11 +1,10 @@
 /* Main container that holds the entire chat application */
 .chat-app {
-    @apply w-full bg-background h-full flex flex-col h-screen; /* Flex column layout for chat app */
+    @apply w-full bg-background h-full flex flex-col h-screen;
 }
 
-/* Header */
 .header {
-    @apply flex justify-between items-center bg-whatsapp text-white p-4 sticky top-0 h-14; /* Use flex layout to align elements */
+    @apply flex justify-between items-center bg-whatsapp text-white p-4 sticky top-0 h-14;
 }
 
 .header-title {
@@ -25,11 +24,11 @@
 }
 
 .header .information-button {
-    @apply text-xl text-white cursor-pointer; /* Ensure the button is styled and clickable */
+    @apply text-xl text-white cursor-pointer;
 }
 
 .messages {
-    @apply flex flex-col overflow-y-auto p-4 flex-grow scroll-smooth; /* Allows scrolling and takes up available space */
+    @apply flex flex-col overflow-y-auto p-4 flex-grow scroll-smooth;
 }
 
 /* Message Bubbles */
@@ -38,7 +37,7 @@
 }
 
 .message .message-image img.quoted-image {
-    max-width: 100px; /* Resize image for reply */
+    max-width: 100px;
     max-height: 100px;
     object-fit: cover;
     cursor: pointer;
@@ -71,25 +70,21 @@
     @apply text-xs text-gray-500;
 }
 
-/* New Message Form */
 .new-message-form {
     @apply flex flex-col p-2 border-t border-gray-300 bg-black sticky bottom-0 z-10; /* Flex column for form with reply box above */
 }
 
-/* Input Field */
 .new-message-input {
     @apply flex-1 border border-gray-300 bg-gray-200 rounded-lg pl-10 pr-10 p-2 focus:outline-none focus:ring focus:ring-blue-400;
 }
 
-/* Reply Box (Positioned Above the Input Field) */
 .replying-to {
-    @apply w-full text-sm text-gray-600 p-2 bg-gray-100 rounded-lg mb-2; /* Improved appearance */
-    position: relative; /* Ensures proper stacking above the input */
+    @apply w-full text-sm text-gray-600 p-2 bg-gray-100 rounded-lg mb-2;
+    position: relative;
 }
 
-/* Icon Buttons (Emoticon, Camera, etc.) */
 .icon-buttons {
-    @apply flex items-center justify-end space-x-2; /* Align icons to the right */
+    @apply flex items-center justify-end space-x-2;
 }
 
 .emoticon-button {
@@ -108,7 +103,6 @@
     @apply gap-4 place-items-end;
 }
 
-/* Emoji Picker */
 .emoji-picker {
     @apply absolute bottom-16 left-0 z-10 bg-white p-2 border border-gray-300 rounded-lg shadow-lg w-72 max-h-60 overflow-y-auto;
 }
@@ -133,77 +127,56 @@
     @apply text-2xl cursor-pointer hover:bg-gray-200 rounded-lg p-2 transition ease-in-out duration-200;
 }
 
-/* Reply Info */
 .reply-info {
     @apply text-sm text-gray-500 mt-1 italic;
 }
 
-/* Image Preview Section */
 .image-preview {
-    @apply relative inline-block rounded-lg overflow-hidden; /* Rounded corners */
-    width: 140px; /* Slightly smaller than before for a more compact look */
-    height: 140px; /* Square shape for consistency */
-    margin: 0 auto 10px auto; /* Centered horizontally and space below */
-    border: none; /* No border for a cleaner look */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle, deeper shadow for more depth */
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Smooth transition for zoom and shadow */
+    @apply relative inline-block rounded-lg overflow-hidden;
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 10px auto;
+    border: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
-/* Image inside preview */
-/* Image Preview Section */
-.image-preview {
-    @apply relative inline-block rounded-lg overflow-hidden; /* Rounded corners */
-    width: 140px; /* Slightly smaller than before for a more compact look */
-    height: 140px; /* Square shape for consistency */
-    margin: 0 auto 10px auto; /* Centered horizontally and space below */
-    border: none; /* No border for a cleaner look */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle, deeper shadow for more depth */
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Smooth transition for zoom and shadow */
-}
-
-/* Image inside preview */
 .image-preview img {
-    @apply w-full h-full object-cover; /* Ensure image covers the entire preview area */
-    border-radius: 10px; /* Rounded corners for the image */
-    display: block; /* Remove unwanted spaces around the image */
-    transition: transform 0.3s ease-in-out; /* Smooth zoom effect for image */
+    @apply w-full h-full object-cover;
+    border-radius: 10px;
+    display: block;
+    transition: transform 0.3s ease-in-out;
 }
 
-/* Hover effect on image preview */
 .image-preview:hover {
-    transform: scale(1.05); /* Slight zoom effect on hover */
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Deeper shadow on hover */
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
-/* Overlay Gradient for Image Preview (optional) */
 .image-preview::before {
-    content: ''; /* Empty content for the pseudo-element */
-    @apply absolute inset-0 bg-gradient-to-t from-black opacity-40; /* Gradient from black for a subtle overlay */
-    z-index: 5; /* Ensure overlay stays on top of image */
-    border-radius: 10px; /* Matching rounded corners */
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-t from-black opacity-40;
+    z-index: 5;
+    border-radius: 10px;
 }
 
-/* Close Button Styling */
 .close-preview-button {
     @apply absolute top-1 right-1 bg-black text-white rounded-full p-1 opacity-60 hover:opacity-100 transition duration-200 ease-in-out; /* Minimal and subtle close button */
     cursor: pointer;
-    font-size: 12px; /* Smaller close button */
-    z-index: 10; /* Ensure button stays above the image */
+    font-size: 12px;
+    z-index: 10;
 }
 
-/* Close button hover effect */
 .close-preview-button:hover {
-    @apply bg-red-600; /* Change to red when hovered */
-    transform: scale(1.2); /* Slight zoom effect on hover */
+    @apply bg-red-600;
+    transform: scale(1.2);
 }
 
-/* Optional: Add a subtle zoom effect on image when hovered */
 .image-preview img:hover {
-    transform: scale(1.1); /* Slight zoom effect for image */
-    transition: transform 0.3s ease-in-out; /* Smooth transition */
+    transform: scale(1.1);
+    transition: transform 0.3s ease-in-out;
 }
 
-/* Responsive Design for Smaller Screens */
 @media (max-width: 600px) {
     .header-title {
         @apply text-lg;

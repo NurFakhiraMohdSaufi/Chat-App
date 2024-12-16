@@ -7,7 +7,7 @@ import Cookies from 'universal-cookie';
 
 import ListChat from '@/app/chat/page';
 import { SearchRoom } from '@/app/chat/SearchRoom';
-import { ProfileUser } from '@/app/profile/ProfileUser';
+import { ProfileUser } from '@/app/login/profile/ProfileUser';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
 	Sidebar,

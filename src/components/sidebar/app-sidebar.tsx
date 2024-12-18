@@ -50,7 +50,7 @@ export function AppSidebar({
 
     return (
         <Sidebar
-            className={`bg-gray-800 text-white ${
+            className={`bg-gray-800 text-white flex flex-col h-screen ${
                 isSidebarOpen ? 'block' : 'hidden'
             }`}
         >
@@ -67,11 +67,11 @@ export function AppSidebar({
                 <SidebarTrigger onClick={toggleSidebar} />
             </div>
 
-            <ScrollArea>
-                <SidebarContent className='border-b border-gray-700 h-screen'>
+            <ScrollArea className='flex-grow'>
+                <SidebarContent className='border-b border-gray-700'>
                     <SidebarGroup>
                         <SidebarGroupContent className='flex flex-col'>
-                            <SidebarMenu className='flex-grow mt-2'>
+                            <SidebarMenu className='flex-grow'>
                                 <SidebarMenuItem>
                                     <SearchRoom
                                         setRoom={setRoom}
@@ -88,13 +88,10 @@ export function AppSidebar({
                 </SidebarContent>
             </ScrollArea>
 
-            <SidebarFooter>
-                <div className='flex flex-row justify-between items-center '>
+            <SidebarFooter className='border-t border-gray-700'>
+                <div className='flex flex-row justify-between items-center'>
                     <div className='relative flex-grow'>
-                        <ProfileUser
-                            setRoom={setRoom}
-                            setIsInChat={setIsInChat}
-                        />
+                        <ProfileUser />
                     </div>
                     <div className='ml-2'>
                         <IconButton>

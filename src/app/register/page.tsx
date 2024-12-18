@@ -9,7 +9,7 @@ import {
 	updateProfile,
 } from 'firebase/auth';
 import { collection, doc, setDoc } from 'firebase/firestore';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, CircleCheck } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -26,26 +26,28 @@ export default function Register() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [passwordError, setPasswordError] = useState('');
 
     const router = useRouter();
 
-    const validatePassword = (password: string) => {
-        const minLength = 8;
-        const hasUpperCase = /[A-Z]/.test(password);
-        const hasLowerCase = /[a-z]/.test(password);
-        const hasDigit = /\d/.test(password);
-        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-
-        if (password.length < minLength) {
-            return 'Password must be at least 8 characters long.';
+    const validatePassword = (password: string): string => {
+        if (password.length < 8) {
+            return 'Password must be at least 8 characters long';
         }
-
-        if (!hasUpperCase || !hasLowerCase || !hasDigit || !hasSpecialChar) {
-            return 'Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.';
+        if (!/[A-Z]/.test(password)) {
+            return 'Password must contain at least one uppercase letter';
         }
-
+        if (!/[a-z]/.test(password)) {
+            return 'Password must contain at least one lowercase letter';
+        }
+        if (!/\d/.test(password)) {
+            return 'Password must contain at least one digit';
+        }
+        if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+            return 'Password must contain at least one special character';
+        }
         return '';
     };
 
@@ -60,14 +62,23 @@ export default function Register() {
                 return;
             }
 
+            if (name == '') {
+                setError('Enter your name');
+                setIsSubmitting(false);
+                return;
+            }
+
             const result = await createUserWithEmailAndPassword(
                 auth,
                 email,
                 password,
             );
             const user = result.user;
+            setError('');
 
-            alert('Verification email sent. Please check your inbox');
+            setSuccess(
+                'Verification email sent. Please check your inbox and log in to your account',
+            );
 
             await updateProfile(user, {displayName: name});
             await setDoc(doc(collection(db, 'users'), user.uid), {
@@ -78,18 +89,17 @@ export default function Register() {
 
             await sendEmailVerification(user);
 
-            if (!user.emailVerified) {
-                alert('Please verify your email before logging in.');
-                router.push('/login');
-                return;
-            }
-
+            // if (!user.emailVerified) {
+            //     alert('Please verify your email before logging in.');
+            //     router.push('/login');
+            //     return;
+            // }
             cookies.set('auth-token', result.user.refreshToken);
+            router.push('/login');
             setName('');
             setEmail('');
             setPassword('');
-        } catch (err) {
-            console.error(err);
+        } catch {
             setError('The email already exists');
         } finally {
             setIsSubmitting(false);
@@ -101,13 +111,13 @@ export default function Register() {
             const result = await signInWithPopup(auth, provider);
             const user = result.user;
 
-            await sendEmailVerification(user);
+            // await sendEmailVerification(user);
 
-            // Check if the email is verified
-            if (!user.emailVerified) {
-                alert('Please verify your email before logging in.');
-                return;
-            }
+            // // Check if the email is verified
+            // if (!user.emailVerified) {
+            //     alert('Please verify your email before logging in.');
+            //     return;
+            // }
 
             await setDoc(doc(collection(db, 'users'), user.uid), {
                 name: user.displayName,
@@ -116,10 +126,13 @@ export default function Register() {
             });
 
             cookies.set('auth-token', user.refreshToken);
-            alert('Verification email sent. Please check your inbox');
+            setError('');
+            setSuccess(
+                'Verification email sent. Please check your inbox and log in to your account',
+            );
             router.push('/login');
-        } catch (err) {
-            console.error(err);
+        } catch {
+            setError('The email is already exist: ');
         }
     };
 
@@ -131,7 +144,7 @@ export default function Register() {
         router.push('/');
     };
 
-    const handlePasswordChange = (e) => {
+    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newPassword = e.target.value;
         setPassword(newPassword);
 
@@ -163,7 +176,7 @@ export default function Register() {
             </svg>
             <div className='header-container'>
                 <Image
-                    className='cursor-pointer'
+                    className='cursor-pointer responsive-logo'
                     src={logo}
                     width={300}
                     height={300}
@@ -184,6 +197,21 @@ export default function Register() {
                             <AlertCircle className='h-4 w-4' />
                             <AlertTitle>Error</AlertTitle>
                             <AlertDescription>{error}</AlertDescription>
+                        </Alert>
+                    )}
+
+                    {success && (
+                        <Alert variant='default' className='border-whatsapp'>
+                            <CircleCheck
+                                className='h-4 w-4 text-green-500'
+                                style={{color: '#86BC25'}}
+                            />
+                            <AlertTitle className='text-whatsapp'>
+                                Success
+                            </AlertTitle>
+                            <AlertDescription className='text-whatsapp'>
+                                {success}
+                            </AlertDescription>
                         </Alert>
                     )}
 
@@ -253,7 +281,10 @@ export default function Register() {
 
                 <p className='no-acc-text'>
                     Already have an account?{' '}
-                    <a className='link-text' onClick={loginButton}>
+                    <a
+                        className='link-text cursor-pointer'
+                        onClick={loginButton}
+                    >
                         Log In
                     </a>
                 </p>

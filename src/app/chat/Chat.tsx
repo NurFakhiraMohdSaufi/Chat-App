@@ -55,11 +55,9 @@ export default function Room({room}: RoomProps) {
 
         const unsubscribe = onSnapshot(queryMessages, (snapshot) => {
             const messages: Message[] = [];
-
             snapshot.forEach((doc) => {
                 const data = doc.data();
-
-                const message: Message = {
+                messages.push({
                     id: doc.id,
                     text: data.text || '',
                     user: data.user || 'Unknown',
@@ -67,13 +65,9 @@ export default function Room({room}: RoomProps) {
                     room: data.room || room,
                     replyTo: data.replyTo || null,
                     image: data.image || null,
-                };
-
-                messages.push(message);
+                });
             });
-
             setMessages(messages);
-            scrollToBottom();
         });
 
         return () => unsubscribe();
@@ -113,7 +107,7 @@ export default function Room({room}: RoomProps) {
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
-            handleSubmit(e);
+            handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
         }
     };
 
@@ -260,7 +254,6 @@ export default function Room({room}: RoomProps) {
         '🌍': [
             '🌍',
             '🌎',
-            '🏖️',
             '🗽',
             '🏕️',
             '🚢',
@@ -429,7 +422,7 @@ export default function Room({room}: RoomProps) {
 
                     <button
                         type='submit'
-                        className='mdi mdi-send send-button'
+                        className='mdi mdi-send send-button border-white border-2 hover:text-whatsapp'
                         disabled={newMessage === '' && !imageFile}
                     ></button>
                 </div>
@@ -446,7 +439,11 @@ export default function Room({room}: RoomProps) {
                                             ? 'active'
                                             : ''
                                     }`}
-                                    onClick={() => setEmojiCategory(category)}
+                                    onClick={() =>
+                                        setEmojiCategory(
+                                            category as keyof typeof emojis,
+                                        )
+                                    }
                                 >
                                     {category}{' '}
                                     {/* Use the emoji key for display */}

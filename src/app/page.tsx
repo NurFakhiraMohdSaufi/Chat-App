@@ -102,7 +102,7 @@ export default function Dashboard() {
                 <h1 className='text-4xl lg:text-5xl font-bold text-white mb-4'>
                     A New Era of Communication
                 </h1>
-                <p className='text-lg lg:text-xl text-gray-200 mb-8'>
+                <p className='text-lg lg:text-xl text-gray-200 mb-2'>
                     Chatify: Where Chats Spark Connections.
                 </p>
                 <button

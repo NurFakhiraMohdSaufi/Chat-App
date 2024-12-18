@@ -13,8 +13,11 @@ RUN npm install
 # Copy the entire application to the container
 COPY . .
 
-# Expose the port your app will run on
+# Set the environment variable
+ENV NODE_ENV=development
+
+# Expose the port of the app will run on
 EXPOSE 3000
 
-# Command to run your application
+# Command to run the application
 CMD ["npm", "run", "dev"]

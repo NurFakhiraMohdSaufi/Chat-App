@@ -6,7 +6,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-import logo from '../chatify-logo.png';
+import logo from '@/logo-chatify.png';
+
 import dashImage from '../dashImage.png';
 import devicesMockup from '../device-mockup.jpg';
 

@@ -21,7 +21,7 @@ import {
 	SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { auth } from '@/config/firebase-config';
-import logo from '@/logo chatify.png';
+import logo from '@/logo-chatify.png';
 import { IconButton } from '@mui/material';
 
 const cookies = new Cookies();

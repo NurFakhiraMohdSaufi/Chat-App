@@ -17,7 +17,7 @@ import Cookies from 'universal-cookie';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { auth, db, provider } from '@/config/firebase-config';
-import logo from '@/logo chatify.png';
+import logo from '@/logo-chatify.png';
 
 const cookies = new Cookies();
 

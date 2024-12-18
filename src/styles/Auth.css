@@ -15,7 +15,7 @@
 }
 
 .header-title {
-    @apply text-4xl text-black uppercase font-bold font-sans hover:font-serif;
+    @apply text-4xl text-black uppercase font-bold font-sans;
 }
 
 .header-t {

@@ -16,7 +16,7 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
     title: 'Chatify',
-    description: 'Connect Like Never Before',
+    description: 'Where Chats Spark Connections',
 };
 
 export default function RootLayout({

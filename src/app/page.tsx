@@ -8,6 +8,7 @@ import { useState } from 'react';
 
 import logo from '../chatify-logo.png';
 import dashImage from '../dashImage.png';
+import devicesMockup from '../device-mockup.jpg';
 
 export default function Dashboard() {
     const router = useRouter();
@@ -106,17 +107,27 @@ export default function Dashboard() {
                 </p>
                 <button
                     onClick={() => navigateTo('/register')}
-                    className='px-8 py-4 bg-white text-gray-800 rounded-lg font-bold shadow-lg hover:bg-[#86BC25] hover:text-gray-900 transform transition-all duration-300 ease-in-out hover:scale-105 active:scale-95 focus:outline-none cursor-pointer'
+                    className='px-8 py-4 m-6 bg-white text-gray-800 rounded-lg font-bold shadow-lg hover:bg-[#86BC25] hover:text-gray-900 transform transition-all duration-300 ease-in-out hover:scale-105 active:scale-95 focus:outline-none cursor-pointer'
                 >
                     Get Started
                 </button>
 
+                <div>
+                    <Image
+                        src={devicesMockup}
+                        alt='App in Devices'
+                        width={500}
+                        height={500}
+                        className='transition-all duration-300 transform hover:scale-105 hover:shadow-2xl'
+                    />
+                </div>
+
                 <div className='flex items-center w-full content-end'>
-                    <div className='browser-mockup flex flex-1 m-3 md:px-0 md:m-12 bg-white w-full rounded shadow-xl'>
+                    <div className='browser-mockup flex flex-1 m-3 md:px-0 md:m-12 bg-white w-full rounded transition-all duration-300 transform hover:scale-105 hover:shadow-2xl'>
                         <Image
                             src={dashImage}
                             width={1200}
-                            height={50}
+                            height={1000}
                             alt='Chatify Logo'
                         />
                     </div>

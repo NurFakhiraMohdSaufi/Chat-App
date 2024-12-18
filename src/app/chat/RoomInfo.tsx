@@ -24,12 +24,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-<<<<<<< HEAD
 import { auth, db, storage } from '@/config/firebase-config';
-import { Input } from '@mui/material';
-=======
-import { db, storage } from '@/config/firebase-config';
->>>>>>> 2eb9a8e942748b908a3e00eea624aa76e7b10063
 import { Label } from '@radix-ui/react-dropdown-menu';
 
 interface Room {
@@ -44,16 +39,13 @@ export function RoomInfo({room}: Room) {
     const [createdBy, setCreatedBy] = useState<string | null>(null); // Store creator info
     const [members, setMembers] = useState<string[]>([]);
     const [open, setOpen] = useState(false);
-<<<<<<< HEAD
     const [openConfirm, setOpenConfirm] = useState(false); // For leave room confirmation dialog
     const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false); // For delete room confirmation dialog
-=======
 
     const defaultImageProfile =
         'https://static.vecteezy.com/system/resources/previews/026/019/617/original/group-profile-avatar-icon-default-social-media-forum-profile-photo-vector.jpg';
 
     //  Firebase
->>>>>>> 2eb9a8e942748b908a3e00eea624aa76e7b10063
     const roomRef = collection(db, 'room');
     const userRoomsRef = collection(db, 'userRooms');
 
@@ -272,38 +264,30 @@ export function RoomInfo({room}: Room) {
                         </DialogDescription>
                     </DialogHeader>
 
-<<<<<<< HEAD
-                    <ScrollArea className='flex-1 overflow-y-auto max-h-[400px] hover:border-2 hover:border-[#86BC25] transition-all'>
+                    <ScrollArea className='flex-1 overflow-y-auto max-h-[400px] hover:border-2 hover:border-[#86BC25] transition-all p-3'>
                         <div className='grid gap-4 py-4'>
                             <div className='flex justify-center items-center p-7'>
-                                <div className='h-40 w-40 rounded-full overflow-hidden border-2 border-[#86BC25] flex items-center justify-center hover:scale-105 transition-all'>
-                                    <Image
-                                        src={
-                                            imageRoomFile ||
-                                            'https://static.vecteezy.com/system/resources/previews/026/019/617/original/group-profile-avatar-icon-default-social-media-forum-profile-photo-vector.jpg'
-=======
-                <ScrollArea className='flex-1 overflow-y-auto max-h-[400px] hover:border-2 hover:border-[#86BC25] transition-all p-3'>
-                    <div className='grid gap-4 py-4'>
-                        <div className='flex justify-center items-center p-7'>
-                            <div className='relative'>
-                                <div className='h-40 w-40 rounded-full overflow-hidden border-2 border-[#86BC25] flex items-center justify-center hover:scale-105 transition-all'>
-                                    <Image
-                                        src={
-                                            imageRoomFile || defaultImageProfile
->>>>>>> 2eb9a8e942748b908a3e00eea624aa76e7b10063
-                                        }
-                                        width={200}
-                                        height={200}
-                                        alt='Avatar'
-                                        className='transition-transform duration-300'
-                                    />
-                                </div>
-<<<<<<< HEAD
-                                <div className='absolute top-2 right-0'>
+                                <div className='relative'>
+                                    <div className='h-40 w-40 rounded-full overflow-hidden border-2 border-[#86BC25] flex items-center justify-center hover:scale-105 transition-all'>
+                                        <Image
+                                            src={
+                                                imageRoomFile ||
+                                                defaultImageProfile
+                                            }
+                                            width={200}
+                                            height={200}
+                                            alt='Avatar'
+                                            className='transition-transform duration-300'
+                                        />
+                                    </div>
+
                                     <label
                                         htmlFor='imageRoom-upload'
-                                        className='mdi mdi-camera text-white hover:text-[#86BC25] transition-all duration-300 transform hover:scale-125'
-                                    ></label>
+                                        className='absolute bottom-0 right-5 bg-whatsapp text-white cursor-pointer flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 transform hover:scale-110'
+                                        title='Edit Group Profile Picture'
+                                    >
+                                        <span className='mdi mdi-camera text-lg'></span>{' '}
+                                    </label>
                                     <input
                                         id='imageRoom-upload'
                                         type='file'
@@ -340,39 +324,29 @@ export function RoomInfo({room}: Room) {
                                         setRoomDesc(e.target.value)
                                     }
                                     style={{color: 'white'}}
-=======
-
-                                <label
-                                    htmlFor='imageRoom-upload'
-                                    className='absolute bottom-0 right-5 bg-whatsapp text-white cursor-pointer flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 transform hover:scale-110'
-                                    title='Edit Group Profile Picture'
-                                >
-                                    <span className='mdi mdi-camera text-lg'></span>{' '}
-                                </label>
-                                <input
-                                    id='imageRoom-upload'
-                                    type='file'
-                                    accept='image/*'
-                                    style={{display: 'none'}}
-                                    onChange={handleEditGroupImages}
->>>>>>> 2eb9a8e942748b908a3e00eea624aa76e7b10063
                                 />
                             </div>
 
                             <div className='grid items-center gap-4'>
-                                <Label className='text-base font-semibold'>
-                                    Room Members:
-                                </Label>
-                                <div className='space-y-2'>
-                                    {members.map((member, idx) => (
-                                        <div
-                                            key={idx}
-                                            className='text-white hover:scale-105 transition-all'
-                                        >
-                                            {member}
-                                        </div>
-                                    ))}
-                                </div>
+                                <h6 className='text-base font-semibold text-white'>
+                                    Room Member(s):
+                                </h6>
+                                <ul>
+                                    {members.length > 0 ? (
+                                        members.map((memberId, index) => (
+                                            <li
+                                                key={index}
+                                                className='text-sm text-white'
+                                            >
+                                                {memberId}
+                                            </li>
+                                        ))
+                                    ) : (
+                                        <li className='text-sm text-white'>
+                                            No members yet
+                                        </li>
+                                    )}
+                                </ul>
                             </div>
                         </div>
                     </ScrollArea>

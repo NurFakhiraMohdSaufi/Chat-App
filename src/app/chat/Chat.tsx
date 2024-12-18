@@ -36,7 +36,8 @@ export default function Room({room}: RoomProps) {
     const [newMessage, setNewMessage] = useState('');
     const [messages, setMessages] = useState<Message[]>([]);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-    const [emojiCategory, setEmojiCategory] = useState('😊'); // Default category to Smileys emoji
+    const [emojiCategory, setEmojiCategory] =
+        useState<keyof typeof emojis>('😊'); // Default category to Smileys emoji
     const [replyToMessageText, setReplyToMessageText] = useState<string | null>(
         '',
     );
@@ -295,7 +296,10 @@ export default function Room({room}: RoomProps) {
             '💌',
             '💕',
         ],
-    };
+    } as const;
+
+    // Define the type for the keys of emojis
+    type EmojiCategory = keyof typeof emojis;
 
     useEffect(() => {
         if (messages.length > 0) {
@@ -451,15 +455,17 @@ export default function Room({room}: RoomProps) {
                             ))}
                         </div>
                         <div className='emoji-grid'>
-                            {emojis[emojiCategory]?.map((emoji) => (
-                                <button
-                                    key={emoji}
-                                    className='emoji'
-                                    onClick={() => handleEmojiClick(emoji)}
-                                >
-                                    {emoji}
-                                </button>
-                            ))}
+                            {(emojis[emojiCategory] as readonly string[]).map(
+                                (emoji: string) => (
+                                    <button
+                                        key={emoji}
+                                        className='emoji'
+                                        onClick={() => handleEmojiClick(emoji)}
+                                    >
+                                        {emoji}
+                                    </button>
+                                ),
+                            )}
                         </div>
                     </div>
                 )}

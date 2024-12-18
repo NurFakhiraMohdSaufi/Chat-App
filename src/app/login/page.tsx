@@ -1,11 +1,15 @@
 'use client';
 import '@/styles/Auth.css';
 
+import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import {
-	sendPasswordResetEmail,
-	signInWithEmailAndPassword,
-	signInWithPopup,
-} from 'firebase/auth';
+	collection,
+	doc,
+	getDocs,
+	query,
+	setDoc,
+	where,
+} from 'firebase/firestore';
 import { AlertCircle } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -13,8 +17,10 @@ import { useState } from 'react';
 import Cookies from 'universal-cookie';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { auth, provider } from '@/config/firebase-config';
+import { auth, db, provider } from '@/config/firebase-config';
 import logo from '@/logo chatify.png';
+
+import { ForgottenPassword } from '../forgotPassword/ForgottenPassword';
 
 const cookies = new Cookies();
 
@@ -23,27 +29,57 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
 
     const router = useRouter();
 
+    const checkEmailPassword = () => {
+        // Check email & password is not null
+        if (!email || !password) {
+            setError(
+                !email && !password
+                    ? 'Please enter both email and password'
+                    : !email
+                    ? 'Please enter the email'
+                    : 'Please enter the password',
+            );
+            return false;
+        }
+        setError('');
+        return true;
+    };
+
     const signInWithGoogle = async () => {
+        setIsGoogleSubmitting(true);
         try {
             const result = await signInWithPopup(auth, provider);
+            const user = result.user;
+            console.log('user: ', user);
+
+            await setDoc(doc(collection(db, 'users'), user.uid), {
+                name: user.displayName,
+                email: user.email,
+                createdAt: new Date(),
+            });
+
             cookies.set('auth-token', result.user.refreshToken);
-            // setIsAuth(true);
-            // alert('Successfully logged in!');
-            router.push('/home'); // Redirect to home page after login
-        } catch (err) {
-            console.error(err);
+
+            if (!user.emailVerified) {
+                setError('Please verify your email before logging in.');
+                setIsGoogleSubmitting(false);
+                return;
+            }
+
+            router.push('/home');
+        } catch {
             setError('Failed to sign in with Google');
+        } finally {
+            setIsGoogleSubmitting(false);
         }
     };
 
     const signInWithEmailPassword = async () => {
-        if (!email || !password) {
-            setError('Please enter both email and password.');
-            return;
-        }
+        if (!checkEmailPassword()) return;
 
         setIsSubmitting(true);
         try {
@@ -53,10 +89,9 @@ export default function Login() {
                 password,
             );
             const user = result.user;
-            console.log('user: ', user);
 
             if (!user.emailVerified) {
-                alert('Please verify your email before logging in.');
+                setError('Please verify your email before logging in.');
                 setIsSubmitting(false);
                 return;
             }
@@ -70,18 +105,9 @@ export default function Login() {
             setPassword('');
         } catch (err) {
             console.error(err);
-            setError('Invalid email or password');
+            setError('Email does not exist. Please register first');
         }
         setIsSubmitting(false);
-    };
-
-    const forgotPassword = async () => {
-        try {
-            await sendPasswordResetEmail(auth, email);
-            alert('Password reset email sent! Check your inbox.');
-        } catch (error) {
-            console.error(error);
-        }
     };
 
     const registerButton = () => {
@@ -93,12 +119,8 @@ export default function Login() {
     };
 
     return (
-        <div className=' auth-container'>
-            <svg
-                viewBox='0 0 500 150'
-                preserveAspectRatio='none'
-                className='w-full'
-            >
+        <div className='auth-container'>
+            <svg viewBox='0 0 500 150' preserveAspectRatio='none'>
                 <defs>
                     <linearGradient
                         id='myGradient'
@@ -115,14 +137,14 @@ export default function Login() {
             </svg>
             <div className='header-container'>
                 <Image
-                    className='cursor-pointer'
+                    className='cursor-pointer responsive-logo'
                     src={logo}
-                    width={300}
-                    height={300}
+                    width={200}
+                    height={200}
                     alt='Chatify Logo'
                     onClick={homeButton}
                 />
-                <h1 className='header-title'>Chatify</h1>
+                <h1 className='header-title '>Chatify</h1>
                 {/* <button className='text-white p-2 hover:bg-whatsapp hover:text-black rounded transition duration-500 ease-in-out font-medium'>
                         Register
                     </button> */}
@@ -134,10 +156,10 @@ export default function Login() {
                         signInWithEmailPassword();
                     }}
                 >
-                    <h1 className='header-t'>Log In</h1>
+                    <h1 className='header-t mb-2'>Log In</h1>
                     {error && (
                         <Alert variant='destructive'>
-                            <AlertCircle className='h-4 w-4' />
+                            <AlertCircle className='h-4 w-4 mt-2' />
                             <AlertTitle>Error</AlertTitle>
                             <AlertDescription>{error}</AlertDescription>
                         </Alert>
@@ -162,7 +184,9 @@ export default function Login() {
                         className='input'
                         placeholder='Enter your password'
                     />
-                    <p className='forgot-password-label'></p>
+                    <p className='forgot-password-label'>
+                        <ForgottenPassword />
+                    </p>
                     <button
                         type='submit'
                         disabled={isSubmitting}
@@ -174,11 +198,15 @@ export default function Login() {
                 <div className='or-area'>
                     <div className='or-text'>OR</div>
                 </div>
+                <p className='google-text text-white text-center mt-5'>
+                    automatically sign up with Google
+                </p>
                 <div className='flex mt-4 gap-x-2'>
                     <button
                         type='button'
                         onClick={signInWithGoogle}
                         className='button-google'
+                        disabled={isGoogleSubmitting}
                     >
                         <svg
                             xmlns='http://www.w3.org/2000/svg'
@@ -192,7 +220,10 @@ export default function Login() {
 
                 <p className='no-acc-text'>
                     Do not have an account?{' '}
-                    <a className='link-text' onClick={registerButton}>
+                    <a
+                        className='link-text cursor-pointer'
+                        onClick={registerButton}
+                    >
                         Sign Up
                     </a>
                 </p>

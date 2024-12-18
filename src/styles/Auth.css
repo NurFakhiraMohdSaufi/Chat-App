@@ -15,11 +15,31 @@
 }
 
 .header-title {
-    @apply text-4xl text-black uppercase font-bold;
+    @apply text-4xl text-black uppercase font-bold font-sans hover:font-serif;
 }
 
 .header-t {
     @apply text-3xl font-semibold text-center text-whatsapp uppercase;
+}
+
+.responsive-logo {
+    width: 350px;
+    height: 350px;
+}
+
+@media (max-width: 768px) {
+    .responsive-logo {
+        width: 200px;
+        height: 200px;
+    }
+}
+
+/* Adjust for small screens */
+@media (max-width: 480px) {
+    .responsive-logo {
+        width: 200px;
+        height: 200px;
+    }
 }
 
 .alert-warning {
@@ -59,10 +79,6 @@
 }
 .forgot-password-button {
     @apply font-medium font-bold text-whatsapp hover:underline;
-}
-
-h1 {
-    font-family: Montserrat, sans-serif;
 }
 
 .mezzo {

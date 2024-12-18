@@ -21,9 +21,9 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { db, storage } from '@/config/firebase-config';
-import { Input } from '@mui/material';
 import { Label } from '@radix-ui/react-dropdown-menu';
 
 interface Room {
@@ -189,23 +189,29 @@ export function RoomInfo({room}: Room) {
                     </DialogDescription>
                 </DialogHeader>
 
-                <ScrollArea className='flex-1 overflow-y-auto max-h-[400px] hover:border-2 hover:border-[#86BC25] transition-all'>
+                <ScrollArea className='flex-1 overflow-y-auto max-h-[400px] hover:border-2 hover:border-[#86BC25] transition-all p-3'>
                     <div className='grid gap-4 py-4'>
                         <div className='flex justify-center items-center p-7'>
-                            <div className='h-40 w-40 rounded-full overflow-hidden border-2 border-[#86BC25] flex items-center justify-center hover:scale-105 transition-all'>
-                                <Image
-                                    src={imageRoomFile || defaultImageProfile}
-                                    width={200}
-                                    height={200}
-                                    alt='Avatar'
-                                    className='transition-transform duration-300'
-                                />
-                            </div>
-                            <div className='absolute top-2 right-0'>
+                            <div className='relative'>
+                                <div className='h-40 w-40 rounded-full overflow-hidden border-2 border-[#86BC25] flex items-center justify-center hover:scale-105 transition-all'>
+                                    <Image
+                                        src={
+                                            imageRoomFile || defaultImageProfile
+                                        }
+                                        width={200}
+                                        height={200}
+                                        alt='Avatar'
+                                        className='transition-transform duration-300'
+                                    />
+                                </div>
+
                                 <label
                                     htmlFor='imageRoom-upload'
-                                    className='mdi mdi-camera text-white hover:text-[#86BC25] transition-all duration-300 transform hover:scale-125'
-                                ></label>
+                                    className='absolute bottom-0 right-5 bg-whatsapp text-white cursor-pointer flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 transform hover:scale-110'
+                                    title='Edit Group Profile Picture'
+                                >
+                                    <span className='mdi mdi-camera text-lg'></span>{' '}
+                                </label>
                                 <input
                                     id='imageRoom-upload'
                                     type='file'

@@ -126,7 +126,7 @@ export function SearchRoom({setRoom, setIsInChat}: RoomProps) {
                     <input
                         type='text'
                         onChange={handleSearchChange}
-                        className='px-4 py-2 w-full text-black bg-white border-b border-gray-400 rounded-md pl-10 focus:outline-none focus:ring-2 focus:ring-blue-300'
+                        className='px-4 py-2 w-full text-black bg-white border-b border-whatsapp rounded-md pl-10 focus:outline-none focus:ring-2 focus:ring-whatsapp'
                         placeholder='Search'
                     />
                     <i className='fa fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-black w-5 h-5'></i>

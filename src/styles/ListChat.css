@@ -15,7 +15,7 @@
 }
 
 .card-list {
-    @apply divide-y divide-gray-100 flex flex-col -mx-2 h-auto overflow-y-auto;
+    @apply divide-y divide-gray-700 flex flex-col -mx-2 h-auto overflow-y-auto;
 }
 
 .button-chat {

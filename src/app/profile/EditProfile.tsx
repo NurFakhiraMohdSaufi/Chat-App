@@ -1,5 +1,5 @@
 import imageCompression from 'browser-image-compression';
-import { updateProfile } from 'firebase/auth';
+import { isSignInWithEmailLink, updateProfile } from 'firebase/auth';
 import {
 	collection,
 	doc,
@@ -26,10 +26,16 @@ import { Input } from '@/components/ui/input';
 import { auth, db, storage } from '@/config/firebase-config';
 import { Label } from '@radix-ui/react-dropdown-menu';
 
-export function EditProfile({onProfileEdit}) {
+interface EditProfileProps {
+    onProfileEdit: () => void;
+}
+
+export function EditProfile({onProfileEdit}: EditProfileProps) {
     const user = auth.currentUser?.displayName ?? '';
     const userData = auth.currentUser;
     const [userName, setUserName] = useState('');
+
+    const [email, setEmail] = useState<string | null>(null);
     const [imageFile, setImageFile] = useState<string | null>(null);
     const [open, setOpen] = useState(false);
 
@@ -38,6 +44,7 @@ export function EditProfile({onProfileEdit}) {
     useEffect(() => {
         if (userData?.displayName) {
             setUserName(userData.displayName);
+            setEmail(userData.email);
         }
     }, [userData]);
 
@@ -177,9 +184,10 @@ export function EditProfile({onProfileEdit}) {
                     height={200}
                     alt='Avatar'
                     onClick={() => setOpen(true)}
+                    title='Edit Profile'
                 />
             </DialogTrigger>
-            <DialogContent className='sm:max-w-[425px] bg-white text-black'>
+            <DialogContent className='sm:max-w-[425px] bg-black text-white'>
                 <DialogHeader>
                     <DialogTitle className='text-left font-bold'>
                         Edit Profile
@@ -191,23 +199,30 @@ export function EditProfile({onProfileEdit}) {
                 </DialogHeader>
                 <div className='grid gap-4 py-4'>
                     <div className='flex justify-center items-center p-7'>
-                        <div className='h-40 w-40 rounded-full overflow-hidden border-2 border-gray-300 flex items-center justify-center'>
-                            <Image
-                                src={
-                                    imageFile || // Show the updated image if available
-                                    userData?.photoURL ||
-                                    'https://i.pinimg.com/736x/d2/98/4e/d2984ec4b65a8568eab3dc2b640fc58e.jpg'
-                                }
-                                width={200}
-                                height={200}
-                                alt='Avatar'
-                            />
-                        </div>
-                        <div className='icon-buttons'>
+                        <div className='relative'>
+                            {/* Profile image container with rounded border and shadow */}
+                            <div className='h-40 w-40 rounded-full overflow-hidden border-4 border-whatsapp flex items-center justify-center shadow-lg hover:shadow-2xl transition-shadow duration-300'>
+                                <Image
+                                    src={
+                                        imageFile ||
+                                        userData?.photoURL ||
+                                        'https://i.pinimg.com/736x/d2/98/4e/d2984ec4b65a8568eab3dc2b640fc58e.jpg'
+                                    }
+                                    width={160}
+                                    height={160}
+                                    alt='Avatar'
+                                    className='object-cover transform hover:scale-105 transition-transform duration-300' // Smooth zoom effect on hover
+                                />
+                            </div>
+
                             <label
                                 htmlFor='profile-upload'
-                                className='mdi mdi-camera camera-button'
-                            ></label>
+                                className='absolute bottom-0 right-5 bg-whatsapp text-white cursor-pointer flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 transform hover:scale-110'
+                                title='Edit Profile Picture'
+                            >
+                                <span className='mdi mdi-camera text-lg'></span>{' '}
+                                {/* Adjust icon size */}
+                            </label>
                             <input
                                 id='profile-upload'
                                 type='file'
@@ -221,15 +236,28 @@ export function EditProfile({onProfileEdit}) {
                     <div className='grid grid-cols-4 items-center gap-4'>
                         <Label className='text-right'>Name</Label>
                         <Input
-                            className='col-span-3'
+                            className='col-span-3 bg-black text-white border-[#86BC25] focus:ring-[#86BC25] hover:scale-105 transition-all'
                             value={userName}
                             onChange={(e) => setUserName(e.target.value)}
+                            title='Change Username'
+                        />
+                    </div>
+                    <div className='grid grid-cols-4 items-center gap-4'>
+                        <Label className='text-right'>Email</Label>
+                        <Input
+                            className='cursor-pointer col-span-3 bg-black text-white border-[#86BC25] focus:ring-[#86BC25] hover:scale-105 transition-all'
+                            value={email || ''}
+                            readOnly
                         />
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button type='submit' onClick={handleUpdateName}>
-                        Save changes
+                    <Button
+                        className='bg-whatsapp text-black px-6 py-3 rounded-md hover:bg-white hover:text-black focus:ring-2 focus:ring-[#86BC25] transform hover:scale-105 transition-all duration-300'
+                        type='submit'
+                        onClick={handleUpdateName}
+                    >
+                        Save Changes
                     </Button>
                 </DialogFooter>
             </DialogContent>

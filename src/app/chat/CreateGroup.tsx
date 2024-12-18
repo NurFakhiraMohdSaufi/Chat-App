@@ -2,6 +2,7 @@ import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { MessageCirclePlusIcon } from 'lucide-react';
 import { useState } from 'react';
 
+import { Button } from '@/components/ui/button';
 import {
 	Dialog,
 	DialogContent,
@@ -12,7 +13,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { auth, db } from '@/config/firebase-config';
-import { Button, IconButton } from '@mui/material';
+import { IconButton } from '@mui/material';
 
 import { RoomProps } from '../../interfaces/RoomProps';
 
@@ -50,9 +51,8 @@ export function CreateGroup({setIsInChat}: RoomProps) {
             setIsInChat(true);
             setRoomName('');
             setOpen(false);
-        } catch (err) {
+        } catch {
             setError('Failed to create room. Please try again.');
-            console.error('Error creating room: ', err);
         } finally {
             setLoading(false);
         }
@@ -63,9 +63,11 @@ export function CreateGroup({setIsInChat}: RoomProps) {
             <DialogTrigger asChild>
                 <IconButton className='bg-[#86BC25] p-3 rounded-full shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-110'>
                     <MessageCirclePlusIcon
-                        className='text-white text-lg hover:text-blue-500'
+                        className='text-white text-lg hover:text-whatsapp'
                         onClick={() => setOpen(true)}
-                    />
+                    >
+                        <title>Create New Chat Room</title>
+                    </MessageCirclePlusIcon>
                 </IconButton>
             </DialogTrigger>
             <DialogContent className='bg-black p-6 rounded-xl shadow-lg transition-all duration-500 transform hover:scale-105'>

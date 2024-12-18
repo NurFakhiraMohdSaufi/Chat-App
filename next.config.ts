@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
             'firebasestorage.googleapis.com',
             'static.vecteezy.com',
             'i.pinimg.com',
+            'lh3.googleusercontent.com',
         ],
     },
 };

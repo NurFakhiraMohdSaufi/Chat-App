@@ -14,12 +14,27 @@
 .description-button,
 .profile-button,
 .send-button {
-    @apply bg-transparent border-none transition duration-300 ease-in-out;
+    @apply bg-whatsapp border-none transition duration-300 ease-in-out;
+}
+
+.camera-button:hover {
+    color: #86bc25;
+    cursor: pointer;
+}
+
+.emoticon-button:hover {
+    color: #86bc25;
+    cursor: pointer;
+}
+
+.send-button:hover {
+    background: black;
+    cursor: pointer;
+    border-width: 2px;
 }
 
 .description-button:hover,
-.profile-button:hover,
-.send-button:hover {
+.profile-button:hover {
     @apply bg-gray-700;
 }
 

@@ -138,7 +138,7 @@ export default function Login() {
             <div className='header-container'>
                 <Image
                     className='cursor-pointer responsive-logo'
-                    src={logo}
+                    src='/chatify-logo.png'
                     width={200}
                     height={200}
                     alt='Chatify Logo'

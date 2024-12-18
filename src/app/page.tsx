@@ -47,7 +47,7 @@ export default function Dashboard() {
                     <div className='flex items-center space-x-4'>
                         <Image
                             className='cursor-pointer'
-                            src={logo}
+                            src='/chatify-logo.png'
                             width={100}
                             height={100}
                             alt='Chatify Logo'

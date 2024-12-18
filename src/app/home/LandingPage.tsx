@@ -13,7 +13,7 @@ export default function LandingPage() {
                 </h1>
                 <div className='place-items-center m-7'>
                     <Image
-                        src={logo}
+                        src='/chatify-logo.png'
                         width={300}
                         height={300}
                         alt='Chat App Logo'

@@ -37,7 +37,8 @@
     "react-dropzone": "^14.3.5",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
-    "universal-cookie": "^7.2.2"
+    "universal-cookie": "^7.2.2",
+    "webpack": "^5.97.1"
   },
   "devDependencies": {
     "@types/node": "20.17.6",
@@ -52,6 +53,6 @@
     "url-loader": "^4.1.1"
   },
   "engines": {
-  "node": "18.x"
-}
+    "node": "18.x"
+  }
 }

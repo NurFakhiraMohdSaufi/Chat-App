@@ -7,8 +7,8 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import logo from '../chatify-logo.png';
-import dashImage from '../dashImage.png';
-import devicesMockup from '../device-mockup.jpg';
+// import dashImage from '../dashImage.png';
+// import devicesMockup from '../device-mockup.jpg';
 
 export default function Dashboard() {
     const router = useRouter();
@@ -114,7 +114,7 @@ export default function Dashboard() {
 
                 <div>
                     <Image
-                        src={devicesMockup}
+                        src="/src/device-mockup.jpg"
                         alt='App in Devices'
                         width={500}
                         height={500}
@@ -125,7 +125,7 @@ export default function Dashboard() {
                 <div className='flex items-center w-full content-end'>
                     <div className='browser-mockup flex flex-1 m-3 md:px-0 md:m-12 bg-white w-full rounded transition-all duration-300 transform hover:scale-105 hover:shadow-2xl'>
                         <Image
-                            src={dashImage}
+                            src="/src/dashImage.jpg"
                             width={1200}
                             height={1000}
                             alt='Chatify Logo'

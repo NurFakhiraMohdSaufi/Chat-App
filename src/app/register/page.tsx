@@ -178,7 +178,7 @@ export default function Register() {
             <div className='header-container'>
                 <Image
                     className='cursor-pointer responsive-logo'
-                    src='/logo-chatify.png'
+                    src="/src/chatify-logo.png"
                     width={300}
                     height={300}
                     alt='Chatify Logo'

@@ -57,7 +57,7 @@ export function AppSidebar({
             <div className='flex items-center justify-between border-b border-gray-700 p-1 h-14'>
                 <SidebarHeader>
                     <Image
-                        src='/logo-chatify.png'
+                        src="/src/chatify-logo.png"
                         width={100}
                         height={100}
                         alt='Chatify Logo'

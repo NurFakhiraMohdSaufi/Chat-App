@@ -17,7 +17,8 @@ import Cookies from 'universal-cookie';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { auth, db, provider } from '@/config/firebase-config';
-import logo from '@/logo-chatify.png';
+
+// import logo from '@/logo-chatify.png';
 
 const cookies = new Cookies();
 
@@ -177,7 +178,7 @@ export default function Register() {
             <div className='header-container'>
                 <Image
                     className='cursor-pointer responsive-logo'
-                    src='/chatify-logo.png'
+                    src='/logo-chatify.png'
                     width={300}
                     height={300}
                     alt='Chatify Logo'

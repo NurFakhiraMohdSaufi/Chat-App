@@ -21,12 +21,12 @@ import {
 	SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { auth } from '@/config/firebase-config';
-import logo from '@/logo-chatify.png';
+// import logo from '@/chatify-logo.png';
 import { IconButton } from '@mui/material';
 
 const cookies = new Cookies();
 
-interface RoomProps {
+interface Room {
     setRoom: (roomName: string) => void;
     setIsInChat: (isInChat: boolean) => void;
     isSidebarOpen: boolean;
@@ -38,7 +38,7 @@ export function AppSidebar({
     setIsInChat,
     isSidebarOpen,
     toggleSidebar,
-}: RoomProps) {
+}: Room) {
     // const user = auth.currentUser?.displayName;
 
     const signUserOut = async () => {
@@ -57,7 +57,7 @@ export function AppSidebar({
             <div className='flex items-center justify-between border-b border-gray-700 p-1 h-14'>
                 <SidebarHeader>
                     <Image
-                        src='/chatify-logo.png'
+                        src='/logo-chatify.png'
                         width={100}
                         height={100}
                         alt='Chatify Logo'

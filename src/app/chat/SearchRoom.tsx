@@ -20,7 +20,7 @@ import { CreateGroup } from './CreateGroup';
 export function SearchRoom({setRoom, setIsInChat}: RoomProps) {
     const [roomName, setRoomName] = useState('');
     const [rooms, setRooms] = useState<RoomData[]>([]);
-    const [users, setUsers] = useState<any[]>([]);
+    // const [users, setUsers] = useState<any[]>([]);
 
     useEffect(() => {
         const searchRooms = async () => {
@@ -60,7 +60,7 @@ export function SearchRoom({setRoom, setIsInChat}: RoomProps) {
 
             const querySnapshot = await getDocs(q);
             const userList = querySnapshot.docs.map((doc) => doc.data());
-            setUsers(userList);
+            // setUsers(userList);
         };
 
         searchUsers();

@@ -1,5 +1,5 @@
 import imageCompression from 'browser-image-compression';
-import { isSignInWithEmailLink, updateProfile } from 'firebase/auth';
+import { updateProfile } from 'firebase/auth';
 import {
 	collection,
 	doc,
@@ -153,7 +153,7 @@ export function EditProfile({onProfileEdit}: EditProfileProps) {
 
                 uploadTask.on(
                     'state_changed',
-                    (snapshot) => {},
+                    // (snapshot) => {},
                     (error) => {
                         console.error('Error uploading image:', error);
                     },

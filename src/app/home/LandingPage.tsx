@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-import logo from '@/logo chatify.png';
+// import logo from '@/logo chatify.png';
 
 export default function LandingPage() {
     return (
@@ -13,7 +13,7 @@ export default function LandingPage() {
                 </h1>
                 <div className='place-items-center m-7'>
                     <Image
-                        src='/chatify-logo.png'
+                        src='/logo-chatify.png'
                         width={300}
                         height={300}
                         alt='Chat App Logo'

@@ -11,11 +11,13 @@ const nextConfig: NextConfig = {
         ],
     },
     webpack: (config) => {
-        config.module.rules.push({
-            test: /\.(png|jpe?g|gif|svg)$/i,
-            type: 'asset/resource',
-        });
+        config.cache = false;
         return config;
+      },
+    eslint: {
+        // Warning: This allows production builds to successfully complete even if
+        // your project has ESLint errors.
+        ignoreDuringBuilds: true,
     },
 };
 

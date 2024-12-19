@@ -22,7 +22,11 @@ import { auth, db } from '@/config/firebase-config';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { RoomProps } from '../../interfaces/RoomProps';
+export interface RoomProps {
+    [key: string]: any; // Generalize the index signature
+    setRoom: (roomName: string) => void;
+    setIsInChat: (isInChat: boolean) => void;
+}
 
 interface Message {
     id: string;

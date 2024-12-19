@@ -6,8 +6,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-import logo from '@/logo-chatify.png';
-
+import logo from '../chatify-logo.png';
 import dashImage from '../dashImage.png';
 import devicesMockup from '../device-mockup.jpg';
 
@@ -47,7 +46,7 @@ export default function Dashboard() {
                     <div className='flex items-center space-x-4'>
                         <Image
                             className='cursor-pointer'
-                            src='/chatify-logo.png'
+                            src={logo}
                             width={100}
                             height={100}
                             alt='Chatify Logo'
@@ -100,8 +99,10 @@ export default function Dashboard() {
                 id='hero'
                 className='container mx-auto flex flex-col items-center text-center py-16 px-4 bg-black'
             >
-                <h1 className='text-4xl lg:text-5xl font-bold text-white mb-4'></h1>
-                <p className='text-lg lg:text-xl text-gray-200 mb-2'>
+                <h1 className='text-4xl lg:text-5xl font-bold text-white mb-4'>
+                    A New Era of Communication
+                </h1>
+                <p className='text-lg lg:text-xl text-gray-200 mb-8'>
                     Chatify: Where Chats Spark Connections.
                 </p>
                 <button

@@ -18,7 +18,7 @@ import { auth, db } from '@/config/firebase-config';
 
 import { RoomInfo } from './RoomInfo';
 
-interface RoomProps {
+interface Room {
     room: string;
 }
 
@@ -32,7 +32,7 @@ interface Message {
     image?: string | null;
 }
 
-export default function Room({room}: RoomProps) {
+export default function Room({room}: Room) {
     const [newMessage, setNewMessage] = useState('');
     const [messages, setMessages] = useState<Message[]>([]);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -297,9 +297,6 @@ export default function Room({room}: RoomProps) {
             '💕',
         ],
     } as const;
-
-    // Define the type for the keys of emojis
-    type EmojiCategory = keyof typeof emojis;
 
     useEffect(() => {
         if (messages.length > 0) {

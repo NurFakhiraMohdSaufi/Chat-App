@@ -2,14 +2,7 @@
 import '@/styles/Auth.css';
 
 import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
-import {
-	collection,
-	doc,
-	getDocs,
-	query,
-	setDoc,
-	where,
-} from 'firebase/firestore';
+import { collection, doc, setDoc } from 'firebase/firestore';
 import { AlertCircle } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -18,8 +11,8 @@ import Cookies from 'universal-cookie';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { auth, db, provider } from '@/config/firebase-config';
-import logo from '@/logo-chatify.png';
 
+// import logo from '@/logo-chatify.png';
 import { ForgottenPassword } from '../forgotPassword/ForgottenPassword';
 
 const cookies = new Cookies();
@@ -138,7 +131,7 @@ export default function Login() {
             <div className='header-container'>
                 <Image
                     className='cursor-pointer responsive-logo'
-                    src='/chatify-logo.png'
+                    src='/logo-chatify.png'
                     width={200}
                     height={200}
                     alt='Chatify Logo'
